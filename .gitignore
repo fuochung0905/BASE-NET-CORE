@@ -1,0 +1,14 @@
+# Ignore Visual Studio temporary files, build results, and
+# common folders.
+
+## Ignore Visual Studio project files
+.vs/
+*.csproj.user
+
+## Ignore build results
+bin/
+obj/
+
+# Ignore NuGet Packages folder
+*.nupkg
+*.snupkg
