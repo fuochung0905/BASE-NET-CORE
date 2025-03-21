@@ -1,0 +1,17 @@
+﻿@model MODELS.BASE.MODELCombobox?
+@(Html.Kendo().DropDownListFor(m => m)
+    .DataValueField("Value")
+    .DataTextField("Text")
+    .Filter(FilterType.Contains)
+    .OptionLabel("-- Chọn người AssignTo --")
+    .DataSource(
+        source =>
+        {
+            source.Read(read =>
+            {
+                read.Action("GetComboBoxNguoiQuanLy", "TaiKhoan");
+            });
+        }
+    )
+    .AutoWidth(true)
+)

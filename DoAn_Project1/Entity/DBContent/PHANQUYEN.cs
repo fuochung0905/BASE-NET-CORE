@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Entity.DBContent;
+namespace ENTITIES.DBContent;
 
 public partial class PHANQUYEN
 {
@@ -12,6 +12,8 @@ public partial class PHANQUYEN
     public string ControllerName { get; set; } = null!;
 
     public bool IsXem { get; set; }
+
+    public bool IsThem { get; set; }
 
     public bool IsCapNhat { get; set; }
 

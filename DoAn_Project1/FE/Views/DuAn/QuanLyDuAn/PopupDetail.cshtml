@@ -1,0 +1,298 @@
+@model MODELS.DUAN.QUANLYDUAN.Requests.PostQuanLyDuAnRequest
+<style>
+    #IsCanhBaoHetHan_validationMessage {
+        display: none !important;
+    }
+
+  /*   #ThoiGianKetThuc_validationMessage {
+        display: none;
+    }
+
+    #ThoiGianBatDau_validationMessage {
+        display: none;
+    } */
+  
+</style>
+<div class="modal-content" id="modalLoading">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmQuanLyDuAn", @class = "forms-sample" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            @if (!Model.IsEdit)
+            {
+                <h4 class="modal-title">Thêm mới dự án</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Cập nhật dự án</h4>
+            }
+            <button type="button" class="close" onclick="closePopUp();" aria-label="Close" data-bs-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(model => model.IsEdit)
+            @Html.HiddenFor(model => model.Id)
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>
+                        Mã dự án  <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().TextBoxFor(m => m.MaDuAn).HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                    @Html.ValidationMessageFor(model => model.MaDuAn, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Tên dự án <span class="text-danger">*</span></label>
+                    @(Html.Kendo().TextBoxFor(m => m.TenDuAn).HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                    @Html.ValidationMessageFor(model => model.TenDuAn, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>Chủ đầu tư</label>
+                    @(Html.Kendo().TextBoxFor(m => m.ChuDauTu).HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                    @Html.ValidationMessageFor(model => model.ChuDauTu, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label> Giai đoạn dự án<span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().DropDownListFor(m => m.GiaiDoanId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetAllComboBox", "GiaiDoanDuAn");
+
+                        })
+                        )
+                        )
+                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                        )
+                    @Html.ValidationMessageFor(model => model.GiaiDoanId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>
+                        Thời gian bắt đầu
+                    </label>
+                    @(Html.Kendo().DatePickerFor(m => m.ThoiGianBatDau)
+                        .Format("dd/MM/yyyy")
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;" })
+                        )
+                    @* <div id="ThoiGianBatDau_validationMessage" class="validation-message">
+                    </div> *@
+                </div>
+                <div class="col-md-6">
+                    <label>
+                        Thời gian kết thúc
+                    </label>
+                    @(Html.Kendo().DatePickerFor(m => m.ThoiGianKetThuc)
+                        .Format("dd/MM/yyyy")
+                        .HtmlAttributes(new
+                        {
+                            @class = "form-control",
+                            @style = "width:100%;",
+                            data_val_ignore = "true",
+                            placeholder = "Chưa chọn ngày" 
+                        })
+                        )
+                </div>
+
+
+            </div>
+            <div class="row form-group">
+                <div class="col-md-4">
+                    <label>Chi phí hồ sơ</label>
+                    @(Html.Kendo().NumericTextBoxFor(m => m.ChiPhiHoSo).HtmlAttributes(new { @class = "form-control", @style = "width:100%; " }))
+                    @Html.ValidationMessageFor(model => model.ChiPhiHoSo, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-4">
+                    <label>Chi phí triển khai</label>
+                    @(Html.Kendo().NumericTextBoxFor(m => m.ChiPhiTrienKhai).HtmlAttributes(new { @class = "form-control", @style = "width:100%; " }))
+                    @Html.ValidationMessageFor(model => model.ChiPhiTrienKhai, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-4">
+                    <label>Chi phí code</label>
+                    @(Html.Kendo().NumericTextBoxFor(m => m.ChiPhiCode).HtmlAttributes(new { @class = "form-control", @style = "width:100%; " }))
+                    @Html.ValidationMessageFor(model => model.ChiPhiCode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>
+                        Loại dự án
+                    </label>
+                    @(Html.Kendo().DropDownListFor(m => m.LoaiDuAn)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .BindTo(SYS_CONFIG.LOAIDUAN)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.LoaiDuAn, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>
+                        Trạng thái
+                    </label>
+                    @(Html.Kendo().DropDownListFor(m => m.IsActived)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .BindTo(SYS_CONFIG.TRANG_THAI)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.IsActived, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label for="CanhBaoHetHan">Cảnh báo hết hạn</label>
+                    @(Html.CheckBoxFor(m => m.IsCanhBaoHetHan, new { @class = "form-check-input", style = "margin-left:8px;height:1em;width:1em;" }))
+                  
+                </div>
+
+
+            </div>
+           
+            <div class="row form-group">
+                <div class="col-md-12">
+                    <label>Ghi chú</label>
+                    @(Html.Kendo().TextAreaFor(m => m.GhiChu).HtmlAttributes(new { @class = "form-control", @style = "width:100%; height: 250px;" }))
+                    @Html.ValidationMessageFor(model => model.GhiChu, "", new { @class = "text-danger" })
+                 
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" onclick="closePopUp();"><i class="fas fa-times-square"></i> Hủy</button>
+            <div>
+                <button type="submit" id="btnLuu" class="btn btn-success"><i class="fas fa-check-square"></i> Lưu</button>
+                @if (!Model.IsEdit)
+                {
+                    <button type="button" class="btn btn-success" id="btnLuuTiep"><i class="fas fa-check-square"></i> Lưu và thêm </button>
+                }
+            </div>
+        </div>
+    }
+</div>
+<script>
+    
+    $(document).ready(function () {
+        // Khi modal được hiển thị, hủy bỏ sự kiện focus mặc định của Bootstrap modal
+        $('#frmQuanLyDuAn').on('shown.bs.modal', function () {
+            $(document).off('focusin.modal');
+        });
+         
+        // Ẩn tất cả các thông báo validation
+        $("#frmQuanLyDuAn").find("span.field-validation-valid").hide();
+
+        // Khởi tạo validator Kendo cho form
+        var validator = $("#frmQuanLyDuAn").kendoValidator({
+        rules: {
+            // Rule cho ThoiGianBatDau
+        
+            // Rule cho ThoiGianKetThuc
+            ruleThoiGianKetThuc: function(input) {
+                if (input.is("[name=ThoiGianKetThuc]") && $("#IsCanhBaoHetHan").is(":checked")) {
+                    if (input.val() == "") {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        },
+        messages: {
+          
+            ruleThoiGianKetThuc: "Thời gian kết thúc là bắt buộc"   // Thông báo cho ThoiGianKetThuc
+        }
+    }).data("kendoValidator");
+
+          
+        // Sự kiện click vào nút "Lưu và thêm"
+        $("#btnLuuTiep").click(function (event) {
+            event.preventDefault();  // Ngừng hành động mặc định của button
+            if (validator.validate()) {
+                LuuThongTin(true);  // Gọi hàm LuuThongTin với tham số true
+            }
+        });
+          
+        // Lắng nghe sự thay đổi của checkbox có class 'form-check-input'
+        // $('.form-check-input').change(function () {
+        //     // Kiểm tra nếu checkbox được chọn
+        //     if ($(this).prop('checked')) {
+        //         // Hiển thị thông báo lỗi khi checkbox được chọn
+        //         $('#ThoiGianKetThuc_validationMessage').css('display', 'block');  // Hiển thị thông báo
+        // $('#ThoiGianBatDau_validationMessage').css('display', 'block');   // Hiển thị thông báo
+        //     } else {
+        //         // Ẩn thông báo lỗi khi checkbox không được chọn
+        //          $('#ThoiGianKetThuc_validationMessage').css('display', 'none');  // Ẩn thông báo
+        // $('#ThoiGianBatDau_validationMessage').css('display', 'none');   // Ẩn thông báo
+        //     }
+        // });
+
+        // Sự kiện submit form
+        $("#frmQuanLyDuAn").submit(function (event) {
+         
+
+     
+  
+              event.preventDefault();
+                LuuThongTin(false);
+            
+        });
+
+        // Hàm lưu thông tin
+        function LuuThongTin(isThemTiep = false) {
+            // Lấy giá trị của checkbox "Cảnh báo hết hạn" (true hoặc false)
+            var isCanhBaoHetHanChecked = $('#IsCanhBaoHetHan').prop('checked');
+
+            // Cập nhật giá trị cho input ẩn IsCanhBaoHetHan trước khi gửi dữ liệu
+            $('#frmQuanLyDuAn').find('input[name="IsCanhBaoHetHan"]').val(isCanhBaoHetHanChecked);
+
+            // Hiển thị loading element
+            showLoadingElement(true, 'modalLoading');
+
+            // Thực hiện gửi dữ liệu bằng Ajax
+            $.ajax({
+                url: '/QuanLyDuAn/Post',  // URL để gửi dữ liệu
+                type: "POST",  // Phương thức POST
+                data: $("#frmQuanLyDuAn").serialize(),  // Lấy dữ liệu từ form
+                success: function (data) {
+                    // Xử lý kết quả trả về
+                    if (data.IsSuccess) {
+                        if (data.Data) {
+                            // Hiển thị thông báo thành công khi cập nhật
+                            showSuccessNotify(updateSuccess);
+                            closePopUp();  // Đóng modal
+                        } else {
+                            // Hiển thị thông báo thành công khi thêm mới
+                            showSuccessNotify(addSuccess);
+                            if (isThemTiep) {
+                                // Nếu chọn "Lưu và thêm", hiển thị lại popup
+                                var url = '@Url.Action("ShowInsertPopup", "QuanLyDuAn")';
+                                reloadModal(url);
+                            } else {
+                                // Nếu không, đóng modal
+                                closePopUp();
+                            }
+                        }
+                    } else {
+                        // Hiển thị thông báo lỗi nếu thất bại
+                        showErrorNotify(data.Message);
+                    }
+                }
+            });
+
+            // Ẩn loading element sau khi hoàn thành
+            showLoadingElement(false, 'modalLoading');
+        }
+    });
+
+    // Hàm đóng popup và làm mới grid
+    function closePopUp() {
+        refreshGrid();  // Làm mới dữ liệu trong grid
+        hideModal();  // Ẩn modal
+    }
+</script>
+
+

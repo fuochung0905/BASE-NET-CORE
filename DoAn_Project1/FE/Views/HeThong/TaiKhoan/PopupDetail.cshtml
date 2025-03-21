@@ -1,0 +1,489 @@
+﻿@model MODELS.HETHONG.TAIKHOAN.Requests.PostTaiKhoanRequest
+@{
+    string beAddress = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("BEFileUrl").Value.ToString();
+}
+<style>
+    .profile-pic {
+        color: transparent;
+        transition: all 0.3s ease;
+        display: flex;
+        /*justify-content: center;*/
+        align-items: center;
+    }
+
+    .profile-pic input {
+        display: none;
+    }
+
+    .profile-pic img {
+        position: absolute;
+        object-fit: cover;
+        width: 165px;
+        height: 165px;
+        box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.35);
+        border-radius: 100px;
+        z-index: 0;
+    }
+
+    .profile-pic .-label {
+        cursor: pointer;
+        height: 165px;
+        width: 165px;
+        margin: 0;
+    }
+
+    .profile-pic:hover .-label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 10000;
+        color: #fafafa;
+        transition: background-color 0.2s ease-in-out;
+        border-radius: 100px;
+        margin: 0;
+        height: 165px;
+        width: 165px;
+    }
+
+    .profile-pic span {
+        display: inline-flex;
+        padding: 0.2em;
+        height: 2em;
+    }
+
+    .profile-pic .k-dropzone, .profile-pic .k-upload-files {
+        display: none;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $("#MatKhau").attr("autocomplete", "new-password");//Fix lỗi googleChorme autofill input password
+
+        $("#frmTaiKhoan").find("span.field-validation-valid").hide();
+        //validate
+        var validator = $("#frmTaiKhoan").kendoValidator().data("kendoValidator");
+        //Thêm tiếp
+        $("#btnLuuTiep").click(async function (event) {
+            event.preventDefault();
+            if (validator.validate()) { //nhập hợp lệ
+                LuuThongTin(true);
+            }
+        });
+
+        //Lưu
+        $("#frmTaiKhoan").submit(async function (event) {
+            event.preventDefault();
+            if (validator.validate()) { //Nhập hợp lệ
+                LuuThongTin(false);
+            }
+        });
+
+        async function LuuThongTin(isThemTiep = false) {
+            showLoadingElement(true, 'modalLoading');
+            //UPLOAD FILE
+            await uploadFile();
+            //END UPLOAD FILE
+            var datapost = $("#frmTaiKhoan").serializeArray();
+            let hoVaTen = $("#HoVaTen").data("kendoTextBox").value();
+            let splitted = hoVaTen.split(" ");
+            let HoLot = splitted.length > 1 ? splitted.slice(0, -1).join(" ") : "";
+            let Ten = splitted[splitted.length - 1];
+            datapost.push({ name: "HoLot", value: HoLot });
+            datapost.push({ name: "Ten", value: Ten });
+            //datapost.push({name: "HuyenId", value: $("#HuyenId").data("kendoDropDownList").value()});
+            //datapost.push({name: "XaId", value: $("#XaId").data("kendoDropDownList").value()});
+            $.ajax({
+                url: '/TaiKhoan/Post',
+                type: "POST",
+                data: $.param(datapost),
+                success: function (data) {
+                    if (data.Data) {
+                        showSuccessNotify(updateSuccess);
+                    }
+                    else {
+                        showSuccessNotify(addSuccess);
+                    }
+                    if (isThemTiep) {
+                        var url = '@Url.Action("ShowInsertPopup", "TaiKhoan")';
+                        reloadModal(url);
+                    } else {
+                        closePopUp();
+                    }
+                }
+            });
+            showLoadingElement(false, 'modalLoading');
+        }
+
+    });
+
+    function closePopUp() {
+        refreshGrid();
+        hideModal();
+    }
+
+    //Start Load img
+    //Preview & Update an image before it is uploaded
+    function readURL() {
+        var input = document.getElementById("uploadFileBase");
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#img_AnhDaiDien').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function uploadFile() {
+        //UPLOAD FILE
+        var upload = $("#uploadFileBase").data("kendoUpload");
+        var files = upload.getFiles();
+
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                data.append("FolderName", $("#FolderUpload").val());
+                if (files.length > 0) {
+                    for (var x = 0; x < files.length; x++) {
+                        data.append("file", files[x].rawFile);
+                    }
+                }
+
+                return $.ajax({
+                    type: "POST",
+                    url: '/Home/UploadFile',
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    success: function (data) {
+                        return;
+                    }
+                });
+            } else {
+                showErrorNotify("Vui lòng cập nhật trình duyệt web của bạn!");
+            }
+        }
+    }
+
+    function setReadonlyThongTinNhanSu(value = true)
+    {
+        $("#Email").data("kendoTextBox").readonly(value);
+        $("#SoDienThoai").data("kendoTextBox").readonly(value);
+        $("#PhongBanId").data("kendoDropDownList").readonly(value);
+        $("#HoLot").data("kendoTextBox").readonly(value);
+        $("#Ten").data("kendoTextBox").readonly(value);
+        $("#NgaySinh").data("kendoDatePicker").readonly(value);
+        $("#GioiTinh").data("kendoDropDownList").readonly(value);
+    }
+    function setEmptyThongTinNhanSu()
+    {
+        $("#Email").val("");
+        $("#SoDienThoai").val("");
+        $("#PhongBanId").data("kendoDropDownList").value("");
+        $("#HoLot").val("");
+        $("#Ten").val("");
+        $("#NgaySinh").data("kendoDatePicker").value("");
+        $("#GioiTinh").data("kendoDropDownList").value("");
+        $('#img_AnhDaiDien').attr('src', "@beAddress" + "Files/no-image.png");
+    }
+
+    function donViId_onChange() {
+        $("#PhongBanId").data("kendoDropDownList").dataSource.read();
+    }
+</script>
+<div class="modal-content" id="modalLoading">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmTaiKhoan" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            @if (!Model.IsEdit)
+            {
+                <h5 class="modal-title">Thêm mới tài khoản</h5>
+            }
+            else
+            {
+                <h5 class="modal-title">Cập nhật tài khoản</h5>
+            }
+            <button type="button" class="close" onclick="closePopUp();">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.IsEdit)
+            @Html.HiddenFor(model => model.AnhDaiDien)
+            @Html.HiddenFor(model => model.FolderUpload)
+            <div class="row">
+                <div class="col-md-6">
+                    <label>
+                        Tên đăng nhập <span class="text-danger">*</span>
+                    </label>
+                    @if (Model.IsEdit)
+                    {
+                        @Html.HiddenFor(model => model.UserName)
+                        @(Html.Kendo().TextBox().Name("txtUserName").Value(Model.UserName).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    }
+                    else
+                    {
+                        @(Html.Kendo().TextBoxFor(m => m.UserName).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                    }
+                </div>
+                <div class="col-md-6">
+                    <label>
+                        Mật khẩu <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().TextBoxFor(m => m.MatKhau).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;", @type = "Password", autocomplete = "chrome-off" }))
+                    @Html.ValidationMessageFor(model => model.MatKhau, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>
+                        Họ và tên <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().TextBox()
+                        .Name("HoVaTen")
+                        .Value(Model.HoLot + " " + Model.Ten)
+                        .HtmlAttributes(new { @class = "form-control",
+                            @style = "width:100%;  max-width:none;",
+                            required = "",
+                            validationMessage = "Họ và tên bắt buộc nhập"}))
+                </div>
+                <div class="col-md-6">
+                    <label>
+                        Ngày sinh <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().DatePickerFor(m => m.NgaySinh).Format("dd/MM/yyyy")
+                        .HtmlAttributes(new
+                        {
+                            style = "width:100%;  max-width:none;",
+                            data_val_date = "Ngày sinh không đúng định dạng!",
+                        }))
+                    @Html.ValidationMessageFor(model => model.NgaySinh, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>
+                        Email <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().TextBoxFor(m => m.Email).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>
+                        Số điện thoại <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().TextBoxFor(m => m.SoDienThoai).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.SoDienThoai, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>
+                        Đơn vị <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().DropDownListFor(m => m.DonViId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                            .Custom()
+                            .Transport(transport => transport
+                                .Read(read =>
+                                {
+                                    read.Action("GetList_Combobox", "DonVi");
+                                })))
+                        .Events(e => e.Change("donViId_onChange"))
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.DonViId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>
+                        Phòng ban <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().DropDownListFor(m => m.PhongBanId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                            .Custom()
+                            .Transport(transport => transport
+                                .Read(read =>
+                                {
+                                    read.Action("GetList_ComboboxWithDonVi", "PhongBan").Data(@<text>
+                                        function(e) {
+                                            return {
+                                                donViId: $("#DonViId").data("kendoDropDownList").value()
+                                            }
+                                        }
+                                    </text>);
+                                })
+                            )
+                            .ServerFiltering(true)
+                        )
+                        .CascadeFrom("DonViId")
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.PhongBanId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>
+                        Vai trò <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().DropDownListFor(m => m.VaiTroId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                            .Custom()
+                            .Transport(transport => transport
+                                .Read(read =>
+                                {
+                                    read.Action("GetList_Combobox", "VaiTro");
+                                })))
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.VaiTroId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Người quản lý</label>
+                    @(Html.Kendo().DropDownListFor(m => m.NguoiQuanLyId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .OptionLabel("Không").Filter(FilterType.Contains)
+                        .DataSource(source => source
+                            .Custom()
+                            .Transport(transport => transport
+                                .Read(read =>
+                                {
+                                    read.Action("GetComboBoxNguoiQuanLy", "TaiKhoan");
+                                })))
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.NguoiQuanLyId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">                
+                <div class="col-md-6">
+                    <label>Loại tài khoản <span class="text-danger">*</span></label>
+                    @(Html.Kendo().DropDownListFor(m => m.LoaiTaiKhoanId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                            .Custom()
+                            .Transport(transport => transport
+                                .Read(read =>
+                                {
+                                    read.Action("GetList_Combobox", "LoaiTaiKhoan");
+                                })
+                            )
+                        )
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.LoaiTaiKhoanId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Chức vụ<span class="text-danger">*</span></label>
+                    @(Html.Kendo().DropDownListFor(m => m.ChucVuId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetList_Combobox", "ChucVu");
+                        })
+                        )
+                        )
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.ChucVuId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Trạng thái</label>
+                    @(Html.Kendo().DropDownListFor(m => m.IsActived)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .BindTo(SYS_CONFIG.TRANG_THAI)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.IsActived, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>
+                        Giới tính
+                    </label>
+                    @(Html.Kendo().DropDownListFor(m => m.GioiTinh)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .BindTo(SYS_CONFIG.GIOI_TINH)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.GioiTinh, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="profile-userpic">
+                    <div class="profile-pic">
+                        <label class="-label" for="uploadFileBase">
+                            <span class="glyphicon glyphicon-camera"></span>
+                            <span>Đổi ảnh đại diện</span>
+                        </label>
+                        @(
+                            Html.Kendo().Upload()
+                            .Name("uploadFileBase")
+                            .Events(events => events.Select("readURL"))
+                            .Messages(m => m.InvalidFileExtension("Tệp không đúng định dạng"))
+                            .Messages(m => m.InvalidMaxFileSize("Tệp vượt quá kích thước quy định"))
+                            .Messages(m => m.StatusFailed("Đã xảy ra lỗi khi tải lên"))
+                            .Messages(m => m.StatusUploaded("Hoàn thành"))
+                            .Messages(m => m.StatusUploading("Đang tải lên"))
+                            .Messages(m => m.HeaderStatusUploaded("Hoàn thành"))
+                            .Messages(m => m.HeaderStatusUploading("Đang tải lên"))
+                            )
+                        @if (!string.IsNullOrEmpty(Model.AnhDaiDien))
+                        {
+                            <img class="img_cover img-thumbnail img_cover" id="img_AnhDaiDien" src="@(beAddress + Model.AnhDaiDien)" alt="Ảnh đại diện" width="200" />
+                        }
+                        else
+                        {
+                            <img class="img_cover img-thumbnail img_cover" id="img_AnhDaiDien" src="@(beAddress + "Files/no-image.png")" alt="Ảnh đại diện" width="200" />
+                        }
+                    </div>
+                </div>
+            </div>
+            @*<div class="row">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label my-0-hiday">
+                        Ảnh đại diện
+                    </label>
+                    <div class="col-sm-10">
+                        @Html.Partial("~/Views/Shared/Components/UploadFileBase.cshtml",
+                        new MODELS.BASE.MODELUploadFileBase {
+                            FileSizeLimit = 10, //Megabyte (Giới hạn độ lớn file)
+                            FileValidate = MODELS.COMMON.CommonConst._fileHinhAnhValid, //Kiểm tra định dạng file
+                            FileValidateText = MODELS.COMMON.CommonConst._fileHinhAnhValidString, //Text hiển thị định dạng file cho phép
+                            MultiFile = false, //Chọn nhiều file hay không
+                            ListTepDinhKem = new List<MODELS.BASE.MODELTepDinhKem>() //Hiển thị danh sách tệp đính kèm hiện có
+                        })
+                    </div>
+                </div>
+            </div>*@
+        </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" onclick="closePopUp();"><i class="fas fa-times-square"></i> Hủy</button>
+            <div>
+                <button type="submit" id="btnLuu" class="btn btn-success"><i class="fas fa-check-square"></i> Lưu</button>
+                @if (!Model.IsEdit)
+                {
+                    <button type="button" class="btn btn-success" id="btnLuuTiep"><i class="fas fa-check-square"></i> Lưu và thêm </button>
+                }
+            </div>
+        </div>
+    }
+</div>

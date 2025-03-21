@@ -1,50 +1,274 @@
-﻿<!DOCTYPE html>
+﻿﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@{
+    string hostNotify = Configuration.GetValue<string>("HostNotify") ?? string.Empty;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - FE</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/FE.styles.css" asp-append-version="true" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>QUẢN LÝ DỰ ÁN UTC2</title>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/jquery-ui.js"></script>
+	<!-- Start ADMINLTE -->
+	<link rel="icon" type="image/x-icon" href="~/icon.ico?v=2">
+    <link rel="stylesheet" href="~/css/fonts.css">
+    <link rel="stylesheet" href="~/theme/dist/css/adminlte.css">
+    
+	<link rel="stylesheet" href="~/theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
 
+	<link href="~/lib/jquery-validation/dist/jquery.validate.js" rel="stylesheet" />
+	<link href="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js" rel="stylesheet" />
+	<!-- End ADMINLTE -->
+	<!-- Start MY SITE -->
+	<link href="~/lib/fontawesome-pro-5.15.3-web/css/all.min.css" rel="stylesheet" />
+	<script src="~/lib/moment/moment.js"></script>
+	<script src="~/js/myscript.js?v=3"></script>
+    <link href="~/css/root.css" rel="stylesheet" />
+	<link href="~/css/mystyle.css?v=13" rel="stylesheet" />
+    <link href="~/css/mobile.css" rel="stylesheet" />
+    <link href="~/lib/jquery-idle-timeout/jquery-ui.css" rel="stylesheet" />
+    <link href="~/lib/jquery-idle-timeout/jquery-ui.structure.css" rel="stylesheet" />
+    <link href="~/lib/jquery-idle-timeout/jquery-ui.theme.css" rel="stylesheet" />
+	<!-- End MY SITE -->
+	 @* KENDO UI *@
+	<link href="~/lib/kendo/css/kendo.common-fiori.min.css" rel="stylesheet" type="text/css" />
+	<link href="~/lib/kendo/css/kendo.fiori.min.css" rel="stylesheet" type="text/css" />
+	<script src="~/lib/kendo/js/kendo.all.min.js"></script>
+	<script src="~/lib/kendo/js/kendo.aspnetmvc.min.js"></script>
+	<script src="~/lib/kendo/js/jszip.min.js"></script>
+	<script src="~/js/kendo.modernizr.custom.js"></script>
+	<script src="~/lib/kendo/js/cultures/kendo.culture.vi-VN.min.js"></script>
+	<script src="~/lib/kendo/js/messages/kendo.messages.vi-VN.min.js"></script>
+	<script src="~/js/signalr/dist/browser/signalr.js"></script>
+	<script type="text/javascript">
+	    var extension = "";
+	    var xoFunc = xoFunc || {};   //global func
+	    $(document).ready(function () {
+	        kendo.culture("vi-VN");
+	    })
+	</script> <!--js-->
+	 @* END KENDO UI *@
+	<style>
+	   
+	</style>
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FE</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+
+<body class="hold-transition sidebar-mini layout-fixed layout-footer-fixed">
+    @await Component.InvokeAsync("Header", null)
+    <div id="pageLoading" class="wrapper">
+        
+        @await Component.InvokeAsync("LeftMenu", null)
+        <div id="idpagebodywrapper" class="content-wrapper">
+            @RenderBody()
+        </div>
+        <footer class="main-footer">
+            <strong>Quản lý dự án UTC2</strong>
+            <div class="float-right d-none d-sm-inline-block">
+            
+            </div>
+        </footer>
+    </div>
+    <div class="modal fade" id="idle-timeout-dialog" style="width:100% !important;" data-backdrop="static">
+        <div class="modal-dialog modal-small">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Phiên làm việc bạn sắp hết thời hạn.</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <i class="fa fa-warning font-red"></i> Phiên làm việc sẽ khóa trong
+                        <span id="idle-timeout-counter"></span> giây.
+                    </p>
+                    <p> Bạn có muốn tiếp tục giữ phiên làm việc không? </p>
+                </div>
+                <div class="modal-footer">
+                    <button id="idle-timeout-dialog-logout" type="button" class="btn dark btn-outline sbold uppercase">Không, Hãy đăng xuất</button>
+                    <button id="idle-timeout-dialog-keepalive" type="button" class="btn green btn-outline sbold uppercase" data-dismiss="modal">Có, Tiếp tục làm việc</button>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - FE - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- jQuery UI 1.11.4 -->
+    @* <script src="~/theme/plugins/jquery-ui/jquery-ui.min.js"></script> *@
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+   @*  <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script> *@
+    <!-- Bootstrap 4 -->
+    <script src="~/theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- overlayScrollbars -->
+    <script src="~/theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/theme/dist/js/adminlte.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <link rel="stylesheet" href="~/theme/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <link rel="stylesheet" href="~/theme/plugins/toastr/toastr.min.css">
+    <script src="~/theme/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/theme/plugins/toastr/toastr.min.js"></script>
+    <script src="~/theme/plugins/jquery.blockui.min.js"></script>
+    <script src="~/js/site.js?v=16"></script>
+    <script src="~/lib/jquery-idle-timeout/store.min.js"></script>
+    <script src="~/lib/jquery-idle-timeout/jquery-idletimeout.js"></script>
+
+    <!-- POPUP KENDO WINDOW -->
+    <div id="popupWindowModal"></div>
+    <!-- END POPUP KENDO WINDOW -->
+    <div class="modal fade" id="modal-systemModal" role="basic" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" id='modelContainer-systemModal'>
+
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+        <!-- /.modal-dialog -->
+    </div>
+    <script id="treeview-template" type="text/kendo-ui-template">
+        # if(item.hasChildren) { #
+            <img class="k-image" alt="" src="/images/fopen_sm.png" />
+        # } else { #
+            <img class="k-image" alt="" src="/images/fclose_sm.png" />
+        # } #
+        #= item.Name #
+    </script>
+    <script>
+        var connection = new signalR.HubConnectionBuilder().withUrl("@hostNotify" + "/notificationHub").build();
+        connection.on("ReceiveMessage", function (message) {
+            const obj = JSON.parse(message);
+            if (obj.Action == "LOGOUT" && "@User.Identity.Name" == obj.NguoiNhan) {
+                window.location.href = "/Account/Logout";
+            }
+            if (obj.Action == "RELOAD") {
+                SignalRLoadRealtime();
+            }
+            if (obj.NguoiNhan == "ALL_USER") {
+                showToast(obj);
+            } else if ("@User.Identity.Name" == obj.NguoiNhan) {
+                showToast(obj);
+            }
+            if (obj) {
+            triggerNewNotificationEvent(obj);
+            }
+        });
+        connection.start();
+            function triggerNewNotificationEvent(obj) {
+            GetNotificationCount();
+            alert("Thông báo mới từ " + obj.NguoiGui + ": " + obj.NoiDung);
+        }
+    </script>
+    <script>
+
+
+        $(document).ready(function () {
+            showLoading(false);
+
+            loadSessionTimer('@FE.Helpers.Common.SessionTime');
+
+            $('input').attr('autocomplete', 'off');
+
+            //process reader dialog
+            var dialogReader = $("#popupWindowModal");
+            dialogReader.kendoWindow().data("kendoWindow").close();
+
+           
+        })
+
+        function SignalRLoadRealtime() {
+            //SET SESSION TIMER
+            $.ajax({
+                url: '/CaiDatBaoMat/UpdateSessionTime',
+                type: "POST",
+                success: function (data) {
+                    if (data.IsSuccess) {
+                        loadSessionTimer(data.Data);
+                    }
+                }
+            });
+        }
+
+        function loadSessionTimer(time) {
+            $(document).idleTimeout({
+                redirectUrl: '@Url.Action("Logout", "Account")', // redirect to this url
+                idleTimeLimit: time * 60,
+                activityEvents: 'click keypress scroll wheel mousewheel',
+                dialogDisplayLimit: 30,
+                sessionKeepAliveTimer: false,
+                dialogTitle: 'Cảnh báo phiên làm việc', // also displays on browser title bar
+                dialogText: 'Do bạn không thao tác trên phần mềm, nên phiên làm việc đã hết hạn.',
+                dialogTimeRemaining: 'Thời gian đăng xuất',
+                dialogStayLoggedInButton: 'Ở lại',
+                dialogLogOutNowButton: 'Đăng xuất',
+            });
+        }
+
+        function redirectToPage(action, controller, header, sub) {
+            localStorage.setItem("itemActive", action + "_" + controller);
+            localStorage.setItem("headerActive", header);
+            localStorage.setItem("subActive", sub);
+            var href = '@Url.Action("_Action_", "_Controller_")';
+            href = href.replace('_Action_', action);
+            href = href.replace('_Controller_', controller);
+            window.location.href = href;
+        }
+
+        //function menuClose() {
+        //    document.body.classList.add(
+        //        'page-sidebar-closed'
+        //    );
+        //    $("#ulMenu").addClass("page-sidebar-menu-closed");
+        //}
+
+        //function menuOpen() {
+        //    document.body.classList.remove(
+        //        'page-sidebar-closed'
+        //    );
+        //    $("#ulMenu").removeClass("page-sidebar-menu-closed");
+        //}
+
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        //POPUP DETAIL
+        function taiTepDinhKemPopup(url) {
+            //dowload file
+            window.location.href = '@Url.Action("Download", "Home")?filePath=' + decodeURI(url);
+        }
+
+        //show file đính kèm
+        function xemTepDinhKemPopup(url) {
+            //var path = "https://localhost:44318/Home/Index?documentUrl=" + url
+            //$('#viewer').attr('src', path)
+
+            var dialog = $("#popupWindowModal").data("kendoWindow").center().open();
+            dialog.refresh({
+                url: '@Url.Action("ShowPopupDocumentReader", "Home")',
+                data: {
+                    documentUrl: decodeURI(url)
+                }
+            });
+            dialog.title("Tệp " + decodeURI(url.split(/(\\|\/)/g).pop()));
+            dialog.setOptions({
+                actions: ["close"]
+            });
+            dialog.maximize();
+
+        }
+
+        Date.prototype.toJSON = function () {
+            //return moment(this).format("YYYY-MM-DDTHH:mm:ss");
+
+            var utcDate = new Date(Date.UTC(
+              this.getFullYear(),
+              this.getMonth(),
+              this.getDate(),
+              this.getHours(),
+              this.getMinutes(),
+              this.getSeconds(),
+              this.getMilliseconds()
+            ));
+            return utcDate.toISOString();
+        }
+    </script>
+
 </body>
 </html>

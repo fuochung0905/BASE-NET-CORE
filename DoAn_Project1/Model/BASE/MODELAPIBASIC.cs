@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Model.BASE
 {
-    public class MODELAPIBASIC
+    public class MODELAPIBasic
     {
         public bool Success { get; set; }
         public int StatusCode { get; set; }

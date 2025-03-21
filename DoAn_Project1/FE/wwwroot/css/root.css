@@ -1,0 +1,170 @@
+:root {
+    --mau-chinh: #3141A5;
+    --mau-avatar-text:#A6A6A6;
+    --mau-title-1:#e45252;
+    --mau-bg:#D1D1D1;
+    --mau-title-chon:#F86568;
+    --mau-border:#e8eaed;
+    --mau-breadcrum:#2d78ba;
+    --mau-slidebar:#f8f8f8;
+    --mau-slidebar-text:#A6A6A6;
+    --mau-navbar:#A6A6A6;
+    --bg-color: #f8f9fa;
+
+    
+    --accent-color: #F4C131;  /* Vàng kim thịnh vượng */
+    --background-color: #D1D1D1; /* Xám bạc hiện đại */
+    --navbar-color: #003141; /* Xanh đậm ngân hàng */
+    --text-light: #777; /* Màu chữ phụ */
+    
+    --hover-color: #41B1E1; /* Xanh sáng tương tác */
+    --button-primary: #3141A5; /* Xanh dương ngân hàng */
+    --button-secondary: #C1C1C1; /* Xám bạc sang trọng */
+    --brand-color: #F4C131; /* Vàng tài lộc */
+    --footer-bg: #1F3141; /* Xanh navy trầm */
+    --footer-text: #C1C1C1; /* Xám bạc nhạt */
+
+
+     
+     --primary-color: #3141A5; /* Xanh ngân hàng */
+     --secondary-color: #41B1E1; /* Xanh sáng tương tác */
+     --selected-color: #3151B1; /* Xanh đậm */
+     --text-color: #313131; /* Đen than chì */
+     --border-color: #f9f9f9; /* Xám bạc */
+     --row-even-bg: #E1E1E1; /* Xám bạc nhạt */
+     --row-odd-bg: #FFFFFF; /* Trắng */
+     --pager-bg: #C1C1C1; /* Xám bạc */
+ 
+     /* Màu nền */
+     --background-color: #F5F5F5; /* Xám nhạt dịu mắt */
+     --navbar-bg: #3141A5; /* Xanh ngân hàng */
+     --footer-bg: #313131; /* Đen than chì */
+
+     --status-new: #41B1E1; /* Bright Blue - Fresh and active */
+     --status-assigned: #41B119; /* Silver Gray - Assigned but not started */
+     --status-in-progress: #3151B1; /* Deep Blue - Work in progress */
+     --status-completed: #3141A5; /* Banking Blue - Task completed */
+     --status-pending-approval: #F4C131; /* Prosperity Gold - Awaiting approval */
+     --status-error: #E45153; /* Error Red - Task failed or encountered issues */
+     --status-overdue: #C14141; /* Deep Red - Deadline missed, requires attention */    
+
+     /* Màu button */
+    --button-primary-bg: #3141A5; /* Xanh ngân hàng */
+    --button-primary-hover: #3151B1; /* Xanh đậm */
+    --button-secondary-bg: #41B1E1; /* Xanh sáng */
+    --button-secondary-hover: #3191C1; /* Xanh sáng hơn */
+
+    --nav-link-active: #E45252; /* Đỏ năng lượng */
+--nav-link-active-hover: #C14141; /* Đỏ trầm hơn khi hover */
+--nav-link-active-text: #FFFFFF; /* Chữ trắng nổi bật */
+}
+
+/* Toàn bộ trang */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--navbar-color);
+    color: white;
+    padding: 12px 20px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+}
+
+.navbar a:hover {
+    background-color: var(--hover-color);
+    color: white;
+}
+
+/* Tiêu đề */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Button */
+.button {
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: background 0.3s ease-in-out;
+}
+
+.button-primary {
+    background-color: var(--button-primary);
+    color: white;
+}
+
+.button-primary:hover {
+    background-color: var(--hover-color);
+}
+
+.button-secondary {
+    background-color: var(--button-secondary);
+    color: black;
+}
+
+.button-secondary:hover {
+    background-color: var(--accent-color);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--navbar-color);
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+
+/* Box thông tin */
+.info-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid var(--primary-color);
+}
+
+/* Hover hiệu ứng */
+a:hover, .button:hover {
+    transition: 0.3s;
+    opacity: 0.9;
+}
+
+html {
+    font-family: 'Roboto Condensed', sans-serif !important;
+    
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  }
+body {
+    margin: 0;
+    
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text-color);
+    text-align: left;
+  
+    font-family: 'Roboto Condensed', sans-serif !important;
+    /* color:var(--text-color); */
+    font-size: 13px !important;
+    background-color: var(--bg-color);
+  }
+  a:hover, .button:hover {
+    transition: 0.3s;
+    opacity: 0.9;
+}
+

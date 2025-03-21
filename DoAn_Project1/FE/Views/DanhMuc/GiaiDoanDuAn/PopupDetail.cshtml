@@ -1,0 +1,132 @@
+@model MODELS.DANHMUC.GIAIDOANDUAN.Requests.PostGiaiDoanDuAnRequest
+
+<div class="modal-content" id="modalLoading">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmGiaiDoanDuAn", @class = "forms-sample" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            @if (!Model.IsEdit)
+            {
+                <h4 class="modal-title">Thêm mới giai đoạn dự án</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Cập nhật giai đoạn dự án</h4>
+            }
+            <button type="button" class="close" onclick="closePopUp();" aria-label="Close" data-bs-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(model => model.IsEdit)
+            @Html.HiddenFor(model => model.Id)
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>
+                        Mã  <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().TextBoxFor(m => m.Ma).HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                    @Html.ValidationMessageFor(model => model.Ma, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>
+                        Tên gọi <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().TextBoxFor(m => m.TenGoi).HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                    @Html.ValidationMessageFor(model => model.TenGoi, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>
+                        Trạng thái
+                    </label>
+                    @(Html.Kendo().DropDownListFor(m => m.IsActived)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .BindTo(SYS_CONFIG.TRANG_THAI)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.IsActived, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" onclick="closePopUp();"><i class="fas fa-times-square"></i> Hủy</button>
+            <div>
+                <button type="submit" id="btnLuu" class="btn btn-success"><i class="fas fa-check-square"></i> Lưu</button>
+                @if (!Model.IsEdit)
+                {
+                    <button type="button" class="btn btn-success" id="btnLuuTiep"><i class="fas fa-check-square"></i> Lưu và thêm </button>
+                }
+            </div>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $('#frmGiaiDoanDuAn').on('shown.bs.modal', function () { $(document).off('focusin.modal'); });
+
+        $("#frmGiaiDoanDuAn").find("span.field-validation-valid").hide();
+        //validate
+        var validator = $("#frmGiaiDoanDuAn").kendoValidator().data("kendoValidator");
+        //Thêm tiếp
+        $("#btnLuuTiep").click(function (event) {
+            event.preventDefault();
+            if (validator.validate()) { //nhập hợp lệ
+                showLoadingElement(true, 'modalLoading');
+                $.ajax({
+                    url: '/GiaiDoanDuAn/Post',
+                    type: "POST",
+                    data: $("#frmGiaiDoanDuAn").serialize(),
+                    success: function (data) {
+                        if (data.IsSuccess) {
+                            showSuccessNotify(addSuccess);
+                            var url = '@Url.Action("ShowInsertPopup", "GiaiDoanDuAn")';
+                            reloadModal(url);
+                        }
+                        else {
+                            showErrorNotify(data.Message);
+                        }
+                    }
+                });
+                showLoadingElement(false, 'modalLoading');
+            }
+        });
+
+        //Lưu
+        $("#frmGiaiDoanDuAn").submit(function (event) {
+            event.preventDefault();
+            if (validator.validate()) { //Nhập hợp lệ
+                showLoadingElement(true, 'modalLoading');
+                $.ajax({
+                    url: '/GiaiDoanDuAn/Post',
+                    type: "POST",
+                    data: $("#frmGiaiDoanDuAn").serialize(),
+                    success: function (data) {
+                        if (data.IsSuccess) {
+                            if (data.Data)
+                                showSuccessNotify(updateSuccess);
+                            else
+                                showSuccessNotify(addSuccess);
+                            closePopUp();
+                        }
+                        else {
+                            showErrorNotify(data.Message);
+                        }
+                    }
+                });
+                showLoadingElement(false, 'modalLoading');
+            }
+        });
+
+    });
+
+    function closePopUp() {
+        refreshGrid();
+        hideModal();
+    }
+</script>
+
+
+
+

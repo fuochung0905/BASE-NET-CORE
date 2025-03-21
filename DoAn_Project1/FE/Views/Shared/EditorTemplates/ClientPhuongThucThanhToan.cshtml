@@ -1,0 +1,8 @@
+﻿@model int?
+
+@(Html.Kendo().DropDownListFor(m => m)
+    .DataValueField("Value")
+    .DataTextField("Text")
+    .BindTo(SYS_CONFIG.PHUONG_THUC_THANH_TOAN)
+    .AutoWidth(true)
+)

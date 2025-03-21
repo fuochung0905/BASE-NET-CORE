@@ -1,0 +1,936 @@
+@model MODELS.DUAN.QUANLYCONGVIEC.Requests.PostQuanLyCongViecRequest
+
+<script>
+    $(document).ready(function () {
+        //process reader dialogLoi
+        var dialogLoiReader = $("#popupLoiWindowModal");
+        dialogLoiReader.kendoWindow({
+            actions: ["Close"],
+            draggable: false,
+            modal: true,
+            scrollable: true,
+            close: function (e) {
+                //isLoading = true; //active loading when popup close
+                kendo.ui.progress(this.element, false);
+                $("#popupLoiWindowModal").empty();   //clear content html
+            },
+            refresh: function () {
+                //open center screen
+                this.center();
+            }
+        }).data("kendoWindow").close();
+        calculateTongThoiGianThucHien();
+
+        $('#frmQuanLyCongViec').on('shown.bs.modal', function () { $(document).off('focusin.modal'); });
+
+        $("#frmQuanLyCongViec").find("span.field-validation-valid").hide();
+        //validate
+        var validator = $("#frmQuanLyCongViec").kendoValidator().data("kendoValidator");
+        //Thêm tiếp
+        $("#btnLuuTiep").click(function (event) {
+            event.preventDefault();
+            if (validator.validate()) {
+                LuuThongTin(true);
+            }
+        });
+
+        getListPhanHoi();
+        $("#frmQuanLyCongViec").submit(function (event) {
+            event.preventDefault();
+            if (validator.validate()) {
+                LuuThongTin(false);
+            }
+        });
+
+        async function LuuThongTin(isThemTiep = false) {
+            
+              var listSubTask = [];
+                 if (typeof gridDataSusTask_GetListData === "function") {
+                    listSubTask = gridDataSusTask_GetListData(); 
+                 }           
+           
+            showLoadingElement(true, 'modalLoading');
+            var checkUploadFile = await uploadFile();
+            var isEdit = $('#IsEdit').val();
+            if (checkUploadFile !== undefined) {
+                if (checkUploadFile.IsSuccess === true) {
+                    $('#IsTepDinhKem').val(true);
+                }
+            }
+            if (isEdit === 'True') {    
+                $('#IsTepDinhKem').val(true);
+            }
+            
+            getAttachments();
+             var param = $("#frmQuanLyCongViec").serializeArray();
+            param.push({ name: "Json_ListSubTask",value: JSON.stringify(listSubTask) });
+
+            
+            $.ajax({
+                url: '/QuanLyCongViec/Post',
+                type: "POST",
+                data: param,
+                success: function (data) {
+                    if (data.IsSuccess) {
+                        if (data.Data) {
+                            showSuccessNotify(updateSuccess);
+                            closePopUp();
+                        }
+                        else {
+                            showSuccessNotify(addSuccess);
+                            if (isThemTiep) {
+                                var url = '@Url.Action("ShowInsertPopup", "QuanLyCongViec")';
+                                reloadModal(url);
+                            } else {
+                                closePopUp();
+                            }
+                        }
+                    }
+                    else {
+                        showErrorNotify(data.Message);
+                    }
+                }
+            });
+            showLoadingElement(false, 'modalLoading');
+        }
+    });
+    function calculateTongThoiGianThucHien() {
+        
+        var gridLoi = $("#gridDataLoi").data("kendoGrid");
+        var gridChiTiet = $("#gridDataSubTask").data("kendoGrid");
+        var TongSoGioCong = gridChiTiet?.dataSource.view().map(x => x.SoGioCong).reduce((sum, curr) => sum + curr, 0);
+        $('#SoGioThucTe').data('kendoNumericTextBox')?.value(TongSoGioCong);
+        var TongSoGioThucTe =Number($('#SoGioThucTe').data('kendoNumericTextBox')?.value());
+        var TongSoThoiGianTest = gridLoi?.dataSource.view().map(x => x.SoGioTest).reduce((sum, curr) => sum + curr, 0);
+        $('#ThoiGianTest').data('kendoNumericTextBox')?.value(TongSoThoiGianTest)
+        var thoiGianTest = Number($('#ThoiGianTest').data('kendoNumericTextBox')?.value());
+        var tongThoiGianFixLoi = gridLoi?.dataSource.view().map(x => x.SoGioFix).reduce((prev, curr) => prev + curr, 0);
+        if (tongThoiGianFixLoi === undefined) {
+            tongThoiGianFixLoi = 0;
+        }
+        $('#TongThoiGianThucHien').data('kendoNumericTextBox')?.value(TongSoGioThucTe + thoiGianTest + tongThoiGianFixLoi);
+    }
+    function closePopUp() {
+        refreshGrid();
+        hideModal();
+    }
+
+    function getListIdLoiSelected() {
+        
+        var g = $("#gridDataLoi").getKendoGrid();
+        return g.selectedKeyNames();
+    //var grid = $("#gridDataLoi").data("kendoGrid");
+    // var selectedRow = grid.select(); // Lấy dòng được chọn
+    // var dataUid = selectedRow.attr("data-uid");
+
+    // console.log("UID của dòng được chọn:", dataUid);
+    }
+
+    function gridDataLoiFilter() {
+        filter = {
+            CongViecId: '@Model.Id',
+            //ChiTietCongViecId : '@Model.',    
+            TextSearch: $("#TextSearchLoi").val()
+        }
+        return filter;
+    }
+
+    function congViecGiaiDoanData() {
+        var data = {
+            GiaiDoanId: $("#GiaiDoanId").val()
+        };
+        return data;
+    }
+
+    function congViecLienQuanData() {
+        var data = {
+            DuAnId: $("#DuAnId").val()
+        };
+        return data;
+    }
+
+    function getListPhanHoi() {
+        var url = '@Url.Action("GetList", "PhanHoi_CongViec")' + "?CongViecId=@Model.Id";
+        $.ajax({
+            url: url,
+            type: "GET",
+            success: function (data) {
+                if(data.Errors === null || data.Errors === "") {
+                    showErrorNotify(data.Errors)
+                } else {
+                    $('#listPhanHoi').empty();
+                    var dataHtml = data.map(x => getHtmlFromPhanHoi(x));
+                    if(dataHtml === []) {
+                        $('#listPhanHoi').html("<p>Không có phản hồi</p>");
+                    } else {
+                        $('#listPhanHoi').html(dataHtml);
+                    }
+                }
+            }
+        });
+    }
+
+    function getHtmlFromPhanHoi(item) {
+        let date = new Date(item.NgayGui);
+        let formatted = new Intl.DateTimeFormat("vi-VN", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+        }).format(date);
+        let username = item.PhanHoiByUsername ? `@@${item.PhanHoiByUsername}` : "";
+
+
+        if (item.ParentId === "" || item.ParentId === null) {
+            return `
+                <div class="row border border-secondary" id="${item.Id}" style="background-color: #FFFFFF;">
+                    <div class="p-3 w-100">
+                        <div class="d-flex align-items-center">
+                            <div class="text-dark">
+                                ${item.NguoiGui} - <span class="text-muted">${item.NgayGui}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 ml-auto">
+                                <button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiUpdateEditor('${item.Id}')"><i class="fa fa-edit" aria-hidden="true"></i> Sửa</button>
+                                        <button type="button" class="btn btn-link btn-sm text-danger" onclick="XoaPhanHoi('${item.Id}')"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</button>
+                                <button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiEditor('${item.Id}')"><i class="fa fa-reply" aria-hidden="true"></i> Trả lời</button>
+                            </div>
+                        </div>
+                        <div class="mt-1">
+                            <span><span class= "text-primary text-bold">${username}</span> ${item.NoiDungHtml}</span>
+                        </div>
+                    </div>
+                </div>
+            `
+        } else {
+            return `
+                <div class="row pt-3 ml-5 border border-primary" id="${item.Id}" style="background-color: #FFFFFF;">
+                    <div class="p-3 w-100">
+                        <div class="d-flex align-items-center">
+                            <div class="text-dark">
+                                ${item.NguoiGui} - <span class="text-muted">${item.NgayGui}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 ml-auto">
+                                <button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiUpdateEditor('${item.Id}')"><i class="fa fa-edit" aria-hidden="true"></i> Sửa</button>
+                                    <button type="button" class="btn btn-link btn-sm text-danger" onclick="XoaPhanHoi('${item.Id}')"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</button>
+                                <button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiEditor('${item.Id}')"><i class="fa fa-reply" aria-hidden="true"></i> Trả lời</button>
+                            </div>
+                        </div>
+                        <div class="mt-1">
+                            <span><span class= "text-primary text-bold">${username}</span> ${item.NoiDungHtml}</span>
+                        </div>
+                    </div>
+                </div>
+            `
+        }
+    }
+
+    function showPhanHoiEditor(parentId) {
+        var commentContainer = $('#SubCommentContainer');
+        var parentElement = $('#' + parentId).parent();
+        commentContainer.attr('data-parent-id', parentId);
+        parentElement.append(commentContainer);
+        commentContainer.show();
+        var editor = $("#SubCommentEditor").data("kendoEditor");
+        if (!editor) {
+            $("#SubCommentEditor").kendoEditor();
+            editor = $("#SubCommentEditor").data("kendoEditor");
+        }
+
+        if (editor) {
+            editor.refresh();
+        } else {
+            console.error("Kendo Editor not found for #SubCommentEditor");
+        }
+
+    }
+
+    function HuySubPhanHoiUpdate() {
+        $('#UpdateCommentContainer').hide();
+        $('#UpdateCommentEditor').data('kendoEditor').value('');
+        $('#PhanHoiContainer').append($('#UpdateCommentContainer'));
+    }
+    function HuySubPhanHoi() {
+        $('#SubCommentContainer').hide();
+        $('#SubCommentEditor').data('kendoEditor').value('');
+        $('#PhanHoiContainer').append($('#SubCommentContainer'));
+    }
+      function showPhanHoiUpdateEditor(CommentId) {
+        var commentContainer = $('#UpdateCommentContainer');
+        var parentElement = $('#' + CommentId).parent();
+        commentContainer.attr('data-parent-id', CommentId);
+        parentElement.append(commentContainer);
+        commentContainer.show();
+        var editor = $("#UpdateCommentEditor").data("kendoEditor");
+        if (!editor) {
+            $("#UpdateCommentEditor").kendoEditor();
+            editor = $("#UpdateCommentEditor").data("kendoEditor");
+        }
+
+        if (editor) {
+            editor.refresh();
+        } else {
+            console.error("Kendo Editor not found for #SubCommentEditor");
+        }
+        var url = '@Url.Action("GetById","PhanHoi_CongViec")' + "?Id=" + CommentId;
+        $.ajax({
+            url: url,
+            type: "GET",
+            success: function(data){
+                editor.value(data.NoiDungHtml);
+            }
+        })
+    }
+    function LuuPhanHoiUpdate() {
+        showLoadingElement(true, 'modalLoading');
+        let parentId = "";
+        parentId = $('#UpdateCommentContainer').attr('data-parent-id');
+        var noiDungHtml = $('#UpdateCommentEditor').data("kendoEditor").value();
+        var phanHoi = {
+            Id: parentId,
+            NoiDungHtml: noiDungHtml
+        }
+        $.ajax({
+            url: '/PhanHoi_CongViec/Update',
+            type: "POST",
+            data: phanHoi,
+            success: function (data) {
+                if (data.IsSuccess) {
+                    HuySubPhanHoiUpdate();
+                    showSuccessNotify("Lưu phản hồi thành công");
+                    getListPhanHoi();
+                }
+                else {
+                    showErrorNotify(data.Message);
+                }
+            }
+        });
+        showLoadingElement(false, 'modalLoading');
+    }
+    function XoaPhanHoi(idCongViec) {
+        console.log(idCongViec);
+        var url = '@Url.Action("Delete", "PhanHoi_CongViec")' + "?Id=" + idCongViec;
+        showLoadingElement(true, 'modalLoading');
+        $.ajax({
+            url: url,
+            type: "POST",
+            success: function (data) {
+                if (data.IsSuccess) {
+                    showSuccessNotify("Xóa phản hồi thành công");
+                    getListPhanHoi();
+                }
+                else {
+                    showErrorNotify(data.Message);
+                }
+            }
+        });
+        showLoadingElement(false, 'modalLoading');
+    }
+    function LuuPhanHoi(isSubComment = false) {
+        showLoadingElement(true, 'modalLoading');
+        let parentId = "";
+        if (isSubComment) {
+            parentId = $('#SubCommentContainer').attr('data-parent-id');
+            var noiDungHtml = $('#SubCommentEditor').data("kendoEditor").value();
+        } else {
+            var noiDungHtml = $('#CommentEditor').data("kendoEditor").value();
+        }
+        var phanHoi = {
+            ParentId: parentId,
+            LienKetId: "@Model.Id",
+            NoiDungHtml: noiDungHtml
+        }
+        $.ajax({
+            url: '/PhanHoi_CongViec/Post',
+            type: "POST",
+            data: phanHoi,
+            success: function (data) {
+                if (data.IsSuccess) {
+                    if(isSubComment) {
+                        HuySubPhanHoi();
+
+                    }
+                    showSuccessNotify("Thêm phản hồi thành công");
+                    getListPhanHoi();
+                }
+                else {
+                    showErrorNotify(data.Message);
+                }
+            }
+        });
+        showLoadingElement(false, 'modalLoading');
+    }
+    debugger;
+</script>
+<div class="modal-content" id="modalLoading">
+@using(Html.BeginForm(null, null, FormMethod.Post, new { id = "frmQuanLyCongViec", @class = "forms-sample" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-header">
+        @if(!Model.IsEdit)
+        {
+            <h4 class="modal-title">Thêm mới công việc</h4>
+        }
+        else
+        {
+            <h4 class="modal-title">Cập nhật công việc</h4>
+        }
+        <button type="button" class="close" onclick="closePopUp();" aria-label="Close" data-bs-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        @Html.HiddenFor(model => model.IsEdit)
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.FolderUpload)
+        @Html.HiddenFor(model => model.TepDinhKemIDs)
+        @Html.HiddenFor(model => model.IsTepDinhKem)
+        <div class="row form-group">
+            <div class="col-md-12">
+                <label>
+                    Tên công việc <span class="text-danger">*</span>
+                </label>
+                @(Html.Kendo().TextBoxFor(m => m.TenCongViec).HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                @Html.ValidationMessageFor(model => model.TenCongViec, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-6">
+                <label>Dự án <span class="text-danger">*</span></label>
+                @(Html.Kendo().DropDownListFor(m => m.DuAnId)
+                .DataTextField("Text")
+                .DataValueField("Value")
+                .Filter(FilterType.Contains)
+                .DataSource(source => source
+                    .Custom()
+                    .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetAllComboBox", "QuanLyDuAn");
+                        })
+                    )
+                )
+                .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+            )
+                @Html.ValidationMessageFor(model => model.DuAnId, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-6">
+                <label>
+                    Giai đoạn dự án
+                </label>
+                @(Html.Kendo().DropDownListFor(m => m.GiaiDoanId)
+                .DataTextField("Text")
+                .DataValueField("Value")
+                //.Filter(FilterType.Contains)
+                .OptionLabel("-- Chọn giai đoạn dự án --")
+                .DataSource(source => source
+                    .Custom()
+                    .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetAllComboBox", "GiaiDoanDuAn");
+                        })
+                    )
+                )
+                .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+            //.Events(e => e.Change("refreshCongViecGiaiDoan"))
+            )
+                @Html.ValidationMessageFor(model => model.GiaiDoanId, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <div class="row form-group">
+            <div class="col-md-6">
+                <label>
+                    Công việc trong giai đoạn
+                </label>
+                @(Html.Kendo().DropDownListFor(m => m.CongViecGiaiDoanId)
+                .DataTextField("Text")
+                .DataValueField("Value")
+                .Filter(FilterType.Contains)
+                .OptionLabel("-- Chọn công việc trong giai đoạn --")
+                .DataSource(source => source
+                    .Custom()
+                    .Transport(transport => transport
+                        .Read(read => { read.Action("GetAllComboBoxByGiaiDoan", "CongViecTrongGiaiDoan").Data("congViecGiaiDoanData");})
+                    )
+                    .ServerFiltering(true)
+                )
+                .CascadeFrom("GiaiDoanId")
+                .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.CongViecGiaiDoanId, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-6">
+                <label>
+                    Assign To
+                </label>
+                @(Html.Kendo().DropDownListFor(m => m.AssignTo)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Filter(FilterType.Contains)
+                        .OptionLabel("-- Chọn Assign To --")
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetComboBoxNguoiQuanLy", "TaiKhoan");
+                        })
+                        )
+                        )
+                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.AssignTo, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <div class="row form-group">
+            <div class="col-md-6">
+                <label>
+                    Trạng thái công việc
+                </label>
+                @(Html.Kendo().DropDownListFor(m => m.TrangThaiId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read => { read.Action("GetComboBoxTrangThaiBYUserName", "QuanLyCongViec"); })
+                        )
+                        )
+                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.TrangThaiId, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-6">
+                <label>Người thực hiện </label>
+                @(Html.Kendo().DropDownListFor(m => m.NguoiThucHienId)
+                .DataTextField("Text")
+                .DataValueField("Value")
+                .Filter(FilterType.Contains)
+                .OptionLabel("-- Chọn người thực hiện --")
+                .DataSource(source => source
+                    .Custom()
+                    .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetComboBoxNguoiQuanLy", "TaiKhoan");
+                        })
+                    )
+                )
+                .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.NguoiThucHienId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-6">
+                <label>Người kiểm tra</label>
+                @(Html.Kendo().DropDownListFor(m => m.NguoiKiemTraId)
+                    .DataTextField("Text")
+                    .DataValueField("Value")
+                    .Filter(FilterType.Contains)
+                    .OptionLabel("-- Chọn người kiểm tra --")
+                    .DataSource(source => source
+                    .Custom()
+                    .Transport(transport => transport
+                    .Read(read =>
+                    {
+                        read.Action("GetComboBoxNguoiQuanLy", "TaiKhoan");
+                    })
+                    )
+                    )
+                    .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.NguoiKiemTraId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-12">
+                <label>
+                    Ghi chú
+                </label>
+                @* @(Html.Kendo().EditorFor(model => model.GhiChu) *@
+                @*     .Encoded(false) *@
+                @*     .HtmlAttributes(new { style = "height: 600px;" }) *@
+                @*     .Tools(tools => tools *@
+                @*         .Formatting() *@
+                @*         .Bold() *@
+                @*         .Italic() *@
+                @*         .Underline() *@
+                @*         .Strikethrough() *@
+                @*         .JustifyLeft() *@
+                @*         .JustifyCenter() *@
+                @*         .JustifyRight() *@
+                @*         .JustifyFull() *@
+                @*         .InsertUnorderedList() *@
+                @*         .InsertOrderedList() *@
+                @*         .Indent() *@
+                @*         .Outdent() *@
+                @*         .CreateLink() *@
+                @*         .Unlink() *@
+                @*         .InsertImage() *@
+                @*         .TableEditing() *@
+                @*         .Pdf() *@
+                @*     )) *@
+                @(Html.Kendo().TextAreaFor(model => model.GhiChu).HtmlAttributes(new { @class = "form-control", @style = "width:100%; height: 125px;" }))
+                @Html.ValidationMessageFor(model => model.GhiChu, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+        <div class="row form-group mb-0">
+            <div class="col-md-12 d-flex">
+                <div class="pr-2 text-bold text-lg">Dự kiến</div>
+                <hr class="my-auto flex-grow-1">
+            </div>
+        </div>
+        <div class="row form-group py-3 mx-0" style="background-color: #dfdfdf">
+            <div class="col-md-4">
+                <label>
+                    Thời gian dự kiến từ ngày
+                </label>
+                @(Html.Kendo().DatePickerFor(m => m.DuKienTuNgay).Format("dd/MM/yyyy").HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
+            </div>
+            <div class="col-md-4">
+                <label>
+                    Thời gian dự kiến đến ngày
+                </label>
+                @(Html.Kendo().DatePickerFor(m => m.DuKienDenNgay).Format("dd/MM/yyyy").HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
+            </div>
+            @* <div class="col-md-4"> *@
+            @*     <label> *@
+            @*         Giờ công dự kiến (giờ) *@
+            @*     </label> *@
+            @*     @(Html.Kendo().NumericTextBoxFor(m => m.GioCongDuKien).Min(0).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " })) *@
+            @* </div> *@
+        </div>
+        <div class="row form-group mb-0">
+            <div class="col-md-12 d-flex">
+                <div class="pr-2 text-bold text-lg">Thực tế</div>
+                <hr class="my-auto flex-grow-1">
+            </div>
+        </div>
+
+        <div class="form-group py-3 px-2" style="background-color: #dfdfdf">
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>
+                        Thời gian thực tế từ ngày
+                    </label>
+                    @(Html.Kendo().DatePickerFor(m => m.ThucTeTuNgay).Format("dd/MM/yyyy")
+                    .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
+                </div>
+                <div class="col-md-6">
+                    <label>
+                        Thời gian thực tế đến ngày
+                    </label>
+                    @(Html.Kendo().DatePickerFor(m => m.ThucTeDenNgay).Format("dd/MM/yyyy")
+                    .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label class="text-danger">
+                        Số giờ thực tế (giờ)
+                    </label>
+                    @(Html.Kendo().NumericTextBoxFor(m => m.SoGioThucTe).Min(0)
+                            .HtmlAttributes(new { @class = "form-control", @style = "width:100%;", @readonly = true })
+                        .Events(e => e.Change("calculateTongThoiGianThucHien"))
+                    )
+                </div>
+                <div class="col-md-6">
+                    <label>
+                        Tiến độ (%)
+                    </label>
+                    @(Html.Kendo().NumericTextBoxFor(m => m.TienDo).Min(0).Max(100)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label class="text-danger">
+                        Tổng thời gian thực hiện (giờ)
+                    </label>
+                    @(Html.Kendo().NumericTextBoxFor(m => m.TongThoiGianThucHien)
+                        .Min(0)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;", @readonly = true }))
+                </div>
+            </div>
+        </div>
+
+        @if (Model.IsEdit)
+        {
+            @(Html.Partial("ListChiTietCongViec.cshtml", Model))
+        }
+@if (Model.IsEdit)
+ {
+        <div class="row form-group mb-0">
+            <div class="col-md-12 d-flex">
+                <div class="pr-2 text-bold text-lg">Test</div>
+                <hr class="my-auto flex-grow-1">
+            </div>
+        </div>
+
+        <div class="form-group py-3 px-2" style="background-color: #dfdfdf">
+            <div class="row form-group">
+                <div class="col-md-6">
+                        <label class="text-danger">
+                        Thời gian test (giờ)
+                    </label>
+                    @(Html.Kendo().NumericTextBoxFor(m => m.ThoiGianTest).Min(0)
+                           .HtmlAttributes(new { @class = "form-control", @style = "width:100%;", @readonly = true })
+                    .Events(e => e.Change("calculateTongThoiGianThucHien"))
+                    )
+
+                </div>
+            </div>
+          
+        </div>
+ }
+        <div class="row form-group">
+            <label class="col-md-12">Tệp đính kèm</label>
+            <div class="col-md-12">
+                @Html.Partial("~/Views/Shared/Components/UploadFileBase.cshtml",
+                    new MODELS.BASE.MODELUploadFileBase
+                    {
+                        FileSizeLimit = 10, //Megabyte (Giới hạn độ lớn file)
+                        FileValidate = MODELS.COMMON.CommonConst._fileValid, //Kiểm tra định dạng file
+                        FileValidateText = MODELS.COMMON.CommonConst._fileValidString, //Text hiển thị định dạng file cho phép
+                        MultiFile = true, //Chọn nhiều file hay không
+                        ListTepDinhKem = Model.ListTepDinhKem //Hiển thị danh sách tệp đính kèm hiện có
+                    })
+            </div>
+        </div>
+        <div class="row form-group">
+            <label class="col-md-12">Kết quả công việc</label>
+            <div class="col-md-12">
+                @*     @(Html.Kendo().EditorFor(model => model.KetQuaCongViec) *@
+                @*     .Encoded(false) *@
+                @*     .HtmlAttributes(new { style = "height: 600px;" }) *@
+                @* ) *@
+                @(Html.Kendo().TextAreaFor(model => model.KetQuaCongViec).HtmlAttributes(new { @class = "form-control", @style = "width:100%; height: 125px;" }))
+                @Html.ValidationMessageFor(model => model.KetQuaCongViec, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row form-group">
+            <label class="col-md-12">Hướng dẫn sử dụng nhanh</label>
+            <div class="col-md-12">
+                @*     @(Html.Kendo().EditorFor(model => model.HuongDanSuDungNhanh) *@
+                @*     .Encoded(false) *@
+                @*     .HtmlAttributes(new { style = "height: 600px;" }) *@
+                @*     .Tools(tools => tools *@
+                @*         .Formatting() *@
+                @*         .Bold() *@
+                @*         .Italic() *@
+                @*         .Underline() *@
+                @*         .Strikethrough() *@
+                @*         .JustifyLeft() *@
+                @*         .JustifyCenter() *@
+                @*         .JustifyRight() *@
+                @*         .JustifyFull() *@
+                @*         .InsertUnorderedList() *@
+                @*         .InsertOrderedList() *@
+                @*         .Indent() *@
+                @*         .Outdent() *@
+                @*         .CreateLink() *@
+                @*         .Unlink() *@
+                @*         .InsertImage() *@
+                @*         .TableEditing() *@
+                @*         .Pdf() *@
+                @*     ) *@
+                @*     .Pdf(pdf => pdf *@
+                @*         .Margin(20, 20, 20, 20) *@
+                @*         .PaperSize("A4") *@
+                @*         .FileName("HDSD_CongViec") *@
+                @*         .Title("Hướng dẫn sử dụng " + Model.TenCongViec)) *@
+                @* ) *@
+                @(Html.Kendo().TextAreaFor(model => model.HuongDanSuDungNhanh).HtmlAttributes(new { @class = "form-control", @style = "width:100%; height: 125px;" }))
+                @Html.ValidationMessageFor(model => model.HuongDanSuDungNhanh, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        @if (Model.IsEdit)
+        {
+            <div class="row form-group">
+                <label class="col-md-12">Phản hồi</label>
+
+                <div class="col-md-12 bg-gray-light" id="PhanHoiContainer">
+                    <div class="card">
+                        <div class="card-body p-4" id="listPhanHoi" style="background: #F9F9F9;">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div>
+                            @(
+                Html.Kendo().Editor()
+                    .Name("CommentEditor")
+                    .Encoded(false)
+                    .HtmlAttributes(new { style = "height: 150px;" })
+                )
+                        </div>
+                        <div class="float-right mt-2">
+                            <button type="button" onclick="LuuPhanHoi()" class="btn btn-primary btn-md">Gửi</button>
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="SubCommentContainer" data-parent-id="" style="display: none;">
+                        <div>
+                            @(
+                Html.Kendo().Editor()
+                    .Name("SubCommentEditor")
+                    .Encoded(false)
+                    .HtmlAttributes(new { style = "height: 150px;" })
+                )
+                        </div>
+                        <div class="float-right mt-2">
+                            <button type="button" onclick="HuySubPhanHoi()" class="btn btn-default btn-md">Hủy</button>
+                            <button type="button" onclick="LuuPhanHoi(true)" class="btn btn-primary btn-md">Gửi</button>
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="UpdateCommentContainer" data-parent-id="" style="display: none;">
+                        <div>
+                            @(
+                Html.Kendo().Editor()
+                    .Name("UpdateCommentEditor")
+                    .Encoded(false)
+                    .HtmlAttributes(new { style = "height: 150px;" })
+                )
+                        </div>
+                        <div class="float-right mt-2">
+                            <button type="button" onclick="HuySubPhanHoiUpdate()" class="btn btn-default btn-md">Hủy</button>
+                            <button type="button" onclick="LuuPhanHoiUpdate()" class="btn btn-primary btn-md">Lưu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    </div>
+    <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" onclick="closePopUp();"><i class="fas fa-times-square"></i> Hủy</button>
+        <div>
+            <button type="submit" id="btnLuu" class="btn btn-success"><i class="fas fa-check-square"></i> Lưu</button>
+            @if(!Model.IsEdit)
+            {
+                <button type="button" class="btn btn-success" id="btnLuuTiep"><i class="fas fa-check-square"></i> Lưu và thêm </button>
+            }
+        </div>
+    </div>
+}
+</div>
+
+<div id="popupLoiWindowModal"></div>
+
+@*TOOLBAR TEMPLATE*@
+                <script id="GridLoiToolbarTemplate" type="text/html">
+                    @{
+                        <div style="width:100%;">
+                            <div style="width: 70%">
+                                <a class="btn btn-info ml-1" onclick="xemThongTinLoi()"><i class="fa fa-eye"></i> Xem </a>
+                                <a class="btn btn-success ml-1" onclick="themThongTinLoi()"><i class="fas fa-layer-plus"></i>&nbsp; Thêm</a>
+                                <a class="btn btn-primary ml-1" onclick="suaThongTinLoi()"><i class="fas fa-wrench"></i> Cập nhật </a>
+                                <a class="btn btn-danger ml-1" onclick="xoaThongTinLoi()"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Xóa </a>
+                            </div>
+                            <div style="width:30%;" class="input-group">
+                                <input id="TextSearchLoi" type="text" class="form-control" placeholder="Tìm kiếm..." onchange="refreshGridLoi()">
+                                <span class="input-group-append">
+                                    <button onclick="refreshGridLoi()" class="btn btn-default" type="button"><i class="fas fa-search"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </script>
+
+                <script>
+    function showOverlayModal(url, size) {
+        var width = '30%';
+        if (size == 'md') { width = '50%'; }
+        if (size == 'lg') { width = '70%'; }
+        if (size == 'full') { width = '100%'; /*$(".k-widget").addClass("topWindowFull"); $(".k-widget").removeClass("topWindowNormal");*/ }
+        var dialogLoi = $("#popupLoiWindowModal").data("kendoWindow");
+        dialogLoi.refresh({
+            url: url,
+            data: {
+                documentUrl: decodeURI(url)
+            }
+        });
+        dialogLoi.setOptions({
+            actions: ["close"],
+            modal: true,
+            width: width,
+            draggable: false,
+            resizable: false,
+            maxHeight: '100%'
+        });
+        dialogLoi.center().open();
+    }
+    //Xem thông tin.
+    function xemThongTinLoi() {
+        var itemSelectedIds = getListIdLoiSelected();
+        if (!checkMultiSelectInGrid(itemSelectedIds)) {
+            return;
+        }
+        var url = '@Url.Action("ShowViewPopup", "QuanLyCongViec_Loi")' + "?id=" + itemSelectedIds[0];
+        showOverlayModal(url, "md");
+    }
+
+    //Thêm thông tin.
+    function themThongTinLoi() {
+        var url = '@Url.Action("ShowInsertPopup", "QuanLyCongViec_Loi")' + "?congViecId=@Model.Id";
+
+        showOverlayModal(url, "md");
+    }
+
+    //Sửa thông tin.
+    function suaThongTinLoi()
+    {
+        debugger;
+        var itemSelectedIds = getListIdLoiSelected();
+        if(!checkMultiSelectInGrid(itemSelectedIds))
+        {
+            return;
+        }
+        var url = '@Url.Action("ShowUpdatePopup", "QuanLyCongViec_Loi")' + "?id=" + itemSelectedIds[0] + "&congViecId=@Model.Id";
+        showOverlayModal(url, "md");
+    }
+
+    //xóa thông tin
+    function xoaThongTinLoi() {
+        var itemSelectedIds = getListIdLoiSelected();
+        if (itemSelectedIds.length == 0) {
+            showErrorNotify(noDataMessage);
+            return;
+        }
+
+        var XoaThongTinLoi = function () {
+            showLoading(true);
+            $.ajax({
+                url: '@Url.Action("Delete", "QuanLyCongViec_Loi")',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    listSelectedId: itemSelectedIds
+                },
+                success: function (data) {
+                    if (data.IsSuccess) {
+                        showSuccessNotify(deleteSuccess);
+                        refreshGrid();
+                        refreshGridLoi();
+                    }
+                    else {
+                        showErrorNotify(data.Message);
+                    }
+                },
+                error: function (request, status, err) {
+                    showErrorNotify(errorMessage);
+                }
+            });
+            showLoading(false);
+        }
+        return xoFunc.confirmDialogYesNo(deleteContent, titleConfirm, XoaThongTinLoi);
+    }
+
+    function refreshGridLoi() {
+        var grid = $("#gridDataLoi").data("kendoGrid");
+        grid.clearSelection();
+        grid.dataSource.page(0);
+        calculateTongThoiGianThucHien();
+        showLoading(false);
+    }
+                </script>

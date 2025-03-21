@@ -1,0 +1,431 @@
+﻿@model MODELS.DUAN.QUANLYCONGVIEC.Dtos.MODELQuanLyCongViec
+<style>
+    .modal-body {
+    padding: 31px;
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
+.label {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    border-radius: 4px;
+    padding: 10px;
+    width: 100%;
+    max-width: none;
+}
+
+.card-body {
+    background-color: #f9f9f9;
+    padding: 19px;
+}
+</style>
+<div class="modal-body">
+	<div class="row form-group">
+        @Html.HiddenFor(model => model.Id, new { id = "HiddenIdField" })
+        <span class="label">@Model.DuAn / @Model.GiaiDoan / @Model.TrangThai</span>
+        <h3 class="text-bold mt-3">@Model.TenCongViec</h3>
+        <div class="row mt-2 w-100 align-items-center">
+	        <div class="col-4"> <span class="mt-2"><i class="fas fa-calendar"></i> Dự kiến </span></div>
+	        <div class="col-8"><span>@(Model.DuKienTuNgay.HasValue ? Model.DuKienTuNgay.Value.ToString("dd/MM/yyyy") : "") - @(Model.DuKienDenNgay.HasValue ? Model.DuKienDenNgay.Value.ToString("dd/MM/yyyy") : "")</span></div>
+        </div>
+        <div class="row mt-2 w-100 align-items-center">
+	        <div class="col-4"> <span class="mt-2"><i class="fas fa-user"></i>  Thực hiện </span></div>
+	        <div class="col-8"><span>@Model.NguoiThucHien</span></div>
+        </div>
+        <div class="row mt-2 w-100 align-items-center">
+	        <div class="col-4"> <span class="mt-2"><i class="fas fa-user"></i>  Kiểm tra </span></div>
+	        <div class="col-8"><span>@Model.NguoiKiemTra</span></div>
+        </div>
+        <div class="row mt-2 w-100 align-items-center">
+	        <div class="col-4"> <span class="mt-2"><i class="fas fa-user"></i>  Assign To </span></div>
+	        <div class="col-8">@(Html.Kendo().DropDownListFor(m => m.AssignTo)
+		                           .DataTextField("Text")
+		                           .DataValueField("Value")
+		                           .Filter(FilterType.Contains)
+		                           .OptionLabel("-- Chọn Assign To --")
+		                           .DataSource(source => source
+			                           .Custom()
+			                           .Transport(transport => transport
+				                           .Read(read => { read.Action("GetComboBoxNguoiQuanLy", "TaiKhoan"); })
+			                           )
+		                           )
+		                           .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;", @id = "AssignToPicker" }))</div>
+        </div>
+        <hr  width="100%" align="center" />
+     
+	        <div class="col-12">
+		        <h5 class="text-bold text-dark">Thực tế</h5>
+	        </div>
+        <div class="row mt-2 w-100 align-items-center">
+		        <div class="col-4"> <span class="mt-2"><i class="fas fa-calendar-day"></i> Từ ngày </span></div>
+		        <div class="col-8">  @(Html.Kendo().DatePickerFor(m => m.ThucTeTuNgay).Format("dd/MM/yyyy")
+			                             .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  ", @id = "ThucTeTuNgayPicker" }))</div>
+	        </div>
+	        <div class="row mt-2 w-100 align-items-center">
+		        <div class="col-4"> <span class="mt-2"><i class="fas fa-calendar-day"></i> Đến ngày </span></div>
+		        <div class="col-8">     @(Html.Kendo().DatePickerFor(m => m.ThucTeDenNgay).Format("dd/MM/yyyy")
+			                                .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  ", @id = "ThucTeDenNgayPicker" }))</div>
+	        </div>
+	        <div class="row mt-2 w-100 align-items-center">
+		        <div class="col-4"> <span class="mt-2"><i class="fas fa-clock"></i> Số giờ </span></div>
+		        <div class="col-8"> @(Html.Kendo().NumericTextBoxFor(m => m.SoGioThucTe).Min(0)
+			                            .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  ", @id = "ThucTeSoGioPicker" }))
+			    </div>
+	        </div>
+        <div class="row mt-2 w-100 align-items-center">
+		        <div class="col-4"> <span class="mt-2"><i class="fas fa-tachometer-alt"></i> Tiến độ (%)</span></div>
+		        <div class="col-8"> @(Html.Kendo().NumericTextBoxFor(m => m.TienDo).Min(0).Max(100)
+			                            .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  ", @id = "TienDoPicker" }))
+		        </div>
+	        </div>
+        <div class="row mt-2 w-100 align-items-center">
+            <div class="col-4"> <span class="mt-2"><i class="fas fa-clock"></i> Tổng số giờ test (giờ)</span></div>
+		        <div class="col-8"> @(Html.Kendo().NumericTextBoxFor(m => m.ThoiGianTest).Min(0)
+                    .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  ", @id = "ThoiGianTestPicker" }))
+		        </div>
+	        </div>
+	     
+        <div class="col-12">
+	       
+        </div>
+        <div class="col-12">
+	        @if (Model.ListTepDinhKem.Count != 0)
+	        {
+		        <hr  width="100%" align="center" />
+		        <div class="d-flex justify-content-between">
+			        <p class="h5">Danh sách tệp đính kèm: </p>
+			        <a href="#" class="text-primary" onclick="downloadAllFiles()">Tải xuống tất cả</a> 
+		        </div>
+		        
+		        foreach (var file in Model.ListTepDinhKem)
+		        {
+			        <a href="#" onclick='taiTepDinhKemPopup(encodeURI("@file.Url"),"@file.TenTapTinFull")'>@file.TenTapTinFull</a>
+		        }
+	        }
+        </div>
+        <hr  width="100%" align="center" />
+	</div>
+	<div class="row form-group">
+		<label class="col-md-12">Phản hồi</label>
+
+		<div class="col-md-12 bg-gray-light" id="PhanHoiContainer">
+			<div class="card">
+				<div class="card-body p-4" id="listPhanHoi" style="background: #F9F9F9;">
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div>
+					@(
+					Html.Kendo().Editor()
+						.Name("CommentEditor")
+						.Encoded(false)
+						.HtmlAttributes(new { style = "height: 150px;" })
+					)
+				</div>
+				<div class="float-right mt-2">
+					<button type="button" onclick="LuuPhanHoi()" class="btn btn-primary btn-md">Gửi</button>
+				</div>
+			</div>
+			<div class="col-md-12" id="SubCommentContainer" data-parent-id="" style="display: none;">
+				<div>
+					@(
+					Html.Kendo().Editor()
+						.Name("SubCommentEditor")
+						.Encoded(false)
+						.HtmlAttributes(new { style = "height: 150px;" })
+					)
+				</div>
+				<div class="float-right mt-2">
+					<button type="button" onclick="HuySubPhanHoi()" class="btn btn-default btn-md">Hủy</button>
+					<button type="button" onclick="LuuPhanHoi(true)" class="btn btn-primary btn-md">Gửi</button>
+				</div>
+			</div>
+			<div class="col-md-12" id="UpdateCommentContainer" data-parent-id="" style="display: none;">
+				<div>
+					@(
+					Html.Kendo().Editor()
+						.Name("UpdateCommentEditor")
+						.Encoded(false)
+						.HtmlAttributes(new { style = "height: 150px;" })
+					)
+				</div>
+				<div class="float-right mt-2">
+					<button type="button" onclick="HuySubPhanHoiUpdate()" class="btn btn-default btn-md">Hủy</button>
+					<button type="button" onclick="LuuPhanHoiUpdate()" class="btn btn-primary btn-md">Lưu</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
+<script>
+    function closePopUp(){
+        hidePanel(); 
+    }
+  function downloadAllFiles() {
+    var fileList = @Html.Raw(Json.Serialize(Model.ListTepDinhKem));
+    fileList.forEach(function (file) {
+        taiTepDinhKemPopup(encodeURI(file.Url), file.TenTapTinFull);
+    });
+}
+
+    $("#btnLuuTiep").click(function (event) {
+        event.preventDefault();
+        var ThucTeTuNgayPicker = $("#ThucTeTuNgayPicker").data("kendoDatePicker").value();
+        var ThucTeDenNgayPicker = $("#ThucTeDenNgayPicker").data("kendoDatePicker").value();
+            var ThucTeSoGio = $("#ThucTeSoGioPicker").data("kendoNumericTextBox");
+            var TienDo = $("#TienDoPicker").data("kendoNumericTextBox");
+            var AssignTo = $("#AssignToPicker").data("kendoDropDownList").value();
+            var thoiGianTest = $("#ThoiGianTestPicker").data("kendoNumericTextBox");
+            var congViecUpdateData = {
+                Id: $("#HiddenIdField").val(),
+                ThucTeTuNgay: ThucTeTuNgayPicker === null ? ThucTeTuNgayPicker : ThucTeTuNgayPicker.toJSON(),
+                ThucTeDenNgay: ThucTeDenNgayPicker === null ? ThucTeDenNgayPicker : ThucTeDenNgayPicker.toJSON(),
+                SoGioThucTe: ThucTeSoGio.value(),
+                TienDo: TienDo.value(),
+                AssignTo : AssignTo,
+                ThoiGianTest: thoiGianTest.value()
+
+            }
+            showLoadingElement(true, 'modalLoading');
+            $.ajax({
+                url: '/TrangThaiCongViec/UpdateCongViec',
+                type: "POST",
+                data: congViecUpdateData, 
+                 success: function (data) {
+                    if (data.IsSuccess) {
+                        showSuccessNotify("Cập nhật thành công");
+                    }
+                    else {
+                        showErrorNotify(data.Message);
+                    }
+                }
+            });
+        showLoadingElement(false, 'modalLoading');
+    });
+
+$(document).ready(function () {
+    getListPhanHoi();
+    });
+    function getListPhanHoi() {
+        var url = '@Url.Action("GetList", "PhanHoi_CongViec")' + "?CongViecId=@Model.Id";
+        $.ajax({
+            url: url,
+            type: "GET",
+            success: function (data) {
+                if (data.Errors === null || data.Errors === "") {
+                    showErrorNotify(data.Errors)
+                } else {
+                    $('#listPhanHoi').empty();
+                    var dataHtml = data.map(x => getHtmlFromPhanHoi(x));
+                    if (dataHtml === []) {
+                        $('#listPhanHoi').html("<p>Không có phản hồi</p>");
+                    } else {
+                        $('#listPhanHoi').html(dataHtml);
+                    }
+                }
+            }
+        });
+    }
+
+    function getHtmlFromPhanHoi(item) {
+        let date = new Date(item.NgayGui);
+        let formatted = new Intl.DateTimeFormat("vi-VN", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+        }).format(date);
+        let username = item.PhanHoiByUsername ? `@@${item.PhanHoiByUsername}` : "";
+
+
+        if (item.ParentId === "" || item.ParentId === null) {
+            return `
+                    <div class="row border border-secondary" id="${item.Id}" style="background-color: #FFFFFF;">
+                        <div class="p-3 w-100">
+                            <div class="d-flex align-items-center">
+                                <div class="text-dark">
+                                    ${item.NguoiGui} - <span class="text-muted">${item.NgayGui}</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-1 ml-auto">
+                                    <button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiUpdateEditor('${item.Id}')"><i class="fa fa-edit" aria-hidden="true"></i> Sửa</button>
+                                            <button type="button" class="btn btn-link btn-sm text-danger" onclick="XoaPhanHoi('${item.Id}')"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</button>
+                                    <button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiEditor('${item.Id}')"><i class="fa fa-reply" aria-hidden="true"></i> Trả lời</button>
+                                </div>
+                            </div>
+                            <div class="mt-1">
+                                <span><span class= "text-primary text-bold">${username}</span> ${item.NoiDungHtml}</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+        } else {
+            return `
+                    <div class="row pt-3 ml-5 border border-primary" id="${item.Id}" style="background-color: #FFFFFF;">
+                        <div class="p-3 w-100">
+                            <div class="d-flex align-items-center">
+                                <div class="text-dark">
+                                    ${item.NguoiGui} - <span class="text-muted">${item.NgayGui}</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-1 ml-auto">
+                                    <button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiUpdateEditor('${item.Id}')"><i class="fa fa-edit" aria-hidden="true"></i> Sửa</button>
+                                            <button type="button" class="btn btn-link btn-sm text-danger" onclick="XoaPhanHoi('${item.Id}')"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</button>
+                                    <button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiEditor('${item.Id}')"><i class="fa fa-reply" aria-hidden="true"></i> Trả lời</button>
+                                </div>
+                            </div>
+                            <div class="mt-1">
+                                <span><span class= "text-primary text-bold">${username}</span> ${item.NoiDungHtml}</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+        }
+    }
+    function XoaPhanHoi(idCongViec) {
+        var xoaThongTin = function(){
+            showLoading(true);
+            var url = '@Url.Action("Delete", "PhanHoi_CongViec")' + "?Id=" + idCongViec;
+            $.ajax({
+                url: url,
+                type: "POST",
+                success: function (data) {
+                    if (data.IsSuccess) {
+                        showSuccessNotify("Xóa phản hồi thành công");
+                        getListPhanHoi();
+                    }
+                    else {
+                        showErrorNotify(data.Message);
+                    }
+                }
+            });
+            showLoading(false);
+        }
+        return xoFunc.confirmDialogYesNo(deleteContent, titleConfirm, xoaThongTin); 
+    }
+    function showPhanHoiEditor(parentId) {
+        var commentContainer = $('#SubCommentContainer');
+        var parentElement = $('#' + parentId).parent();
+        commentContainer.attr('data-parent-id', parentId);
+        parentElement.append(commentContainer);
+        commentContainer.show();
+        var editor = $("#SubCommentEditor").data("kendoEditor");
+        if (!editor) {
+            $("#SubCommentEditor").kendoEditor();
+            editor = $("#SubCommentEditor").data("kendoEditor");
+        }
+
+        if (editor) {
+            editor.refresh();
+        } else {
+            console.error("Kendo Editor not found for #SubCommentEditor");
+        }
+
+    }
+
+    function HuySubPhanHoiUpdate() {
+        $('#UpdateCommentContainer').hide();
+        $('#UpdateCommentEditor').data('kendoEditor').value('');
+        $('#PhanHoiContainer').append($('#UpdateCommentContainer'));
+    }
+    function HuySubPhanHoi() {
+        $('#SubCommentContainer').hide();
+        $('#SubCommentEditor').data('kendoEditor').value('');
+        $('#PhanHoiContainer').append($('#SubCommentContainer'));
+    }
+    function showPhanHoiUpdateEditor(CommentId) {
+        var commentContainer = $('#UpdateCommentContainer');
+        var parentElement = $('#' + CommentId).parent();
+        commentContainer.attr('data-parent-id', CommentId);
+        parentElement.append(commentContainer);
+        commentContainer.show();
+        var editor = $("#UpdateCommentEditor").data("kendoEditor");
+        if (!editor) {
+            $("#UpdateCommentEditor").kendoEditor();
+            editor = $("#UpdateCommentEditor").data("kendoEditor");
+        }
+
+        if (editor) {
+            editor.refresh();
+        } else {
+            console.error("Kendo Editor not found for #SubCommentEditor");
+        }
+        var url = '@Url.Action("GetById", "PhanHoi_CongViec")' + "?Id=" + CommentId;
+        $.ajax({
+            url: url,
+            type: "GET",
+            success: function (data) {
+                editor.value(data.NoiDungHtml);
+            }
+        })
+    }
+    function LuuPhanHoiUpdate() {
+        showLoadingElement(true, 'modalLoading');
+        let parentId = "";
+        parentId = $('#UpdateCommentContainer').attr('data-parent-id');
+        var noiDungHtml = $('#UpdateCommentEditor').data("kendoEditor").value();
+        var phanHoi = {
+            Id: parentId,
+            NoiDungHtml: noiDungHtml
+        }
+        $.ajax({
+            url: '/PhanHoi_CongViec/Update',
+            type: "POST",
+            data: phanHoi,
+            success: function (data) {
+                if (data.IsSuccess) {
+                    HuySubPhanHoiUpdate();
+                    showSuccessNotify("Lưu phản hồi thành công");
+                    getListPhanHoi();
+                }
+                else {
+                    showErrorNotify(data.Message);
+                }
+            }
+        });
+        showLoadingElement(false, 'modalLoading');
+    }
+    function LuuPhanHoi(isSubComment = false) {
+        showLoadingElement(true, 'modalLoading');
+        let parentId = "";
+        if (isSubComment) {
+            parentId = $('#SubCommentContainer').attr('data-parent-id');
+            var noiDungHtml = $('#SubCommentEditor').data("kendoEditor").value();
+        } else {
+            var noiDungHtml = $('#CommentEditor').data("kendoEditor").value();
+        }
+        var phanHoi = {
+            ParentId: parentId,
+            LienKetId: "@Model.Id",
+            NoiDungHtml: noiDungHtml
+        }
+        $.ajax({
+            url: '/PhanHoi_CongViec/Post',
+            type: "POST",
+            data: phanHoi,
+            success: function (data) {
+                if (data.IsSuccess) {
+                    if (isSubComment) {
+                        HuySubPhanHoi();
+
+                    }
+                    showSuccessNotify("Thêm phản hồi thành công");
+                    getListPhanHoi();
+                }
+                else {
+                    showErrorNotify(data.Message);
+                }
+            }
+        });
+        showLoadingElement(false, 'modalLoading');
+    }
+</script>

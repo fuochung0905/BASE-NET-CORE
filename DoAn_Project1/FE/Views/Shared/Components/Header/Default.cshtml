@@ -1,0 +1,206 @@
+﻿<!-- Navbar -->
+<nav class="main-header navbar navbar-expand  static-top">
+    
+        <!-- Left navbar links -->
+
+        <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="brand-link" onclick='redirectToPage("index", "home", "home")'>
+                <div class="brand-image-boc">
+                    <img src="~/theme/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle js-tilt" style="opacity: .8">
+                    <div class="brand-image-boc-text ">Quản lý việc</div>
+                </div>
+                
+            </a>
+        </li>
+            <li class="nav-item Breadcrumbs desktop">
+                @{
+                    var breadcrumbs = ViewData["Breadcrumbs"] as List<MODELS.BREADCRUMB.Breadcrumb> ?? new List<MODELS.BREADCRUMB.Breadcrumb>();
+                }
+                @await Component.InvokeAsync("Breadcrumbs", breadcrumbs)
+            </li>
+           
+        </ul>
+
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                    <i class="fas fa-search"></i>
+                </a>
+
+                <div class="navbar-search-block">
+                    <form class="form-inline">
+                        <div class="input-group input-group-sm">
+                            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-navbar" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#divFilter">
+                    <i class="fas fa-filter"></i>
+                </a>
+            </li>
+            <!-- Notifications Dropdown Menu -->
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#">
+                    <i class="far fa-bell"></i>
+                    <span class="badge badge-warning navbar-badge">0</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                    <span class="dropdown-item dropdown-header">0 Notifications</span>
+
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-envelope mr-2"></i> 4 new messages
+                        <span class="float-right text-muted text-sm">3 mins</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-users mr-2"></i> 8 friend requests
+                        <span class="float-right text-muted text-sm">12 hours</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-file mr-2"></i> 3 new reports
+                        <span class="float-right text-muted text-sm">2 days</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                </div>
+            </li>
+            <!-- User Dropdown Menu -->
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#">
+
+                <img src="@Url.Content(ViewBag.UserInfo.AnhDaiDien)" alt="User Avatar" class="rounded-circle Avatar-img">
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                    <a href="#" class="dropdown-item">
+                        <!-- Message Start -->
+                        <div class="media">
+
+                        <img src="@Url.Content(ViewBag.UserInfo.AnhDaiDien)" alt="User Avatar" class="rounded-circle Avatar-img">
+                            <div class="media-body">
+                                <h3 class="dropdown-item-title">
+                                    @ViewBag.UserInfo.HoLot @ViewBag.UserInfo.Ten
+                                </h3>
+                                <p class="text-sm">@ViewBag.UserInfo.VaiTro</p>
+                            </div>
+                        </div>
+                        <!-- Message End -->
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" onclick="ChangeProfile()">
+                        <i class="fad fa-user-edit mr-1"></i> Đổi hồ sơ cá nhân
+                    </a>
+                    <a class="dropdown-item" onclick="ChangePassword()">
+                        <i class="fad fa-key mr-2"></i> Đổi mật khẩu
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    @using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                    {
+                        <a class="dropdown-item" href="#" onclick="logoutAction()">
+                            <i class="fad fa-sign-out-alt mr-2"></i> Đăng xuất
+                        </a>
+                    }
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                </a>
+            </li>
+        </ul>
+    
+   
+</nav>
+<div class="Breadcrumbs mobile">
+    @await Component.InvokeAsync("Breadcrumbs", breadcrumbs)
+</div>
+<script>
+   
+    function logoutAction() {
+        var Logout = function () {
+            $("#logoutForm").submit();
+        }
+        return xoFunc.confirmDialogYesNo("Bạn có muốn đăng xuất hệ thống không?", titleConfirm, Logout);
+    }
+        $(document).ready(function () {
+        GetNotificationCount();
+
+        function GetNotificationCount() {
+            $.ajax({
+                url: '@Url.Action("SoLuongThongBao", "ThongBao")', 
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.IsSuccess) {   
+                        var notificationCount = response.Data;
+                        console.log(notificationCount);
+                        $('.navbar-badge').text(notificationCount);
+                       $('.dropdown-item.dropdown-header').text(notificationCount + ' Notifications');
+
+
+                    } else {
+                        console.log('Lỗi: ' + response.Message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log('Request failed: ' + error);
+                }
+            });
+        }
+    });
+
+
+</script>
+
+<!-- /.navbar -->
+@* <!-- BEGIN HEADER INNER -->
+<div class="container">
+    <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+        <h4 class="title-header-hiday">@MODELS.COMMON.CommonConst._projectName</h4>
+    </div>
+    <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <ul class="navbar-nav">
+            <li class="nav-item nav-profile dropdown">
+                <span class="username">@ViewBag.UserInfo.HoLot @ViewBag.UserInfo.Ten</span>
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
+                    <img alt="profile" src="@Url.Content(ViewBag.UserInfo.AnhDaiDien)">
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                    <a style="cursor: pointer;" class="dropdown-item" onclick="ChangeProfile()">
+                        <i class="ti-settings"></i> Đổi hồ sơ cá nhân
+                    </a>
+                    <a class="dropdown-item" onclick="ChangePassword()">
+                        <i class="ti-settings"></i> Đổi mật khẩu
+                    </a>
+                    @using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                    {
+                        <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">
+                            <i class="fad fa-sign-out-alt"></i> Đăng xuất
+                        </a>
+                    }
+                </div>
+            </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="horizontal-menu-toggle">
+            <span class="ti-menu"></span>
+        </button>
+    </div>
+</div>
+<!-- END HEADER INNER --> *@

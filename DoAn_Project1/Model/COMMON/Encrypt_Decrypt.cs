@@ -4,9 +4,10 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Model.HETHONG.TAIKHOAN.Dtos;
+using MODELS.HETHONG.TAIKHOAN.Dtos;
+using MODELS.HETHONG;
 
-namespace Model.COMMON
+namespace MODELS.COMMON
 {
     public class Encrypt_Decrypt
     {
@@ -42,7 +43,7 @@ namespace Model.COMMON
             var token = new JwtSecurityToken(config["Jwt:Issuer"],
                 config["Jwt:Issuer"],
                 claims,
-                expires: DateTime.Now.AddHours(Model.COMMON.CommonConst.ExpireTime),
+                expires: DateTime.Now.AddHours(MODELS.COMMON.CommonConst.ExpireTime),
                 signingCredentials: credentials);
 
             return tokenHandler.WriteToken(token);

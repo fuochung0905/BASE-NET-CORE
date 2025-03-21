@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Model.COMMON
+﻿namespace MODELS.COMMON
 {
-     public static class CommonConst
+    public static class CommonConst
     {
-
+        public static Guid _tinhId = Guid.Parse("836F499B-7CC1-45F8-AADC-87428155297B"); //Đồng Nai
         public static int ExpireTime = 8; // Thời gian hết hạn chức thực là 8 giờ
         public static string _projectName = "QUẢN LÝ DỰ ÁN";
-        public static string _footer = "@" + DateTime.Now.Year + " - Designed by Hiday";
+        public static string _footer = "@" + DateTime.Now.Year + " - Designed by Hidays";
         public static string[] _fileValid = new string[] { ".jpg", ".png", ".jpeg", ".pdf", ".rar", ".zip", ".doc", ".docx", ".xls", ".xlsx" };
         public static string _fileValidString = "Ảnh (jpg, png, jpeg), PDF, Tập tin nén (rar, zip), Văn bản (doc, docx, xls, xlsx)";
         public static string[] _fileHinhAnhValid = new string[] { ".jpg", ".png", ".jpeg" };

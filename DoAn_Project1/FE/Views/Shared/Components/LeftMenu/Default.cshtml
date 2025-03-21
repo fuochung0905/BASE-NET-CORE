@@ -1,0 +1,292 @@
+﻿<script>
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     // Bước 1: Lấy phần tử <a> trong breadcrumb thứ 2
+    //     const breadcrumbLink = document.querySelector(
+    //         'li.nav-item.Breadcrumbs.desktop > nav[aria-label="breadcrumb"] ol.breadcrumb li.breadcrumb-item:nth-of-type(2) a'
+    //     );
+    //     console.log(breadcrumbLink);
+    //     if (!breadcrumbLink) {
+    //         console.warn("Không tìm thấy phần tử breadcrumb.");
+    //         return;
+    //     }
+
+    //     const secondLinkHref = breadcrumbLink.getAttribute('href');
+    //     console.log(secondLinkHref);
+    //     if (!secondLinkHref) {
+    //         console.warn("Không tìm thấy giá trị href!");
+    //         return;
+    //     }
+
+    //     // Bước 2: Tách chuỗi href theo ký tự '/'
+    //     const parts = secondLinkHref.split('/');
+    //     const secondElement = parts[1];
+    //     console.log("secondElement:  " + secondElement);
+    //     const str = "spindex_" + secondElement.toLowerCase();
+    //     console.log("str:  "+str);
+    //     // Bước 3: Tìm phần tử <a> có id = str và thêm lớp active
+    //     const targetElement = document.getElementById(str);
+    //     if (targetElement) {
+    //         targetElement.classList.add("active");
+
+    //         // Kiểm tra xem targetElement có phải là con trực tiếp của <li class="nav-item"> không
+    //         const liParent = targetElement.parentElement;
+    //         if (
+    //             liParent &&
+    //             liParent.tagName.toLowerCase() === "li" &&
+    //             liParent.classList.contains("nav-item")
+    //         ) {
+    //             // Kiểm tra xem li.nav-item đó có chứa phần tử <ul class="nav nav-treeview"> không
+    //             const ulNavTreeview = liParent.querySelector("ul.nav.nav-treeview");
+    //             if (ulNavTreeview) {
+    //                 // Nếu ulNavTreeview có display: none thì chuyển sang display: block
+    //                 if (window.getComputedStyle(ulNavTreeview).display === "none") {
+    //                     ulNavTreeview.style.display = "block";
+    //                 }
+
+    //                 // Tìm phần tử liền kề ngay trước ul.nav.nav-treeview
+    //                 const prevSibling = ulNavTreeview.previousElementSibling;
+    //                 if (
+    //                     prevSibling &&
+    //                     prevSibling.tagName.toLowerCase() === "a" &&
+    //                     prevSibling.classList.contains("nav-link")
+    //                 ) {
+    //                     // Thêm lớp active cho phần tử a.nav-link
+    //                     prevSibling.classList.add("active");
+
+    //                     // Kiểm tra xem phần tử a.nav-link có phải là con trực tiếp của <li class="nav-item"> không
+    //                     const parentOfNavLink = prevSibling.parentElement;
+    //                     if (
+    //                         parentOfNavLink &&
+    //                         parentOfNavLink.tagName.toLowerCase() === "li" &&
+    //                         parentOfNavLink.classList.contains("nav-item")
+    //                     ) {
+    //                         // Thêm 2 lớp "menu-is-opening" và "menu-open" cho phần tử li.nav-item chứa a.nav-link
+    //                         parentOfNavLink.classList.add("menu-is-opening", "menu-open");
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
+
+
+    $(document).ready(function () {
+      
+        if ('@ViewContext.RouteData.Values["controller"].ToString()' === 'Home') {
+            $('#headerOpen_home').addClass("menu-open");
+            $('#header_home').addClass("active");
+        } else {
+            var headerActive = localStorage.getItem("headerActive");
+            $('#headerOpen_' + headerActive).addClass("menu-open");
+            $('#header_' + headerActive).addClass("active");
+            var subActive = localStorage.getItem("subActive");
+
+            $('#subOpen_' + subActive).addClass("menu-open");
+            $('#sub_' + subActive).addClass("active");
+            var itemActive = localStorage.getItem("itemActive");
+            $('#sp' + itemActive).addClass("active");
+        }
+      
+    });
+</script>
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar Menu -->
+        <nav class="">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item" id="headerOpen_home">
+                    <a class="nav-link" href="#" id="header_home" onclick='redirectToPage("index", "home", "home")'>
+                        <i class="fas fa-home nav-icon"></i>
+                        <p>
+                            Dashboard
+                        </p>
+                    </a>
+                </li>
+                @{
+                    var menuList = ViewBag.MENUITEM as List<MODELS.HETHONG.TAIKHOAN.Dtos.MODELMenu>;
+                    var headerList = ViewBag.MENUHEADER as List<MODELS.HETHONG.VAITRO.Dtos.MODELNhomQuyen>;
+
+                    foreach (var header in headerList.Where(x => x.ParentId == null))
+                    {
+                        var subMenu = headerList.Where(x => x.ParentId == header.Id).ToList();
+
+                        if (menuList.Where(x => x.NhomQuyenId == header.Id).Count() > 0 || subMenu.Count > 0)
+                        {
+                                                    <li class="nav-item" id="headerOpen_@(header.Id)">
+                                                        <a class="nav-link" href="#" id="header_@(header.Id)">
+                                                            @Html.Raw(header.Icon)
+                                                            <p>
+                                                                @header.TenGoi
+                                                                <i class="fas fa-angle-right right"></i>
+                                                            </p>
+                                                        </a>
+                                                        <ul class="nav nav-treeview">
+                                                            @foreach (var menu in menuList.Where(x => x.NhomQuyenId == header.Id).OrderBy(x => x.Sort))
+                                    {
+                                                                <li class="nav-item">
+                                                                    <a href="#" id="sp@(menu.Action)_@(menu.Controller)" onclick='redirectToPage("@(menu.Action)", "@(menu.Controller)", "@(header.Id)", "")' class="nav-link">
+                                                                    <i class="far fa-plus"></i>
+                                                                        @if (menu.Controller.ToLower() == "quanlycongviec" && menu.Action.ToLower() == "index")
+                                                {
+                                                                        @(menu.TenGoi) <span class="quanlycongviec thong-ke-menu"></span>
+                                                                        <span class="quanlycongviec-gc thong-ke-menu"></span>
+                                                }
+                                                else if (menu.Controller.ToLower() == "quanlyduan" && menu.Action.ToLower() == "index")
+                                                {
+                                                                        @(menu.TenGoi) <span class="quanlyduan thong-ke-menu"></span>
+                                                }
+                                                else
+                                                {
+                                                                            @(menu.TenGoi)
+                                                }
+                                                                    </a>
+                                                                </li>
+                                    }
+                                                            @if (subMenu.Count > 0)
+                                    {
+                                        foreach (var sub in subMenu)
+                                        {
+                                            if (menuList.Where(x => x.NhomQuyenId == sub.Id).Count() > 0)
+                                            {
+                                                                        <li class="nav-item" id="subOpen_@(sub.Id)">
+                                                                            <a class="nav-link" href="#" id="sub_@(sub.Id)">
+                                                                                @Html.Raw(sub.Icon)
+                                                                                <p>
+                                                                                    @sub.TenGoi
+                                                                                    <i class="fas fa-angle-right right"></i>
+                                                                                </p>
+                                                                            </a>
+                                                                            <ul class="nav nav-treeview">
+                                                                                @foreach (var menu in menuList.Where(x => x.NhomQuyenId == sub.Id).OrderBy(x => x.Sort))
+                                                        {
+                                                                                    <li class="nav-item">
+                                                                                        <a href="#" id="sp@(menu.Action)_@(menu.Controller)" onclick='redirectToPage("@(menu.Action)", "@(menu.Controller)", "@(sub.ParentId)", "@(sub.Id)")' class="nav-link">
+                                                                                        <i class="far fa-plus"></i>
+                                                                                            @if (menu.Controller.ToLower() == "quanlycongviec" && menu.Action.ToLower() == "index")
+                                                                    {
+                                                                                            @(menu.TenGoi) <span class="quanlycongviec thong-ke-menu"></span>
+
+                                                                                            <span class="quanlycongviec-gc thong-ke-menu"></span>
+                                                                    }
+                                                                    else if (menu.Controller.ToLower() == "quanlyduan" && menu.Action.ToLower() == "index")
+                                                                    {
+                                                                                            @(menu.TenGoi) <span class="quanlyduan thong-ke-menu"></span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                                                @(menu.TenGoi)
+                                                                    }
+
+                                                                                        </a>
+                                                                                    </li>
+                                                        }
+                                                                            </ul>
+                                                                        </li>
+                                            }
+                                        }
+                                    }
+                                                        </ul>
+                                                    </li>
+                        }
+                    }
+                }
+                @if (User.Identity.Name == "admin")
+                {
+                    <li class="nav-item" id="headerOpen_admin">
+                        <a class="nav-link" href="#" id="header_admin">
+                            <i class="fas fa-user-crown nav-icon"></i>
+                            <p>
+                                Administrator
+                                <i class="fas fa-angle-right right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="#" onclick='redirectToPage("index", "menu", "admin")' id="spindex_menu" class="nav-link">
+                                    <i class="fas fa-greater-than"></i>
+                                    Menu
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" onclick='redirectToPage("index", "nhomquyen", "admin")' id="spindex_nhomquyen" class="nav-link">
+                                    <i class="fas fa-greater-than"></i>
+                                    Nhóm quyền
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>
+
+<script>
+    $(document).ready(function () {
+        LoadDuAnQuaHan();
+        LoadDuAn();
+        LoadCongViec();
+    });
+    function LoadDuAnQuaHan() {
+        var url = '/QuanLyDuAn_QuaHan/Tong';
+        $.ajax(
+            {
+                url: url,
+                type: "GET",
+                data: null,
+                success: function (response) {
+                    
+                    if (response > 0) {
+                        $('.quanlyduan_quahan').html(" " + response + "");
+                        
+                    }
+                    else {
+                        $('.quanlyduan_quahan').html("");
+                    }
+                }
+            });
+    }
+    function LoadDuAn() {
+        var url = '/QuanLyDuAn/Tong';
+        $.ajax(
+            {
+                url: url,
+                type: "GET",
+                data: null,
+                success: function (response) {
+                   
+                    if (response > 0) {
+                        $('.quanlyduan').html(" " + response + "");
+
+                    }
+                    else {
+                        $('.quanlyduan').html("");
+                    }
+                }
+            });
+    }
+    function LoadCongViec() {
+        var url = '/QuanLyCongViec/Tong';
+        $.ajax(
+            {
+                url: url,
+                type: "GET",
+                data: null,
+                success: function (response) {
+                    
+                    if (response.Tong > 0) {
+                        $('.quanlycongviec').html( "<span class='thongke-1'>" + response.Tong + "</span>");
+
+                    }
+                    else {
+                        $('.quanlycongviec').html("");
+                    }
+                }
+            });
+    }
+</script>

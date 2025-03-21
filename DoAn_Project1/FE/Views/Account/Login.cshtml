@@ -1,0 +1,270 @@
+﻿@{
+    Layout = null;
+}
+<style>
+    .symbol-input100 i {
+        color: #3498db; /* Color of the icon */
+    }
+</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Đăng nhập</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="~/icon.ico?v=2">
+    
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/fontawesome-pro-5.15.3-web/css/all.min.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/login/login_vendor/animate/animate.css">
+    <link rel="stylesheet" type="text/css" href="~/login/login_vendor/css-hamburgers/hamburgers.min.css">
+    <link rel="stylesheet" type="text/css" href="~/login/login_vendor/select2/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/login/login_css/util.css">
+    <link href="~/css/root.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="~/login/login_css/main.css">
+    <link rel="stylesheet" type="text/css" href="~/login/login_css/login.css">
+    <link href="~/lib/kendo/css/kendo.common-fiori.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/kendo/css/kendo.fiori.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/lib/kendo/js/kendo.all.min.js"></script>
+    <script src="~/lib/kendo/js/kendo.aspnetmvc.min.js"></script>
+    <script src="~/lib/kendo/js/jszip.min.js"></script>
+    <script src="~/js/kendo.modernizr.custom.js"></script>
+    <style>
+        #logoapp {
+            transition: filter 1s ease-in-out; /* Hiệu ứng chuyển đổi mượt */
+            filter: brightness(100%);
+        }
+
+            /* Trạng thái sáng lên */
+            #logoapp.bright {
+                filter: brightness(150%); /* Tăng độ sáng lên 150% */
+            }
+    </style>
+
+</head>
+<body class="bg-login">
+
+
+    <script>
+        const image = document.getElementById('logoapp');
+
+        // Hàm làm sáng hình ảnh
+        function brightenImage() {
+            image.classList.add('bright'); // Thêm lớp 'bright'
+
+            // Sau 1 giây, trở về trạng thái bình thường
+            setTimeout(() => {
+                image.classList.remove('bright');
+            }, 1000); // Sáng trong 1 giây
+        }
+
+        function togglePassword() {
+            var passwordField = document.getElementById("Password");
+
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                $('#showhide').html("<i class='far fa-eye-slash'></i>");
+
+            } else {
+                passwordField.type = "password";
+
+
+                $('#showhide').html("<i class='fad fa-eye'></i>");
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                return new bootstrap.Popover(popoverTriggerEl);
+            });
+        });
+    </script>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 justify-content-center  centered">
+                <div class="row">
+                    <div class="col-md-4 offset-md-4 login-header image-container">
+                        <img src="~/login/logo.png" class="login-header-img  js-tilt" id="logoapp" />
+                        <div class="light-effect"></div>
+                       
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4 offset-md-4 login-form shadow-lg">
+                        @model MODELS.HETHONG.TAIKHOAN.Requests.LoginRequest
+                        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "frmLogin" }))
+                        {
+                            <div class="boc-het">
+                                @Html.AntiForgeryToken()
+
+                               
+                              
+                                <div class="login-group-boc-lai">
+                                </div>
+                                <div class="login-group shadow-lg">
+                                    <div class="form-group header">
+                                        <h5 class="form-group-header"> QUẢN LÝ DỰ ÁN</h5>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="" class="font-weight-bold">Tên đăng nhập</label>
+
+
+                                        <input class="form-control placeholder-no-fix" type="text" name="UserName" id="UserName" autocomplete="off" placeholder="Tên đăng nhập" asp-for="UserName" />
+                                        <span class="text-danger" asp-validation-for="UserName"></span>
+
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="" class="font-weight-bold">Mật khẩu truy cập</label>
+
+                                        <div class="form-group-item">
+                                            <input class="form-control placeholder-no-fix" type="password" name="Password" id="Password" autocomplete="off" placeholder="Mật khẩu" asp-for="Password" />
+                                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+
+                                            <div id="showhide" onclick="togglePassword()">
+                                                <i class="fad fa-eye"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
+
+                                            <label class="container-checkBox">
+                                                <b>Ghi nhớ tôi</b>
+                                                <input type="checkbox" name="remember" id="cbRemember" value="1">
+                                                <span class="checkmark"></span>
+                                            </label>
+
+                                            <div style="display: flex;  align-items: center;  cursor:pointer">
+                                                <b>Quên mật khẩu</b>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="text-center">
+                                            <button class="btn btn-primary btn-mau-login" type="button" id="btnOK" onclick="logIn()"> Ðăng nhập </button>
+
+                                        </div>
+                                    </div>
+                                    <div style="position:absolute; bottom: 10px; right: 10px;">
+                                        <a href="#" onclick="openLicense()"><h6 style="color: white; text-decoration: underline;">Thông tin bản quyền</h6></a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    
+
+
+
+    
+    <!-- POPUP KENDO WINDOW -->
+    <div id="popupWindowModal"></div>
+    <!-- END POPUP KENDO WINDOW -->
+    <script src="~/login/login_vendor/bootstrap/js/popper.js"></script>
+    <script src="~/login/login_vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/login/login_vendor/select2/select2.min.js"></script>
+    <script src="~/login/login_vendor/tilt/tilt.jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+    <link rel="stylesheet" href="~/theme/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <link rel="stylesheet" href="~/theme/plugins/toastr/toastr.min.css">
+    <link href="~/css/mystyle.css" rel="stylesheet" />
+    <script src="~/theme/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/theme/plugins/toastr/toastr.min.js"></script>
+    <script src="~/theme/plugins/jquery.blockui.min.js"></script>
+    
+    <script src="~/js/site.js?v=2"></script>
+
+    <script>
+        $('.js-tilt').tilt({
+            scale: 1.1
+        })
+    </script>
+
+    <script>
+        $(function () {
+            $("#UserName").focus();
+
+            $("input").on("keypress", function (e) {
+                if (e.keyCode == 13) {
+                    logIn();
+                }
+            });
+
+            //process reader dialog
+            var dialogReader = $("#popupWindowModal");
+            dialogReader.kendoWindow().data("kendoWindow").close();
+        });
+
+    function logIn() {
+        var UserName = $("#UserName").val();
+        var Password = $("#Password").val();
+
+        if (UserName == "") {
+            $("#UserName").focus();
+            showErrorNotify("Vui lòng nhập tên đăng nhập");
+            return;
+        } else if (Password == "") {
+            $("#Password").focus();
+            showErrorNotify("Vui lòng nhập mật khẩu đăng nhập");
+            return;
+        } else {
+             startLogIn(UserName, Password);
+        }
+    }
+
+        function startLogIn(UserName, Password) {
+            showLoading(true);
+
+            var model = {
+                UserName: UserName,
+                Password: Password
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Login", "Account")',
+                data: model,
+                success: function (result) {
+                    showLoading(false);
+                    if (result.IsSuccess) {
+                  
+                            localStorage.setItem("itemActive", "index_trangthaicongviec");
+                            localStorage.setItem("headerActive", 'a39fbd7c-eaec-48b2-8df9-04afdf21a9f4');
+                            localStorage.setItem("subActive", "trangthaicongviec");
+                            window.location.href = "/TrangThaiCongViec/Index";
+                       
+                    
+                    } else {
+                        // alert("Error: " + result.Message);
+                        showErrorNotify(result.Message);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    showLoading(false);
+                    console.error("Error: ", errorThrown); // Log the error to the console
+                    showErrorNotify("An error occurred during login. Please try again later.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>

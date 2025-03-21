@@ -1,0 +1,195 @@
+
+.centered {
+    height:100vh;
+
+}
+
+img.login-header-img {
+    width: 100%;
+    height: 94px;
+    object-fit: fill;
+}
+
+.col-md-4.offset-md-4.login-header {
+    height: 394px;
+    position: relative;
+    padding: 0;
+}
+.col-md-4.offset-md-4.login-header {
+    padding-top: 62px;
+    padding-left: 39px;
+    padding-right: 39px;
+    cursor: pointer;
+    will-change: transform;
+    transform: perspective(300px) rotateX(0deg) rotateY(0deg);
+}
+h5.form-group-header {
+    text-align: center;
+    font-size: 31px;
+    padding: 19px 1px;
+    
+    font-weight: 700;
+}
+
+.form-group.header {
+    margin: 0;
+}
+
+.col-md-4.offset-md-4.login-form {
+    background: #fff;
+    position: relative;
+    height: auto;
+}
+.form-control {
+    font-size: 15.3px;
+}
+.col-md-4.offset-md-4.login-form .login-group {
+    background: #fff;
+    border-radius: 25px;
+    border: 1px solid #e7f0f6;
+    margin: 8px;
+    margin-left: 31px;
+    margin-right: 31px;
+    padding: 1px 31px;
+    position: absolute;
+    left: 0;
+    height: 344px;
+    width: calc(100% - 62px);
+    z-index: 2;
+    top: -227px;
+}
+
+button#btnLogin {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+button#btnOK {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    
+    
+    height: 41px;
+    border-radius: 27px;
+    font-size: 19px;
+    
+    background:var(--mau-chinh);
+}
+
+.login-group-boc-lai {
+    position: absolute;
+    top: -159px;
+    width: 100%;
+    min-height: 314px;
+    max-height: 100vh;
+    z-index: 1;
+    left: 0;
+    border-radius: 13px 13px 1px 1px;
+    background: #fff;
+}
+
+@media only screen and (max-width: 992px) {
+
+    .centered{
+        background-color: #fff;
+    }
+}
+
+.login-group-cam-copy {
+    z-index: 3;
+    position: absolute;
+    width: 100%;
+    height: 15.3px;
+    padding: 25px;
+    left: 0;
+    bottom: 0;
+    background-image: linear-gradient(45deg, #1E9EF0, #2E5399);
+   
+}
+
+.login-group-cam-copy>p {
+    text-align: center;
+    color: #fff;
+}
+
+.login-group-cam-copy>p>a {
+    text-align: center;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-mau-login {
+    background-color: #178658;
+}
+
+.btn-mau-sso {
+    border-color: #178658;
+    color: #77BCEC;
+}
+
+.bg-login {
+    --bs-bg-opacity: 1;
+    background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+    background-image: url(/login/bg.jpg);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    object-fit: fill;
+    
+}
+
+body
+{
+    font-family: 'Roboto Condensed', sans-serif !important;
+    color: #334862;
+    font-size: 18px !important;
+    line-height: 1.2 !important;
+    font-optical-sizing: auto !important;
+    
+}
+label.container-checkBox >b {
+    font-weight: bolder;
+    padding: 0px 0px;
+    margin-left: -14px;
+}
+label.container-checkBox >span {
+   
+    padding: 0;
+    margin-top: -2px;
+    width: 15px;
+}
+.form-group label {
+    font-size: 15.3px;
+    line-height: 1.5rem;
+    vertical-align: top;
+    margin-bottom: 0rem;
+}
+
+.form-group-item {
+    position: relative;
+    width: 100%;
+    height: 39px;
+    overflow: hidden;
+}
+
+.form-group-item>input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.form-group-item>#showhide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 9px;
+    left: calc(100% - 31px);
+    z-index: 2;
+    cursor: pointer;
+}
+

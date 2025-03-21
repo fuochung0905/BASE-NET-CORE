@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Entity.DBContent;
+namespace ENTITIES.DBContent;
 
 public partial class PHANQUYEN_NHOMQUYEN
 {
@@ -14,4 +14,6 @@ public partial class PHANQUYEN_NHOMQUYEN
     public string? Icon { get; set; }
 
     public bool IsActived { get; set; }
+
+    public Guid? ParentId { get; set; }
 }

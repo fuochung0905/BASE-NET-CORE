@@ -1,0 +1,134 @@
+﻿.d-flex.thong-ke-item {
+    background: #fff;
+    border-radius: 13px;
+    padding: 19px 19px;
+    margin: 9px 0;
+    border: 0 solid #f3f2f1;
+    white-space: nowrap;
+    box-shadow: 0 0 2px 2px #ececec !important;
+    min-height: 131px;
+    height: 100%;
+}
+.boc-icon {
+    padding: 0;
+    width: 68px;
+    height: 68px;
+    margin-right: 13px;
+    font-size: 56px;
+    border-radius: 0px;
+}
+.boc-icon {
+    
+    width: 69px;
+    height: 69px;
+    margin-right: 13px;
+    font-size: 31px;
+    line-height: normal;
+    border-radius: 0;
+    opacity: 1;
+    white-space: normal;
+    color: #6c7ab5;
+}
+
+.text-mota {
+    color:var(--selected-color);
+    
+    white-space: normal;
+    font-family: 'UTMBebas', sans-serif !important;
+    font-weight: 500;
+    
+    font-size: 19px;
+}
+.text-sum {
+    font-size: 49px;
+    color: var(--brand-color);
+    font-weight: 600;
+    font-family: Roboto Condensed, sans-serif !important;
+}
+.boc-text.flex-grow-1 {
+    text-align: right;
+}
+.thongke-congviec {
+    display: flex;
+    flex-direction: row; /* Sắp xếp các phần tử theo chiều dọc */
+    align-items: center; /* Căn giữa dọc */
+    justify-content: center; /* Căn giữa ngang */
+    text-align: center; /* Đảm bảo tiêu đề cũng được căn giữa */
+    gap: 13px;
+    padding-bottom: 13px;
+    padding-top: 13px;
+}
+
+.title-thongke {
+    justify-content: stretch;
+    display: flex;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    vertical-align: middle;
+    white-space: nowrap;
+    padding-top: 13px;
+}
+
+.filter {
+    display: flex;
+        justify-content: flex-start;
+        width: 100%;
+}
+
+.k-dropdown {
+    width: auto !important; /* Đảm bảo không bị kéo dài toàn bộ */
+}
+.thongke-col {
+    margin-bottom: 19px;
+}
+
+/* Hiệu ứng xuất hiện (Fade-in) */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(19px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Tạo hiệu ứng khi xuất hiện */
+.d-flex.thong-ke-item {
+    background: linear-gradient(to right, #ffffff, #f8f9fa);
+    border-radius: 13px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    transition: all 0.3s ease-in-out;
+    opacity: 0;
+    transform: translateY(19px);
+    animation: fadeInUp 0.5s ease-in-out forwards;
+}
+
+/* Hiệu ứng hover */
+.d-flex.thong-ke-item:hover {
+    box-shadow: 0px 8px 18px rgba(0, 0, 0, 0.25);
+    transform: translateY(-5px) scale(1.02);
+}
+
+/* Tăng cường màu sắc đẹp hơn */
+
+
+.text-sum {
+   
+    transition: color 0.3s ease-in-out;
+}
+
+/* Tạo hiệu ứng nhấp nháy nhẹ cho số liệu */
+.text-sum:hover {
+    color: #e74c3c;
+    text-shadow: 0px 0px 8px rgba(231, 76, 60, 0.5);
+}
+
+/* Delay hiệu ứng để từng div xuất hiện dần */
+@for $i from 1 through 10 {
+    .d-flex.thong-ke-item:nth-child(#{$i}) {
+        animation-delay: 0.1s * $i;
+    }
+}

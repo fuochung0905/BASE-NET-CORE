@@ -1,0 +1,59 @@
+@model MODELS.DANHMUC.GIAIDOANDUAN.Dtos.MODELGiaiDoanDuAn
+
+<div class="modal-content" id="modalLoading">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmGiaiDoanDuAn", @class = "forms-sample" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            <h5 class="modal-title">Thông tin giai đoạn dự án</h5>
+            <button type="button" class="close" onclick="closePopUp();" aria-label="Close" data-bs-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(model => model.IsEdit)
+            @Html.HiddenFor(model => model.Id)
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>
+                        Mã  <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().TextBoxFor(m => m.Ma).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                    @Html.ValidationMessageFor(model => model.Ma, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>
+                        Tên gọi <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().TextBoxFor(m => m.TenGoi).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                    @Html.ValidationMessageFor(model => model.TenGoi, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>
+                        Trạng thái
+                    </label>
+                    @(Html.Kendo().DropDownListFor(m => m.IsActived).Enable(false)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .BindTo(SYS_CONFIG.TRANG_THAI)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.IsActived, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closePopUp();" class="btn btn-default" type="button"><i class="fas fa-times-square"></i> Huỷ</button>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $("#frmGiaiDoanDuAn").find("span.field-validation-valid").hide();
+    });
+
+    function closePopUp() {
+        hideModal();
+    }
+</script>

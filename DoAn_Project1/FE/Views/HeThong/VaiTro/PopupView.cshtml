@@ -1,0 +1,46 @@
+﻿@model MODELS.HETHONG.VAITRO.Dtos.MODELVaiTro
+
+<div class="modal-content" id="modalLoading">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmVaiTro", @class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            <h4 class="modal-title">Thông tin vai trò</h4>
+            <button type="button" class="close" onclick="closePopUp();" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(model => model.IsEdit)
+            @Html.HiddenFor(model => model.Id)
+            <div class="form-group">
+                <label>Tên gọi <span class="text-danger">*</span></label>
+                @(Html.Kendo().TextBoxFor(m => m.TenGoi).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.TenGoi, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label>
+                    Trạng thái
+                </label>
+                @(Html.Kendo().DropDownListFor(m => m.IsActived).Enable(false)
+                    .DataTextField("Text")
+                    .DataValueField("Value")
+                    .BindTo(SYS_CONFIG.TRANG_THAI)
+                    .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.IsActived, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="closePopUp();"><i class="fas fa-times-square" aria-hidden="true"></i>&nbsp; Hủy</button>
+        </div>
+    }
+</div>
+<script>
+    function closePopUp() {
+        hideModal();
+    }
+</script>
+
+
+
+

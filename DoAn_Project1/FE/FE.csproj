@@ -7,12 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="KendoUI_2023" Version="2019.1.115" />
-    <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
+    <Content Include="Properties\launchSettings.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Model\Model.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.13" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
+    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2021.2.511" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Model\MODELS.csproj" />
   </ItemGroup>
 
 </Project>

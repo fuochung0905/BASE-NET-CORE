@@ -1,0 +1,496 @@
+@model  MODELS.HETHONG.TAIKHOAN.Dtos.MODELPhanQuyen
+@{
+    string idPopup = "divPopup" + DateTime.Now.ToString("yyyyDDmmHHmmss");
+    string userId = ViewBag.UserId.ToString();
+}
+
+<script>
+    function getListIdSelected() {
+        var g = $("#gridData").getKendoGrid();
+        return g.selectedKeyNames();
+    }
+
+    function gridDataFilter() {
+        var duAnId = $("#FilterDuAnId").data("kendoDropDownList").value();
+        var giaiDoanId = $("#FilterGiaiDoanId").data("kendoDropDownList").value();
+        var congViecTrongGiaiDoanId = $("#FilterCongViecTrongGiaiDoanId").data("kendoDropDownList").value();
+        var trangThaiId = $("#FilterTrangThaiId").data("kendoDropDownList").value();
+        var tuNgay = $("#FilterTuNgay").data("kendoDatePicker").value();
+        var denNgay = $("#FilterDenNgay").data("kendoDatePicker").value();
+        var nguoiThucHienId = $("#FilterNguoiThucHienId").data("kendoDropDownList").value();
+        var nguoiKiemTraId = $("#FilterNguoiKiemTraId").data("kendoDropDownList").value();
+        var assignToId = $("#FilterAssignToId").data("kendoDropDownList").value();
+        filter = {
+            DuAnId: duAnId,
+            GiaiDoanId: giaiDoanId,
+            CongViecTrongGiaiDoanId: congViecTrongGiaiDoanId,
+            TrangThaiId: trangThaiId,
+            TuNgay: tuNgay === null ? tuNgay : tuNgay.toJSON(),
+            DenNgay: denNgay === null ? denNgay : denNgay.toJSON(),
+            NguoiThucHienId: nguoiThucHienId,
+            NguoiKiemTraId: nguoiKiemTraId,
+            AssignTo: assignToId,
+            TextSearch: $("#TextSearch").val()
+        }
+        return filter;
+    }
+
+    function congViecGiaiDoanData() {
+        var data = {
+            DuAnId: $("#FilterDuAnId").val(),
+            GiaiDoanId: $("#FilterGiaiDoanId").val()
+        };
+        return data;
+    }
+
+    function refreshCongViecGiaiDoan() {
+        var duAnId = $("#FilterDuAnId").val();
+        var giaiDoanId = $("#FilterGiaiDoanId").val();
+        var congViecGiaiDoan = $('#FilterCongViecTrongGiaiDoanId').data('kendoDropDownList');
+        if (duAnId !== '' && giaiDoanId !== '') {
+            congViecGiaiDoan.dataSource.read();
+        }
+    }
+
+    function resetFilter() {
+        $("#FilterDuAnId").data("kendoDropDownList").value("");
+        $("#FilterGiaiDoanId").data("kendoDropDownList").value("");
+        $("#FilterCongViecTrongGiaiDoanId").data("kendoDropDownList").value("");
+        $("#FilterTrangThaiId").data("kendoDropDownList").value("");
+        $("#FilterNguoiThucHienId").data("kendoDropDownList").value("");
+        $("#FilterNguoiKiemTraId").data("kendoDropDownList").value("");
+        $("#FilterAssignToId").data("kendoDropDownList").value("");
+        $("#FilterTuNgay").data("kendoDatePicker").value("");
+        $("#FilterDenNgay").data("kendoDatePicker").value("");
+        refreshGrid();
+    }
+    function ExportExcel(){
+        debugger;
+         let ngayTu = $("#FilterTuNgay").val().trim();
+         let ngayDen =  $("#FilterDenNgay").val().trim();
+         let regexNgay = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+          if (ngayTu === "" || ngayDen ==="") {
+                 alert("Vui lòng chọn ngày,tháng để xuất báo cáo!");
+                 $("#FilterTuNgay").focus();
+                 return false;
+          }
+          else if(!regexNgay.test(ngayTu) || !regexNgay.test(ngayDen)){
+                  alert("Định dạng ngày không hợp lệ! Vui lòng nhập theo định dạng dd/MM/yyyy.");
+                  $("#FilterTuNgay").focus();
+                  return false;
+          }
+          else{
+              var params = {
+                 TuNgay: $("#FilterTuNgay").val(),
+                 DenNgay: $("#FilterDenNgay").val(),
+             }
+             $.ajax({
+                 type: 'POST',
+                 url: '@Url.Action("ExportExcel", "ThongKeBaoCaoCongViec")',
+                 data: params,
+                 success: function (data, textstatus) {
+                     if (data.Status) {
+                         //url = "@ViewBag.DocViewerUrl" + data.Data.DocumentUrl + "&host=" + data.Data.Host
+                         //$('#iframeShowReport').attr('src', url)
+                         //showReport(url);
+                         window.location.href = data.Data.Host + data.Data.DocumentUrl;
+                     } else {
+                         showLoading(false)
+                         showErrorNotify(data.Message);
+                     }
+                 },
+                 error: function (XMLHttpRequest, textStatus, errorThrown) {
+                     showErrorNotify(errorThrown);
+                     showLoading(false);
+                 }
+             });
+         }
+     }
+
+</script>
+
+<!-- Content Header (Page header) -->
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        @if (Model.IsXem)
+        {
+            <!--FILTER-->
+            <div id="accordion">
+                <div class="card card-info">
+                   @*  <div class="card-header">
+                        <h4 class="card-title w-100">
+                            <a class="d-block w-100" data-toggle="collapse" href="#divFilter">
+                                <i class="fas fa-filter"></i> LỌC DANH SÁCH
+                            </a>
+                        </h4>
+                    </div> *@
+                    <div id="divFilter" class="collapse" data-parent="#accordion" style="">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-xl-3">
+                                    @(Html.Kendo().DropDownList()
+                                        .Name("FilterDuAnId")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .OptionLabel("-- Tất cả dự án --")
+                                        .Filter(FilterType.Contains)
+                                        .DataSource(source => source
+                                            .Custom()
+                                            .Transport(transport => transport
+                                                .Read(read => { read.Action("GetAllComboBox", "QuanLyDuAn"); })
+                                            )
+                                        )
+                                        .Events(e => e.Change("refreshCongViecGiaiDoan"))
+                                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                                    )
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-3">
+                                    @(Html.Kendo().DropDownList().Name("FilterGiaiDoanId")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .OptionLabel("-- Tất cả giai đoạn --")
+                                        .Filter(FilterType.Contains)
+                                        .DataSource(source => source
+                                            .Custom()
+                                            .Transport(transport => transport
+                                                .Read(read => { read.Action("GetAllComboBox", "GiaiDoanDuAn"); })
+                                            )
+                                        )
+                                        .Events(e => e.Change("refreshCongViecGiaiDoan"))
+                                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                                    )
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-3">
+                                    @(Html.Kendo().DropDownList().Name("FilterCongViecTrongGiaiDoanId")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .OptionLabel("-- Tất cả công việc trong giai đoạn --")
+                                        .Filter(FilterType.Contains)
+                                        .DataSource(source => source
+                                            .Custom()
+                                            .Transport(transport => transport
+                                                .Read(read => { read.Action("GetAllComboBoxByGiaiDoan", "CongViecTrongGiaiDoan").Data("congViecGiaiDoanData");})
+                                            )
+                                            .ServerFiltering(true) //Không có cái này thì cái CascadeFrom không chạy được
+                                        )
+                                        .CascadeFrom("FilterGiaiDoanId")
+                                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                                    )
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-3">
+                                    @(Html.Kendo().DropDownList().Name("FilterTrangThaiId")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .OptionLabel("-- Tất cả trạng thái --")
+                                        .Filter(FilterType.Contains)
+                                        .DataSource(source => source
+                                            .Custom()
+                                            .Transport(transport => transport
+                                                .Read(read => { read.Action("GetComboBoxTrangThai", "QuanLyCongViec"); })
+                                            )
+                                        ).HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                                    )
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-xl-3">
+                                    @(Html.Kendo().DatePicker().Name("FilterTuNgay")
+                                        .Format("dd/MM/yyyy").Value(DateTime.ParseExact(DateTime.Now.ToString("01/MM/yyyy"), "dd/MM/yyyy", null))
+                                        .HtmlAttributes(new { @class = "form-control", @style = "width: 100%; max-width: none;", @placeholder = "Từ ngày" })
+                                    )
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-3">
+                                    @(Html.Kendo().DatePicker().Name("FilterDenNgay")
+                                        .Format("dd/MM/yyyy").Value(DateTime.Now)
+                                        .HtmlAttributes(new { @class = "form-control", @style = "width: 100%; max-width: none;", @placeholder = "Đến ngày"})
+                                    )
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-3">
+                                    @(Html.Kendo().DropDownList().Name("FilterNguoiThucHienId")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .OptionLabel("-- Tất cả người thực hiện --")
+                                        .Filter(FilterType.Contains)
+                                        .DataSource(source => source
+                                            .Custom()
+                                            .Transport(transport => transport
+                                                .Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
+                                            )
+                                        )
+                                        .Value(userId.ToString() ?? "")
+                                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                                    )
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-3">
+                                    @(Html.Kendo().DropDownList().Name("FilterNguoiKiemTraId")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .OptionLabel("-- Tất cả người kiểm tra --")
+                                        .Filter(FilterType.Contains)
+                                        .DataSource(source => source
+                                            .Custom()
+                                            .Transport(transport => transport
+                                                .Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
+                                            )
+                                        )
+                                        .Value(userId.ToString() ?? "")
+                                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                                    )
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-3">
+                                    @(Html.Kendo().DropDownList().Name("FilterAssignToId")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .OptionLabel("-- Assign to --")
+                                        .Filter(FilterType.Contains)
+                                        .DataSource(source => source
+                                            .Custom()
+                                            .Transport(transport => transport
+                                                .Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
+                                            )
+                                        )
+                                        .Value(userId.ToString() ?? "")
+                                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                                    )
+                                </div>
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3 d-flex" style="gap: 8px; padding-bottom: 0.3rem;">
+                                    <button class="btn btn-success" onclick="refreshGrid()"><i class="fa fa-filter"></i> Lọc</button>
+                                    <button class="btn btn-primary" onclick="resetFilter()"><i class="fa fa-undo"></i> Đặt lại</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--END FILTER-->
+
+            @(Html.Kendo().Grid<MODELS.DUAN.QUANLYCONGVIEC.Dtos.MODELQuanLyCongViec>()
+                .Name("gridData")
+                .HtmlAttributes(new { @class = "table table-hover" })
+                .Columns(columns =>
+                {
+                    columns.Select().HtmlAttributes(new { @style = "text-align:center;" }).Width(68).Lockable(true).Locked();
+                    columns.Bound("").ClientTemplate("#= xoFunc.renderNumberGrid() #").Title("STT")
+                        .Width(72).Filterable(false).Sortable(false).HtmlAttributes(new { @class = "text-center" }).Lockable(true).Locked();
+
+                    columns.Bound(c => c.TenCongViec).HtmlAttributes(new { @class = "title" }).HtmlAttributes(new { @class = "title" }).Title("Tên công việc").Width(350).Lockable(true).Locked();
+
+                    columns.Bound(c => c.DuAn).Title("Dự án").Width(191).Lockable(true).Locked();
+
+                    columns.Bound(c => c.SoGioThucTe).Title("Thời gian thực hiện (giờ)").Width(131)
+                        .HeaderHtmlAttributes(new { @style = "text-wrap: pretty;" })
+                    .HtmlAttributes(new { @style = "text-align: right;" }).HtmlAttributes(new { @class = "title-number" });
+                    columns.Bound(c => c.ThoiGianTest).Title("Thời gian test (giờ)").Width(131)
+                        .HeaderHtmlAttributes(new { @style = "text-wrap: pretty;" })
+                    .HtmlAttributes(new { @style = "text-align: right;" }).HtmlAttributes(new { @class = "title-number" });
+                    columns.Bound(c => c.TongThoiGianThucHien).Title("Tổng thời gian thực hiện (giờ)").Width(131)
+                        .HeaderHtmlAttributes(new { @style = "text-wrap: pretty;" })
+                    .HtmlAttributes(new { @style = "text-align: right;" }).HtmlAttributes(new { @class = "title-number" });
+                    columns.Bound(c => c.SoLoiDaFix).Title("Số lỗi đã fix")
+                        .Width(131)
+                        .ClientTemplate("#= SoLoiDaFix# / #= TongSoLoi #")
+                    .HtmlAttributes(new { @style = "text-align: right;" }).HtmlAttributes(new { @class = "title-number" });
+                    columns.Bound(c => c.TienDo).Title("Tiến độ").Width(131).Format("{0:p}");
+                    columns.Bound(c => c.GiaiDoan).Title("Giai đoạn").Width(153);
+                    columns.Bound(c => c.NguoiThucHien).Title("Người thực hiện").Width(191);
+                    columns.Bound(c => c.NguoiKiemTra).Title("Người kiểm tra").Width(191);
+                    columns.Bound(c => c.AssignName).Title("Assign to").Width(191);
+                    columns.Bound(c => c.TrangThai).Title("Trạng thái công việc").Width(180).HeaderHtmlAttributes(new { @style = "text-wrap: pretty;" });
+                    columns.Group(g =>
+	                    g.Columns(col =>
+	                    {
+		                    col.Bound(c => c.DuKienTuNgay).Title("Từ ngày").HtmlAttributes(new { @style = "text-align:center;" }).Format("{0: dd/MM/yyyy}").Width(153);
+		                    col.Bound(c => c.DuKienDenNgay).Title("Đến ngày").HtmlAttributes(new { @style = "text-align:center;" }).Format("{0: dd/MM/yyyy}").Width(153);
+	                    })
+	                    .Title("Thời gian dự kiến")
+	                );
+                    columns.Bound(c => c.GioCongDuKien).Title("Giờ công dự kiến (giờ)")
+                        .HeaderHtmlAttributes(new { @style = "text-wrap: pretty;" })
+                    .HtmlAttributes(new { @style = "text-align: right;" }).HtmlAttributes(new { @class = "title-number" })
+                        .Width(131);
+                    columns.Group(g =>
+                        g.Columns(col =>
+                        {
+                            col.Bound(c => c.ThucTeTuNgay).Title("Từ ngày").HtmlAttributes(new { @style = "text-align:center;" }).Format("{0: dd/MM/yyyy}").Width(153);
+                            col.Bound(c => c.ThucTeDenNgay).Title("Đến ngày").HtmlAttributes(new { @style = "text-align:center;" }).Format("{0: dd/MM/yyyy}").Width(153);
+                        })
+                        .Title("Thời gian thực tế")
+                    );
+                })
+                .Sortable()
+                .ToolBar(toolbar =>
+                {
+                    toolbar.ClientTemplateId("GridToolbarTemplate");
+                })
+                .Resizable(x => x.Columns(true))
+                .Pageable()
+                .EnableCustomBinding(true)
+                .PersistSelection()
+                .Scrollable()
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .Model(model => model.Id(p => p.Id))
+                .Read(read => read.Action("GetList", "QuanLyCongViec")
+                .Data("gridDataFilter"))
+                .PageSize(SYS_CONFIG.PAGE_SIZE_DEFAULT)
+                .Events(e => e.Error("xoFunc.onErrorGrid"))
+                )
+                .Events(e => { e.DataBinding("xoFunc.onDataBindingGrid"); })
+                .Pageable(pager => pager
+                .Refresh(true).Input(true).Numeric(false)
+                .PageSizes(SYS_CONFIG.PAGE_SIZES))
+                .NoRecords(n => n.Template("Không có dữ liệu"))
+                .Excel(excel =>
+                    excel.FileName("DanhSachCongViec.xlsx")
+                        .Filterable(true) // Thêm lọc trên các cột excel
+                        .AllPages(true) // Xuất tất cả các trang
+                    )
+                )
+        }
+    </div><!-- /.container-fluid -->
+</section>
+
+@*TOOLBAR TEMPLATE*@
+<script id="GridToolbarTemplate" type="text/html">
+    @{
+        <div class="row w-100">
+            <div class="col-sm-12 col-lg-7 col-xl-8 d-flex flex-wrap" style="gap: 4px;">
+                @{
+                    if(Model.IsXem)
+                    {
+                        <a class="btn btn-info" onclick="xemThongTin()"><i class="fa fa-eye"></i> Xem </a>
+                    }
+                    if(Model.IsThem)
+                    {
+                        <a class="btn btn-success" onclick="themThongTin()"><i class="fas fa-layer-plus"></i>&nbsp; Thêm</a>
+                    }
+                    if(Model.IsCapNhat)
+                    {
+                        <a class="btn btn-primary" onclick="suaThongTin()"><i class="fas fa-wrench"></i> Cập nhật </a>
+                    }
+                    if(Model.IsXoa)
+                    {
+                        <a class="btn btn-danger" onclick="xoaThongTin()"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Xóa </a>
+                    }
+
+                    if(Model.IsThongKe)
+                    {
+                        // <a class="btn btn-success" onclick="xuatExcel()"><i class="fa fa-file-excel" aria-hidden="true"></i>&nbsp; Xuất excel </a>
+                        <a class="btn btn-success" onclick="ExportExcel()"><i class="fa fa-file-excel" aria-hidden="true"></i>&nbsp; Xuất báo cáo</a>
+                    }
+                    <a class="btn btn-info" onclick="xemLichSu()"><i class="fa fa-history" aria-hidden="true"></i> Lịch sử </a>
+                }
+            </div>
+            <div class="input-group col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4 mt-2 mt-lg-0">
+                <input id="TextSearch" type="text" class="form-control" placeholder="Tìm kiếm..." onchange="refreshGrid()">
+                <span class="input-group-append">
+                    <button onclick="refreshGrid()" class="px-md-2 py-md-0 btn btn-default" type="button"><i class="fas fa-search"></i></button>
+                </span>
+            </div>
+        </div>
+    }
+</script>
+
+<script>
+  @*   $(document).ready(function () {
+        var gridElement = $("#gridData").data("kendoGrid");
+        var newHeight = $(window).height() - 150; // Trừ phần header, footer, padding
+        gridElement.wrapper.height(newHeight);
+    });
+   
+ *@
+
+    // Showmodal full nếu màn hình < 1024px và lg nếu > 1024px
+    function showModalResponsive(url) {
+        var windowWidth = $(window).width();
+        if (windowWidth < 1024) {
+            showModal(url, "full");
+        } else {
+            showModal(url, "lg");
+        }
+    }
+    //Xem thông tin.
+    function xemThongTin() {
+        var itemSelectedIds = getListIdSelected();
+        if (!checkMultiSelectInGrid(itemSelectedIds)) {
+            return;
+        }
+        var url = '@Url.Action("ShowViewPopup", "QuanLyCongViec")' + "?id=" + itemSelectedIds[0];
+        var windowWidth = $(window).width();
+        showModalResponsive(url);
+    }
+    //Xem lịch sử
+    function xemLichSu() {
+        var itemSelectedIds = getListIdSelected();
+        if (!checkMultiSelectInGrid(itemSelectedIds)) {
+            return;
+        }
+        var url = '@Url.Action("ShowWorkHistory", "QuanLyCongViec")' + "?id=" + itemSelectedIds[0];
+        showModalResponsive(url);
+    }
+    //Thêm thông tin.
+    function themThongTin() {
+        var url = '@Url.Action("ShowInsertPopup", "QuanLyCongViec")';
+        showModalResponsive(url);
+    }
+
+    //Sửa thông tin.
+    function suaThongTin()
+    {
+        var itemSelectedIds = getListIdSelected();
+        if(!checkMultiSelectInGrid(itemSelectedIds))
+        {
+            return;
+        }
+        var url = '@Url.Action("ShowUpdatePopup", "QuanLyCongViec")' + "?id=" + itemSelectedIds[0];
+        showModalResponsive(url);
+    }
+
+    //xóa thông tin
+    function xoaThongTin() {
+        var itemSelectedIds = getListIdSelected();
+        if (itemSelectedIds.length == 0) {
+            showErrorNotify(noDataMessage);
+            return;
+        }
+        var XoaThongTin = function () {
+            showLoading(true);
+            $.ajax({
+                url: '@Url.Action("Delete", "QuanLyCongViec")',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    listSelectedId: itemSelectedIds
+                },
+                success: function (data) {
+                    if (data.IsSuccess) {
+                        showSuccessNotify(deleteSuccess);
+                        refreshGrid();
+                    }
+                    else {
+                        showErrorNotify(data.Message);
+                    }
+                },
+                error: function (request, status, err) {
+                    showErrorNotify(errorMessage);
+                }
+            });
+            showLoading(false);
+        }
+        return xoFunc.confirmDialogYesNo(deleteContent, titleConfirm, XoaThongTin);
+    }
+
+    //Xuất excel
+    function xuatExcel() {
+        var gridExcel = $("#gridData").data("kendoGrid")
+        gridExcel.saveAsExcel();
+    }
+    function refreshGrid() {
+        var grid = $("#gridData").data("kendoGrid");
+        grid.clearSelection();
+        grid.dataSource.page(0);
+        showLoading(false);
+    }
+</script>

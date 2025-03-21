@@ -2,7 +2,7 @@
 using AutoMapper;
 using Repository;
 using System.Reflection;
-using Entity.DBContent;
+using ENTITIES.DBContent;
 
 namespace BE
 {

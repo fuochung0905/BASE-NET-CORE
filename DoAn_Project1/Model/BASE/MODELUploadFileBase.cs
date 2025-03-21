@@ -1,4 +1,11 @@
-﻿namespace Model.BASE
+﻿using Model.BASE;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MODELS.BASE
 {
     public class MODELUploadFileBase
     {
@@ -7,5 +14,8 @@
         public string FileValidateText { get; set; }
         public string[] FileValidate { get; set; }
         public List<MODELTepDinhKem> ListTepDinhKem { get; set; } //Tệp đính kèm hiện có
+        public int RefType { get; set; }
+        public Guid? RandomIdKey { get; set; }
+        public string? FolderUpload { get; set; }
     }
 }

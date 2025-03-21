@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Entity.DBContent;
+namespace ENTITIES.DBContent;
 
 public partial class TAIKHOAN
 {
@@ -56,4 +56,17 @@ public partial class TAIKHOAN
     public bool IsActived { get; set; }
 
     public bool IsDeleted { get; set; }
+
+    public int CountLoginFail { get; set; }
+
+    public DateTime? TimeLoginFail { get; set; }
+
+    public DateTime? TimeChangePassword { get; set; }
+
+    public bool? IsFirstLogin { get; set; }
+
+    public Guid? ChucVuID { get; set; }
+
+    public Guid? DuAnId { get; set; }
+
 }

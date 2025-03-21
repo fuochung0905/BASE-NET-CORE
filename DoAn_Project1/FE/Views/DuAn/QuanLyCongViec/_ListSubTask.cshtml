@@ -1,0 +1,111 @@
+﻿@model MODELS.DUAN.QUANLYCONGVIEC.Requests.PostQuanLyCongViecRequest
+
+<script>
+    function gridDataSusTask_GetListData() {
+        var listData = [];
+        var gridData = $("#gridDataSubTask").data("kendoGrid");
+        
+       
+        if (gridData) {
+
+            for (let i = 0; i < gridData.dataSource._data.length; i++) {
+                let item = gridData.dataSource._data[i];
+                listData.push({
+                    ParentId: "@(Model?.Id)", 
+                    TenCongViec: item.TenCongViec,
+                    NgayBatDau: item.NgayBatDau && new Date(item.NgayBatDau).getTime() > new Date('1753-01-01').getTime() ? new Date(item.NgayBatDau).toISOString() : null,
+                    NgayHetHan: item.NgayHetHan && new Date(item.NgayHetHan).getTime() > new Date('1753-01-01').getTime() ? new Date(item.NgayHetHan).toISOString() : null,
+                    AssignToId: item.ClientAssignTo?.Value ?? null,
+                    TrangThaiId: item.ClientTrangThaiCongViec?.Value ?? null
+                });
+            }
+        }
+        return listData;    
+    }
+    function gridDataListSubTask_DeleteData(button) {
+    var row = $(button).closest("tr")[0];
+    var grid = $("#gridDataSubTask").data("kendoGrid");
+       console.log(grid.dataSource.data());
+    if (grid) {
+    grid.removeRow(row);
+    }
+    }
+    function gridDataSubTask_AddData() {
+    var grid = $("#gridDataSubTask").data("kendoGrid");
+    if (grid && $("#gridDataSubTask .k-grid-edit-row").length == 0) {
+    $('div[data-role="grid"]').each(function () {
+    var gridInstance = $(this).data("kendoGrid");
+    if (gridInstance && $(this).attr("name") !== "gridDataSubTask") {
+    gridInstance.dataSource.cancelChanges();
+    }
+    });
+
+    grid.addRow();
+    }
+    }
+
+   
+</script>
+
+<div class="row form-group">
+    <div class="col-md-12">
+        <label>Danh sách các công việc được chia nhỏ</label>
+        @(
+            Html.Kendo().Grid<MODELS.DUAN.QUANLYCONGVIEC.Requests.PostSubTaskRequests>()
+                .Name("gridDataSubTask")
+                .HtmlAttributes(new { @class = "table table-hover" })
+                .Columns(columns =>
+                {
+                    columns.Command(command =>
+                    {
+                        command.Custom("Delete").Template("<button type='button' class='btn btn-sm btn-danger' onclick='gridDataListSubTask_DeleteData(this)'><i class='fa fa-trash'></i></button>");
+                    }).Title("").HtmlAttributes(new { style = "text-align:center" }).Width(131);
+                    columns.Bound(c => c.TenCongViec).Title("Tên công việc").Width(153);
+                    columns.Bound(c => c.ClientAssignTo)
+                        .Title("AssignTo Name")
+                        .ClientTemplate("#= ClientAssignTo.Text #");
+                    columns.Bound(c => c.ClientTrangThaiCongViec).Title("Trạng thái công việc").ClientTemplate("#= ClientTrangThaiCongViec.Text  #");
+                columns.Bound(c => c.NgayBatDau).Title("Ngày bắt đầu").Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { style = "text-align:right" });
+                columns.Bound(c => c.NgayHetHan).Title("Ngày hết hạn").Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { style = "text-align:right" });
+            })
+            .Editable(editable => editable.Mode(GridEditMode.InCell).DisplayDeleteConfirmation(false))
+            .ToolBar(toolbar => { toolbar.ClientTemplateId("gridDataListSubTask_ToolBar"); })
+            .Resizable(x => x.Columns(true))
+            .PersistSelection()
+            .Scrollable()
+            //.BindTo(Model.ListSubTask)
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            .Batch(true)
+            .Model(p =>
+            {
+                p.Field(y => y.ClientAssignTo).DefaultValue(new MODELS.BASE.MODELCombobox());
+                p.Field(y => y.ClientTrangThaiCongViec).DefaultValue(new MODELS.BASE.MODELCombobox());
+
+            })
+            )
+            .Navigatable(true)
+            .Events(e => e.DataBinding("xoFunc.onDataBindingGrid"))
+            .NoRecords(n => n.Template("Không có dữ liệu"))
+            )
+    </div>
+</div>
+
+<script id="gridDataListSubTask_ToolBar" type="text/x-kendo-template">
+    <div class="row" style="width: 100%">
+        <div class="col-md-9 col-sm-12">
+            <a id="gridDataSubTask_btnAdd" class="btn btn-success ml-1" onclick="gridDataSubTask_AddData()">
+                <i class="fas fa-layer-plus"></i> Thêm công việc
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-12 divTextSearch">
+            <div class="input-group">
+                <input id="gridDataSubTask_TextSearch" type="text" class="form-control" placeholder="Tìm kiếm...">
+                <span class="input-group-append">
+                    <button class="btn btn-default" type="button"><i class="fas fa-search"></i></button>
+                </span>
+            </div>
+        </div>
+    </div>
+</script>
+

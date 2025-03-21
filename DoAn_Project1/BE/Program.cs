@@ -1,6 +1,6 @@
 using System.Text;
 using BE;
-using Entity.DBContent;
+using ENTITIES.DBContent;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

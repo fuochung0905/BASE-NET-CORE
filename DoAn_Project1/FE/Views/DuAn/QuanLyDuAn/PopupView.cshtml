@@ -1,0 +1,181 @@
+@model MODELS.DUAN.QUANLYDUAN.Dtos.MODELQuanLyDuAn
+
+<div class="modal-content" id="modalLoading">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmQuanLyDuAn", @class = "forms-sample" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            <h5 class="modal-title">Thông tin dự án</h5>
+            <button type="button" class="close" onclick="closePopUp();" aria-label="Close" data-bs-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>
+                        Mã dự án <span class="text-danger">*</span>
+                    </label>
+                    @(Html.Kendo().TextBoxFor(m => m.MaDuAn)
+                        .Enable(false)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                    @Html.ValidationMessageFor(model => model.MaDuAn, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Tên dự án <span class="text-danger">*</span></label>
+                    @(Html.Kendo().TextBoxFor(m => m.TenDuAn)
+                        .Enable(false)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                    @Html.ValidationMessageFor(model => model.TenDuAn, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>Chủ đầu tư</label>
+                    @(Html.Kendo().TextBoxFor(m => m.ChuDauTu)
+                        .Enable(false)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                    @Html.ValidationMessageFor(model => model.ChuDauTu, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>
+                        Giai đoạn dự án
+                    </label>
+                    @(Html.Kendo().DropDownListFor(m => m.GiaiDoanId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .OptionLabel("-- Chọn giai đoạn dự án --")
+                        .DataSource(source => source
+                            .Custom()
+                            .Transport(transport => transport
+                                .Read(read =>
+                                {
+                                    read.Action("GetAllComboBox", "GiaiDoanDuAn");
+                                })
+                            )
+                        )
+                        .Enable(false)
+                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                    )
+                    @Html.ValidationMessageFor(model => model.GiaiDoanId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>
+                        Thời gian bắt đầu
+                    </label>
+                    @(Html.Kendo().DatePickerFor(m => m.ThoiGianBatDau).Format("dd/MM/yyyy")
+                        .Enable(false)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                </div>
+                <div class="col-md-6">
+                    <label>
+                        Thời gian kết thúc
+                    </label>
+                    @(Html.Kendo().DatePickerFor(m => m.ThoiGianKetThuc).Enable(false)
+                        .Format("dd/MM/yyyy")
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;", data_val_ignore = "true" })
+                        )
+
+
+                   
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-4">
+                    <label>Chi phí hồ sơ</label>
+                    @(Html.Kendo().NumericTextBoxFor(m => m.ChiPhiHoSo).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%; " }))
+                    @Html.ValidationMessageFor(model => model.ChiPhiHoSo, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-4">
+                    <label>Chi phí triển khai</label>
+                    @(Html.Kendo().NumericTextBoxFor(m => m.ChiPhiTrienKhai).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%; " }))
+                    @Html.ValidationMessageFor(model => model.ChiPhiTrienKhai, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-4">
+                    <label>Chi phí code</label>
+                    @(Html.Kendo().NumericTextBoxFor(m => m.ChiPhiCode).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%; " }))
+                    @Html.ValidationMessageFor(model => model.ChiPhiCode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>
+                        Loại dự án
+                    </label>
+                    @(Html.Kendo().DropDownListFor(m => m.LoaiDuAn)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .BindTo(SYS_CONFIG.LOAIDUAN)
+                        .Enable(false)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.LoaiDuAn, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>
+                        Trạng thái
+                    </label>
+                    @(Html.Kendo().DropDownListFor(m => m.IsActived)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .BindTo(SYS_CONFIG.TRANG_THAI)
+                        .Enable(false)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.IsActived, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label for="CanhBaoHetHan">Cảnh báo hết hạn</label>
+                    @(Html.CheckBoxFor(m => m.IsCanhBaoHetHan, new { @class = "form-check-input", style = "margin-left:8px;height:1em;width:1em;", disabled = "disabled" }))
+
+
+
+
+                </div>>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-12">
+                    <label>Ghi chú</label>
+                    @(Html.Kendo().TextAreaFor(m => m.GhiChu).HtmlAttributes(new { @class = "form-control", @style = "width:100%; height: 250px;", disabled = "disabled" }))
+                    @Html.ValidationMessageFor(model => model.GhiChu, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+        </div>
+       
+        <div class="modal-footer">
+            <button onclick="closePopUp();" class="btn btn-default" type="button"><i class="fas fa-times-square"></i> Huỷ</button>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $("#frmQuanLyDuAn").find("span.field-validation-valid").hide();
+          var datepicker = $("input[name='ThoiGianKetThuc']").data("kendoDatePicker");
+
+        // Kiểm tra giá trị DatePicker khi trang được tải và nếu là DateTime.MinValue thì hiển thị "Chưa chọn ngày"
+          if (datepicker.value() == null || datepicker.value().getTime() == new Date(1901, 0, 1).getTime()) {
+        datepicker.element.val("Chưa chọn ngày");
+    } else {
+        // Nếu có ngày hợp lệ, hiển thị ngày đúng định dạng
+        var selectedDate = datepicker.value();
+        datepicker.element.val(selectedDate.toLocaleDateString('en-GB')); // Using 'en-GB' for dd/MM/yyyy format
+    }
+        // Thêm sự kiện khi giá trị thay đổi
+        datepicker.bind("change", function() {
+            if (datepicker.value() == null || datepicker.value().toString() == new Date(1901, 0, 1).toString()) {
+                datepicker.element.val("Chưa chọn ngày");
+            }
+            else {
+
+        var selectedDate = datepicker.value();
+     
+        datepicker.element.val(selectedDate.toLocaleDateString()); // Or use a custom date format
+    }
+        });
+    });
+
+    function closePopUp() {
+        hideModal();
+    }
+</script>

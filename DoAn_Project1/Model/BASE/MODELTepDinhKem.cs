@@ -1,4 +1,4 @@
-﻿namespace Model.BASE
+﻿namespace MODELS.BASE
 {
     public class MODELTepDinhKem
     {

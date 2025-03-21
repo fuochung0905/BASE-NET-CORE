@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Model.BASE;
+﻿using Model.BASE;
 
-namespace Model.HETHONG.NHOMQUYEN.Dtos
+namespace MODELS.HETHONG.VAITRO.Dtos
 {
     public class MODELNhomQuyen : MODELBase
     {
         public Guid Id { get; set; }
         public string TenGoi { get; set; }
         public string Icon { get; set; }
+        public int? Sort { get; set; }
+        public Guid? ParentId { get; set; }
+        public string? Parent { get; set; }
     }
 }

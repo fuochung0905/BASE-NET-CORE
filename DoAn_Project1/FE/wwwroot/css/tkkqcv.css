@@ -1,0 +1,268 @@
+﻿.container-fluid-tk {
+    height: calc(100vh - 131px);
+    display: flex;
+    flex-direction: column;
+    padding: 31px;
+}
+
+#infoAccordion
+{
+    height: 100%;
+}
+
+h2#headingZeroHours > button {
+    width: 100%;
+}
+/* Thanh timeline */
+.horizontal-timeline {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 10px;
+    justify-content: space-between;
+}
+
+/* Bộ chọn năm */
+.year-picker-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+}
+
+    .year-picker-container input {
+        width: 90px;
+        text-align: center;
+    }
+
+/* Nút chuyển trang */
+.view-btn {
+    height: 35px;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid #ccc;
+    background: linear-gradient(to bottom, #f1f1f1, #ddd);
+    color: #555;
+    padding: 5px 15px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+    .view-btn:hover {
+        background: linear-gradient(to bottom, #41B1E1, #2d78ba);
+        color: white;
+        border-color: #41B1E1;
+        transform: scale(1.05);
+    }
+
+/* Nút tháng */
+.month-btn {
+    height: 35px;
+    font-size: 15px;
+    font-weight: bold;
+    border: 2px solid #ccc;
+    background: linear-gradient(to bottom, #f1f1f1, #ddd);
+    color: #555;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 4px 3px rgba(0, 0, 0, 0.2);
+    position: relative;
+    cursor: pointer;
+}
+
+    .month-btn:hover {
+        background: linear-gradient(to bottom, #41B1E1, #2d78ba);
+        color: white;
+        border-color: #41B1E1;
+        transform: scale(1.05);
+    }
+
+    .month-btn.active {
+        background: linear-gradient(to bottom, #E74C3C, #C0392B) !important;
+        color: white !important;
+        border-color: #E74C3C !important;
+        box-shadow: 0px 6px 12px rgba(231, 76, 60, 0.4);
+        transform: scale(1.1);
+    }
+
+/* Biểu đồ */
+.chart-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    max-height: calc(78vh - 68px);
+    width: 100%;
+}
+
+/* Hiệu ứng bóng */
+.chart-container .chartjs-render-monitor {
+    filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.2));
+}
+
+/* Nếu tổng giờ = 0, tô đỏ tên */
+.text-red {
+    color: var(--status-overdue) !important;
+    font-weight: bold;
+    text-shadow: 1px 1px 4px rgba(228, 82, 82, 0.8);
+}
+
+.info-container {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: white;
+    display: none;
+}
+
+    .info-container h3 {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+.zero-hours h3, .zero-hours li {
+    color: red;
+}
+
+.below-avg h3, .below-avg li {
+    color: purple;
+}
+
+.info-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.info-container li {
+    font-weight: bold;
+    padding: 5px;
+}
+
+.accordion-button {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.accordion-body {
+    background-color: #f9f9f9;
+}
+
+.accordion-item {
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+}
+
+    .accordion-item h2 {
+        margin: 0;
+    }
+
+#zeroHours li {
+    color: red;
+    font-weight: bold;
+}
+
+#belowAvg li {
+    color: purple;
+    font-weight: bold;
+}
+/* Accordion */
+.accordion-button {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.accordion-body {
+    background-color: #f9f9f9;
+}
+
+.accordion-item {
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+}
+
+/* Bảng hiệu suất */
+.performance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+    .performance-table th, .performance-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .performance-table th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+    }
+
+/* Nút Export */
+.export-btn {
+    margin-top: 10px;
+}
+
+
+/* Accordion */
+.accordion-button {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.accordion-body {
+    background-color: #f9f9f9;
+}
+
+.accordion-item {
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+}
+
+/* Bảng hiệu suất */
+.performance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+    .performance-table th, .performance-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .performance-table th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+    }
+
+/* Nút Export */
+.export-btn {
+    margin-top: 10px;
+}
+
+.quanly-thong-ke-congviec{
+   display:flex;
+   
+   height: calc(78vh - 68px);
+    gap: 13px;
+}
+
+
+    .quanly-thong-ke-congviec #infoAccordion {
+        height: calc(100% - 94px);
+        overflow: auto;
+        min-width:313px;
+    }
+
+h2#headingBelowAvg button {
+    width: 100%;
+}

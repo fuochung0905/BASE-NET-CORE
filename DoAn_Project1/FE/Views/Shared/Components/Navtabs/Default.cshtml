@@ -1,0 +1,32 @@
+﻿@model List<MODELS.HETHONG.TAB.Tab>
+@{
+    // Lấy activeTab từ ViewData; nếu không có, mặc định là "TrangThaiCongViec"
+    var activeTab = ViewData["activeTab"] as string;
+    if (string.IsNullOrEmpty(activeTab))
+    {
+        activeTab = "TrangThaiCongViec";
+    }
+    // Lấy navId từ ViewData; nếu không có, mặc định là "mynavtabs"
+    var navId = ViewData["navId"] as string;
+    if (string.IsNullOrEmpty(navId))
+    {
+        navId = "mynavtabs";
+    }
+
+
+    var tabs = Model.ToList();
+
+
+
+}
+<!-- Sử dụng cấu trúc "tab-container" thay vì ul/li -->
+<div class="tab-container" id="@navId">
+    @foreach (var tab in tabs)
+    {
+        var isActive = tab.Id.Equals(activeTab, System.StringComparison.OrdinalIgnoreCase);
+
+        <div class="tab @(isActive ? "active" : "")" data-tab="@tab.ControllerName@tab.ActionName" data-controller="@tab.ControllerName" data-action="@tab.ActionName">
+            <div class="navtabs-title">@tab.Name</div>
+        </div>
+    }
+</div>

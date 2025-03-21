@@ -1,0 +1,149 @@
+﻿@model MODELS.DANHMUC.Requests.PostDonViRequest
+
+<div class="modal-content" id="modalLoading">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmDonVi", @class = "forms-sample"}))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            @if (!Model.IsEdit)
+            {
+                <h4 class="modal-title">Thêm mới đơn vị</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Cập nhật đơn vị</h4>
+            }
+            <button type="button" class="close" onclick="closePopUp();" aria-label="Close" data-bs-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(model => model.IsEdit)
+            @Html.HiddenFor(model => model.Id)
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Tên gọi <span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().TextAreaFor(model=>model.TenGoi).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.TenGoi, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Người liên hệ</label>
+                    @(Html.Kendo().TextBoxFor(model => model.NguoiLienHe).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.NguoiLienHe, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Điện thoại</label>
+                    @(Html.Kendo().TextBoxFor(model => model.DienThoai).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.DienThoai, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Email</label>
+                    @(Html.Kendo().TextBoxFor(model => model.Email).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Website</label>
+                    @(Html.Kendo().TextBoxFor(model => model.Website).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.Website, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Địa chỉ</label>
+                    @(Html.Kendo().TextBoxFor(model => model.DiaChi).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.DiaChi, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Trạng thái</label>
+                    @(Html.Kendo().DropDownList().Name("IsActived")
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .BindTo(SYS_CONFIG.TRANG_THAI)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.IsActived, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6"></div>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" onclick="closePopUp();"><i class="fas fa-times-square"></i> Hủy</button>
+            <div>
+                <button type="submit" id="btnLuu" class="btn btn-success"><i class="fas fa-check-square"></i> Lưu</button>
+                @if (!Model.IsEdit)
+                {
+                    <button type="button" class="btn btn-success" id="btnLuuTiep"><i class="fas fa-check-square"></i> Lưu và thêm </button>
+                }
+            </div>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $("#frmDonVi").find("span.field-validation-valid").hide();
+        //validate
+        var validator = $("#frmDonVi").kendoValidator().data("kendoValidator");
+        //Thêm tiếp
+        $("#btnLuuTiep").click(function (event) {
+            event.preventDefault();
+            if (validator.validate()) { //nhập hợp lệ
+                showLoadingElement(true, 'modalLoading');
+                $.ajax({
+                    url: '/DonVi/Post',
+                    type: "POST",
+                    data: $("#frmDonVi").serialize(),
+                    success: function (data) {
+                        if (data.IsSuccess) {
+                            showSuccessNotify(addSuccess);
+                            var url = '@Url.Action("ShowInsertPopup", "DonVi")';
+                            reloadModal(url);
+                        }
+                        else {
+                            showErrorNotify(data.Message);
+                        }
+                    }
+                });
+                showLoadingElement(false, 'modalLoading');
+            }
+        });
+
+        //Lưu
+        $("#frmDonVi").submit(function (event) {
+            event.preventDefault();
+            if (validator.validate()) { //Nhập hợp lệ
+                showLoadingElement(true, 'modalLoading');
+                $.ajax({
+                    url: '/DonVi/Post',
+                    type: "POST",
+                    data: $("#frmDonVi").serialize(),
+                    success: function (data) {
+                        if (data.IsSuccess) {
+                            if (data.Data)
+                                showSuccessNotify(updateSuccess);
+                            else
+                                showSuccessNotify(addSuccess);
+                            closePopUp();
+                        }
+                        else {
+                            showErrorNotify(data.Message);
+                        }
+                    }
+                });
+                showLoadingElement(false, 'modalLoading');
+            }
+        });
+
+    });
+
+    function closePopUp() {
+        refreshGrid();
+        hideModal();
+    }
+</script>
+
+
+
+

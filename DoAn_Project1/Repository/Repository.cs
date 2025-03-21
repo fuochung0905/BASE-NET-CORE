@@ -7,7 +7,6 @@ using System.Data.Common;
 using System.Linq.Expressions;
 using System.Reflection;
 
-
 namespace Repository
 {
   
@@ -50,7 +49,10 @@ namespace Repository
                 this._dbSet.Add(entity);
             }
         }
-
+        public virtual void addRange(IEnumerable<T> entity)
+        {
+            _dbSet.AddRange(entity);
+        }
         public virtual void update(T entity)
         {
             EntityEntry entityEntry = (EntityEntry)this._dbContext.Entry<T>(entity);
@@ -75,7 +77,10 @@ namespace Repository
                 this._dbSet.Remove(entity);
             }
         }
-
+        public virtual void DeleteRange(IEnumerable<T> entity)
+        {
+            _dbSet.RemoveRange(entity);
+        }
         public void delete(Guid id)
         {
             T byId = this.GetById(id);
@@ -148,6 +153,42 @@ namespace Repository
         public virtual void Dispose()
         {
             this._dbContext.Dispose();
+        }
+
+        public virtual IQueryable<T> GetAll(Expression<Func<T, bool>> predicate, string[] includes = null)
+        {
+            IQueryable<T> source2;
+            if (includes != null && includes.Count() > 0)
+            {
+                IQueryable<T> source = EntityFrameworkQueryableExtensions.Include(_dbSet, includes.First());
+                foreach (string item in includes.Skip(1))
+                {
+                    source = EntityFrameworkQueryableExtensions.Include(source, item);
+                }
+
+                source2 = ((predicate != null) ? source.Where(predicate).AsQueryable() : source.AsQueryable());
+            }
+            else
+            {
+                source2 = ((predicate != null) ? _dbSet.Where(predicate).AsQueryable() : Queryable.AsQueryable(_dbSet));
+            }
+
+            return source2.AsQueryable();
+        }
+        public virtual IQueryable<T> FindAll()
+        {
+            return _dbSet;
+        }
+
+
+        public virtual IQueryable<T> FindAllAsync()
+        {
+            return _dbSet;
+        }
+
+        public virtual async Task<T> FindAsync(Expression<Func<T, bool>> match)
+        {
+            return await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(_dbSet, match);
         }
     }
 }

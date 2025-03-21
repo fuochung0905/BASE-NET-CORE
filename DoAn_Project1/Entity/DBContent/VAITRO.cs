@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Entity.DBContent;
+namespace ENTITIES.DBContent;
 
 public partial class VAITRO
 {
@@ -15,7 +15,7 @@ public partial class VAITRO
 
     public DateTime? NgaySua { get; set; }
 
-    public string? NguoSua { get; set; }
+    public string? NguoiSua { get; set; }
 
     public DateTime? NgayXoa { get; set; }
 

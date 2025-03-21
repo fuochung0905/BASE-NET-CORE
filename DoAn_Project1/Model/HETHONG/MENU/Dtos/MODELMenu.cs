@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Model.BASE;
+﻿using Model.BASE;
 
-namespace Model.HETHONG.MENU.Dtos
+namespace MODELS.HETHONG.TAIKHOAN.Dtos
 {
     public class MODELMenu : MODELBase
     {
@@ -22,5 +17,7 @@ namespace Model.HETHONG.MENU.Dtos
         public bool CoXoa { get; set; } = false;
         public bool CoDuyet { get; set; } = false;
         public bool CoThongKe { get; set; } = false;
+        public bool IsShowMenu { get; set; } = true;
+        public int? Sort { get; set; }
     }
 }

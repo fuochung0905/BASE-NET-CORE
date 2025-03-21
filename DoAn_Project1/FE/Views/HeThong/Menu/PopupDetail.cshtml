@@ -1,0 +1,178 @@
+﻿@model MODELS.HETHONG.MENU.Requests.PostMenuRequest
+
+<div class="modal-content" id="modalLoading">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMenu", @class = "forms-sample"}))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            @if (!Model.IsEdit)
+            {
+                <h5 class="modal-title">Thêm mới menu</h5>
+            }
+            else
+            {
+                <h5 class="modal-title">Cập nhật menu</h5>
+            }
+            <button type="button" class="close" onclick="closePopUp();" aria-label="Close" data-bs-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(model => model.IsEdit)
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Controller Name <span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().TextBoxFor(m => m.ControllerName).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.ControllerName, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Tên gọi <span class="text-danger">(*)</span> </label>
+                    @(Html.Kendo().TextBoxFor(m => m.TenGoi).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.TenGoi, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label> Controller <span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().TextBoxFor(m => m.Controller).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.Controller, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Action <span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().TextBoxFor(m => m.Action).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.Action, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Nhóm quyền <span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().DropDownListFor(m => m.NhomQuyenId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .OptionLabel("-- Chọn nhóm quyền --").Filter(FilterType.Contains)
+                        .DataSource(source => source
+                        .Custom()
+                        .Group(g => g.Add("Parent", typeof(string)))
+                        .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetList_Combobox", "NhomQuyen");
+                        })))
+                        .HtmlAttributes(new { @class = "form-control", style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.NhomQuyenId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Trạng thái</label>
+                    @(Html.Kendo().DropDownListFor(m => m.IsActived)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .BindTo(SYS_CONFIG.TRANG_THAI)
+                        .HtmlAttributes(new { @class = "form-control", style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.IsActived, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Sắp xếp</label>
+                    @(Html.Kendo().NumericTextBoxFor(m => m.Sort)
+                        .Format("#")
+                        .HtmlAttributes(new { @class = "form-control", style = "width:100%;  max-width:none;" })
+                    )
+                </div>
+                <div class="col-md-6">
+                    <label style="width: 100%;"></label>
+                    @(Html.Kendo().CheckBoxFor(m => m.IsShowMenu).Label("Hiển thị trên menu").HtmlAttributes(new { @class = "form-control form-check-input" }))
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Cấp quyền </label>
+                    <div style="width: 100%;">
+                        @(Html.Kendo().CheckBoxFor(m => m.CoXem).Checked(Model.CoXem).Label("Có xem").HtmlAttributes(new { @class = "form-check-input" }))
+                        @(Html.Kendo().CheckBoxFor(m => m.CoThem).Checked(Model.CoThem).Label("Có thêm").HtmlAttributes(new { @class = "form-check-input" }))
+                        @(Html.Kendo().CheckBoxFor(m => m.CoCapNhat).Checked(Model.CoCapNhat).Label("Có cập nhật").HtmlAttributes(new { @class = "form-check-input" }))
+                        @(Html.Kendo().CheckBoxFor(m => m.CoXoa).Checked(Model.CoXoa).Label("Có xóa").HtmlAttributes(new { @class = "form-check-input" }))
+                        @(Html.Kendo().CheckBoxFor(m => m.CoDuyet).Checked(Model.CoDuyet).Label("Có duyệt").HtmlAttributes(new { @class = "form-check-input" }))
+                        @(Html.Kendo().CheckBoxFor(m => m.CoThongKe).Checked(Model.CoThongKe).Label("Có thống kê").HtmlAttributes(new { @class = "form-check-input" }))
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" onclick="closePopUp();"><i class="fas fa-times-square"></i> Huỷ</button>
+            <div>
+                <button type="submit" id="btnLuu" class="btn btn-success"><i class="fas fa-check-square"></i> Lưu</button>
+                @if (!Model.IsEdit)
+                {
+                    <button type="button" class="btn btn-success" id="btnLuuTiep"><i class="fas fa-check-square"></i> Lưu và thêm </button>
+                }
+            </div>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $("#frmMenu").find("span.field-validation-valid").hide();
+        //validate
+        var validator = $("#frmMenu").kendoValidator().data("kendoValidator");
+        //Thêm tiếp
+        $("#btnLuuTiep").click(function (event) {
+            event.preventDefault();
+            if (validator.validate()) { //nhập hợp lệ
+                showLoadingElement(true, 'modalLoading');
+                $.ajax({
+                    url: '/Menu/Post',
+                    type: "POST",
+                    data: $("#frmMenu").serialize(),
+                    success: function (data) {
+                        if (data.IsSuccess) {
+                            showSuccessNotify(addSuccess);
+                            var url = '@Url.Action("ShowInsertPopup", "Menu")';
+                            reloadModal(url);
+                        }
+                        else {
+                            showErrorNotify(data.Message);
+                        }
+                    }
+                });
+                showLoadingElement(false, 'modalLoading');
+            }
+        });
+
+        //Lưu
+        $("#frmMenu").submit(function (event) {
+            event.preventDefault();
+            if (validator.validate()) { //Nhập hợp lệ
+                showLoadingElement(true, 'modalLoading');
+                $.ajax({
+                    url: '/Menu/Post',
+                    type: "POST",
+                    data: $("#frmMenu").serialize(),
+                    success: function (data) {
+                        if (data.IsSuccess) {
+                            if (data.Data)
+                                showSuccessNotify(updateSuccess);
+                            else
+                                showSuccessNotify(addSuccess);
+                            closePopUp();
+                        }
+                        else {
+                            showErrorNotify(data.Message);
+                        }
+                    }
+                });
+                showLoadingElement(false, 'modalLoading');
+            }
+        });
+
+    });
+
+    function closePopUp() {
+        refreshGrid();
+        hideModal();
+    }
+</script>
+
+
+
+

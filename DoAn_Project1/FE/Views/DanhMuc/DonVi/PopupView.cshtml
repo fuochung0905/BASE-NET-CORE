@@ -1,0 +1,76 @@
+﻿@model MODELS.DANHMUC.Dtos.MODELDonVi
+
+<div class="modal-content" id="modalLoading">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmDonVi", @class = "forms-sample" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            <h5 class="modal-title">Thông tin đơn vị</h5>
+            <button type="button" class="close" onclick="closePopUp();" aria-label="Close" data-bs-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Tên gọi</label>
+                    @(Html.Kendo().TextBoxFor(model => model.TenGoi).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.TenGoi, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Người liên hệ</label>
+                    @(Html.Kendo().TextBoxFor(model => model.NguoiLienHe).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.NguoiLienHe, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Điện thoại</label>
+                    @(Html.Kendo().TextBoxFor(model => model.DienThoai).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.DienThoai, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Email</label>
+                    @(Html.Kendo().TextBoxFor(model => model.Email).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Website</label>
+                    @(Html.Kendo().TextBoxFor(model => model.Website).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.Website, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Địa chỉ</label>
+                    @(Html.Kendo().TextBoxFor(model => model.DiaChi).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.DiaChi, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Trạng thái</label>
+                    @(Html.Kendo().DropDownList().Name("IsActived").Enable(false)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .BindTo(SYS_CONFIG.TRANG_THAI)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.IsActived, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="closePopUp();"><i class="fas fa-times-square" aria-hidden="true"></i> Hủy</button>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $("#frmDonVi").find("span.field-validation-valid").hide();
+    });
+
+    function closePopUp() {
+        hideModal();
+    }
+</script>

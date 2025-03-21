@@ -1,11 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
 using Model.BASE;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Model.HETHONG.MENU.Requests
+namespace MODELS.HETHONG.MENU.Requests
 {
     public class GetMenuByIdRequest : BaseRequest
     {
-        [Required(AllowEmptyStrings = false, ErrorMessage = "ControllerName không được để trống")]
         public string ControllerName { get; set; }
     }
+
+ 
 }

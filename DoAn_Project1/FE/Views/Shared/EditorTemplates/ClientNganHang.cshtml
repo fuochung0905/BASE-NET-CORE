@@ -1,0 +1,17 @@
+﻿@model MODELS.BASE.MODELCombobox?
+@(Html.Kendo().DropDownListFor(m => m)
+    .DataValueField("Value")
+    .DataTextField("Text")
+    .Filter(FilterType.Contains)
+    .OptionLabel("-- Chọn ngân hàng --")
+    .DataSource(
+        source =>
+        {
+            source.Read(read =>
+            {
+                read.Action("GetAllComboBox", "NganHang");
+            });
+        }
+    )
+    .AutoWidth(true)
+)

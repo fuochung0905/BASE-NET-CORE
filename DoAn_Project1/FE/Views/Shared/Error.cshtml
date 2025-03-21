@@ -1,25 +1,45 @@
-﻿@model ErrorViewModel
-@{
-    ViewData["Title"] = "Error";
-}
+﻿@model string 
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<!-- Main content -->
+<section class="content">
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-body">
+            <div style="margin-top:50px; text-align:center;">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-sm-12" style="font-size:25px; text-align:center; color:#c21806;">
+                            <i class="fa fa-warning" aria-hidden="true"></i>
+                            <span> THÔNG BÁO </span>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <div class="col-sm-12">
+                            <h2>@Model </h2>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <a href="#" class="btn btn-primary btn-sm" onclick="goBack()">
+                                <span class="glyphicon glyphicon-backward"></span>
+                                Trở lại trang trước
+                            </a>
+                            <a href="~/Home/" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-home"></span>
+                                Trở về trang chủ
+                            </a>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
-
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.box -->
+</section>
+<!-- /.content -->

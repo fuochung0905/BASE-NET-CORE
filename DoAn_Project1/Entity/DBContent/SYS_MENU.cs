@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Entity.DBContent;
+namespace ENTITIES.DBContent;
 
 public partial class SYS_MENU
 {

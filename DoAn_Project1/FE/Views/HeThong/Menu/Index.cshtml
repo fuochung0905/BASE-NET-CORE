@@ -1,0 +1,129 @@
+﻿@model MODELS.HETHONG.TAIKHOAN.Dtos.MODELPhanQuyen
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">QUẢN LÝ MENU</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Administrator</a></li>
+                    <li class="breadcrumb-item active">Menu</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">    
+        @(Html.Kendo().Grid<MODELS.HETHONG.TAIKHOAN.Dtos.MODELMenu>()
+            .Name("gridData")
+            .HtmlAttributes(new { @class = "table table-hover table-bordered" })
+            .Columns(columns =>
+            {
+                columns.Select().HtmlAttributes(new { @style = "text-align:center;" }).Width(68);
+                columns.Bound("").ClientTemplate("#= xoFunc.renderNumberGrid() #").Title("STT").Width(72).Filterable(false).Sortable(false).HtmlAttributes(new { @style = "text-align: center" });
+                columns.Bound(c => c.TenGoi).Title("Tên gọi").Width(153);
+                columns.Bound(c => c.ControllerName).Title("ControllerName").Width(180);
+                columns.Bound(c => c.Controller).Title("Controller").Width(153);
+                columns.Bound(c => c.Action).Title("Action").Width(100);
+                columns.Bound(c => c.CoXem).Title("Xem").Width(100).ClientTemplate("<input type='checkbox' #= CoXem ? checked='checked' :'' # />").HtmlAttributes(new { @style = "text-align: center" });
+                columns.Bound(c => c.CoThem).Title("Thêm").Width(100).ClientTemplate("<input type='checkbox' #= CoThem ? checked='checked' :'' # />").HtmlAttributes(new { @style = "text-align: center" });
+                columns.Bound(c => c.CoCapNhat).Title("Cập nhật").Width(131).ClientTemplate("<input type='checkbox' #= CoCapNhat ? checked='checked' :'' # />").HtmlAttributes(new { @style = "text-align: center" });
+                columns.Bound(c => c.CoXoa).Title("Xóa").Width(100).ClientTemplate("<input type='checkbox' #= CoXoa ? checked='checked' :'' # />").HtmlAttributes(new { @style = "text-align: center" });
+                columns.Bound(c => c.CoDuyet).Title("Duyệt").Width(100).ClientTemplate("<input type='checkbox' #= CoDuyet ? checked='checked' :'' # />").HtmlAttributes(new { @style = "text-align: center" });
+                columns.Bound(c => c.CoThongKe).Title("Thống kê").Width(131).ClientTemplate("<input type='checkbox' #= CoThongKe ? checked='checked' :'' # />").HtmlAttributes(new { @style = "text-align: center" });
+                columns.Bound(c => c.IsActived).Title("Trạng thái").ClientTemplate(
+                "# if(IsActived) { #" + //Trạng thái đang hoạt động
+                "<button type='button' class='btn btn-outline-success btn-sm btn-flat'>Đang hoạt động</button>" +
+                "# } else { #" +  //Trạng thái không hoạt động (màu đỏ)
+                "<button type='button' class='btn btn-outline-danger btn-sm btn-flat'>Không hoạt động</button>" +
+                "# } #").Width(153).HtmlAttributes(new { @class = "text-center" });
+            })
+            .Sortable()
+            .ToolBar(toolbar =>
+            {
+                toolbar.ClientTemplateId("GridToolbarTemplate");
+            })
+            .Resizable(x => x.Columns(true))
+            //.Filterable(TelerikGridHelper.CustomStringFilterOperator())
+            .Pageable()
+            .EnableCustomBinding(true)
+            .PersistSelection()
+            .Scrollable()
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            .Model(model => model.Id(p => p.ControllerName))
+            .Read(read => read.Action("GetListPaging", "Menu").Data(@<text>
+            function () {
+            return {
+            TextSearch: $("#TextSearch").val()
+            }
+            }
+        </text>))
+            .PageSize(SYS_CONFIG.PAGE_SIZE_DEFAULT)
+            .Events(e => e.Error("xoFunc.onErrorGrid"))
+            )
+            .Events(e => { e.DataBinding("xoFunc.onDataBindingGrid"); })
+            .Pageable(pager => pager
+            .Refresh(true).Input(true).Numeric(false)
+            .PageSizes(SYS_CONFIG.PAGE_SIZES))
+            .NoRecords(n => n.Template("Không có dữ liệu"))
+            )
+    </div><!-- /.container-fluid -->
+</section>
+
+@*TOOLBAR TEMPLATE*@
+<script id="GridToolbarTemplate" type="text/x-kendo-template">
+    @{
+        <div style="width:100%;">
+            <div style="width:70%;">
+                <a class="btn btn-success ml-1" type="button" onclick="themThongTin_Menu()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Thêm mới </a>
+                    <a class="btn btn-primary ml-1" type="button" onclick="suaThongTin_Menu()"><i class="fas fa-wrench"></i>&nbsp; Cập nhật </a>
+            </div>
+            <div style="width:30%;" class="input-group">
+                <input id="TextSearch" type="text" class="form-control" placeholder="Tìm kiếm..." onchange="refreshGrid()">
+                <span class="input-group-append">
+                    <button onclick="refreshGrid()" class="btn btn-default" type="button"><i class="fas fa-search"></i></button>
+                </span>
+            </div>
+        </div>
+    }
+</script>
+
+<script>
+    function getListIdSelected() {
+        var g = $("#gridData").getKendoGrid();
+        return g.selectedKeyNames();
+    }
+
+    //Thêm thông tin.
+    function themThongTin_Menu() {
+        var url = '@Url.Action("ShowInsertPopup", "Menu")';
+
+        showModal(url, "lg");
+    }
+
+    //Sửa thông tin.
+    function suaThongTin_Menu() {
+        var itemSelectedIds = getListIdSelected();
+        if(!checkMultiSelectInGrid(itemSelectedIds))
+        {
+            return;
+        }
+
+        var url = '@Url.Action("ShowUpdatePopup", "Menu")' + "?id=" + itemSelectedIds[0];
+
+        showModal(url, "lg");
+    }
+
+    function refreshGrid() {
+        var grid = $("#gridData").data("kendoGrid");
+        grid.clearSelection();
+        grid.dataSource.page(1);
+        showLoading(false);
+    }
+</script>

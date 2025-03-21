@@ -1,0 +1,205 @@
+﻿@model MODELS.HETHONG.HETHONGTHONGBAO.Requests.PostThongBaoRequest
+@{
+    List<string> DinhKemValid = new List<string>();
+    DinhKemValid.AddRange(MODELS.COMMON.CommonConst._fileValid.ToList());
+
+    string[] _fileDinhKemValid = DinhKemValid.ToArray();
+    string _fileDinhKemValidString = string.Concat(MODELS.COMMON.CommonConst._fileValidString);
+}
+
+
+<div class="modal-content" id="modalLoading">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmThongBao", @class = "forms-sample" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            @if (!Model.IsEdit)
+            {
+                <h4 class="modal-title">Thêm mới thông báo</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Cập nhật thông báo</h4>
+            }
+            <button type="button" class="close" onclick="closePopUp();" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(model => model.IsEdit)
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.FolderUpload)
+            @Html.HiddenFor(model => model.TepDinhKemIDs)
+            @Html.HiddenFor(model => model.IsTepDinhKem)
+            <div class="form-group">
+                <label>Tiêu đề <span class="text-danger">*</span></label>
+                @(Html.Kendo().TextBoxFor(m => m.TieuDe).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.TieuDe, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label>Nội dung <span class="text-danger">*</span></label>
+                @(Html.Kendo().TextBoxFor(m => m.NoiDung).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.NoiDung, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label>
+                    Loại thông báo
+                </label>
+                @(Html.Kendo().MultiSelectFor(x => x.UserIds)
+                    .DataTextField("Text")
+                    .DataValueField("Value")
+                    .Placeholder("-- Chọn người nhận thông báo --")
+                    .Filter(FilterType.Contains)
+                    .DataSource(source => source
+                    .Custom()
+                    .Transport(transport => transport
+                    .Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
+                    )
+                    .ServerFiltering(true)
+                    )
+                    .HtmlAttributes(new { @class = "form-control", @style = "width:100%; max-width:none;" })
+                    )
+
+            </div>
+            <div class="form-group">
+                <label>
+                    Loại thông báo
+                </label>
+                @(Html.Kendo().DropDownListFor(m => m.Type)
+                    .DataTextField("Text")
+                    .DataValueField("Value")
+                    .BindTo(SYS_CONFIG.LOAITHONGBAO)
+                    .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label>
+                    Trạng thái
+                </label>
+                @(Html.Kendo().DropDownListFor(m => m.IsActived)
+                    .DataTextField("Text")
+                    .DataValueField("Value")
+                    .BindTo(SYS_CONFIG.TRANG_THAI)
+                    .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.IsActived, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label>Tệp đính kèm</label>
+                    @Html.Partial("~/Views/Shared/Components/UploadFileBase.cshtml",
+                             new MODELS.BASE.MODELUploadFileBase
+                {
+                    FileSizeLimit = 10, //Megabyte (Giới hạn độ lớn file)
+                    FileValidate = MODELS.COMMON.CommonConst._fileValid, //Kiểm tra định dạng file
+                    FileValidateText = MODELS.COMMON.CommonConst._fileValidString, //Text hiển thị định dạng file cho phép
+                    MultiFile = true, //Chọn nhiều file hay không
+                    ListTepDinhKem = Model.ListTepDinhKem //Hiển thị danh sách tệp đính kèm hiện có
+                })
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" onclick="closePopUp();"><i class="fas fa-times-square"></i> Hủy</button>
+            <div>
+                <button type="submit" id="btnLuu" class="btn btn-success"><i class="fas fa-check-square"></i> Lưu</button>
+                @if (!Model.IsEdit)
+                {
+                    <button type="button" class="btn btn-success" id="btnLuuTiep"><i class="fas fa-check-square"></i> Lưu và thêm </button>
+                }
+            </div>
+        </div>
+    }
+</div>
+<script>
+ 
+
+    $(document).ready(function () {
+
+        $("#frmThongBao").find("span.field-validation-valid").hide();
+        //validate
+        var validator = $("#frmThongBao").kendoValidator().data("kendoValidator");
+        //Thêm tiếp
+         // Thêm tiếp
+    $("#btnLuuTiep").click(async function (event) { // Thêm async
+        event.preventDefault();
+        if (validator.validate()) {
+            showLoadingElement(true, 'modalLoading');
+                var checkUploadFile = await uploadFile();
+                var isEdit = $('#IsEdit').val();
+                if (checkUploadFile !== undefined) {
+                  if (checkUploadFile.IsSuccess === true) {
+                      $('#IsTepDinhKem').val(true);
+                      }
+                  }
+                  if (isEdit === 'True') {
+                      $('#IsTepDinhKem').val(true);
+                  }
+
+              getAttachments();
+            $.ajax({
+                url: '/ThongBao/Post',
+                type: "POST",
+                data: $("#frmThongBao").serialize(),
+                success: function (data) {
+                    if (data.IsSuccess) {
+                        showSuccessNotify(addSuccess);
+                        var url = '@Url.Action("ShowInsertPopup", "ThongBao")';
+                        reloadModal(url);
+                    } else {
+                        showErrorNotify(data.Message);
+                    }
+                }
+            });
+            showLoadingElement(false, 'modalLoading');
+        }
+    });
+
+    // Lưu
+    $("#frmThongBao").submit(async function (event) { // Thêm async
+        event.preventDefault();
+        if (validator.validate()) {
+            showLoadingElement(true, 'modalLoading');
+           var checkUploadFile = await uploadFile();
+            var isEdit = $('#IsEdit').val();
+            if (checkUploadFile !== undefined) {
+                if (checkUploadFile.IsSuccess === true) {
+                    $('#IsTepDinhKem').val(true);
+                }
+            }
+            if (isEdit === 'True') {
+                $('#IsTepDinhKem').val(true);
+            }
+
+            getAttachments();
+            $.ajax({
+                url: '/ThongBao/Post',
+                type: "POST",
+                data: $("#frmThongBao").serialize(),
+                success: function (data) {
+                    if (data.IsSuccess) {
+                        if (data.Data)
+                            showSuccessNotify(updateSuccess);
+                        else
+                            showSuccessNotify(addSuccess);
+                        closePopUp();
+                    } else {
+                        showErrorNotify(data.Message);
+                    }
+                }
+            });
+            showLoadingElement(false, 'modalLoading');
+        }
+    });
+
+
+    });
+
+    function closePopUp() {
+        refreshGrid();
+        hideModal();
+    }
+</script>
+
+
+
+

@@ -1,0 +1,1043 @@
+﻿@using MODELS.DUAN.QUANLYCONGVIEC.Dtos
+@using MODELS.DUAN.TRANGTHAICONGVIEC
+@using MODELS.DUAN.TRANGTHAICONGVIEC.Dtos
+@model MODELCheckPhanQuyen
+@{	
+	string userId = ViewBag.UserId.ToString();
+	// var HostBE = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("BEFileUrl").Value.ToString();
+	var configuration = new ConfigurationBuilder()
+	.SetBasePath(Directory.GetCurrentDirectory())
+	.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+	.Build();
+
+	var HostBE = configuration["BEFileUrl"];
+	var listtabs = ViewData["tabs"] as List<MODELS.HETHONG.TAB.Tab> ?? new List<MODELS.HETHONG.TAB.Tab>();
+
+}
+
+<script>
+	var HostBE = "@HostBE"; // Định nghĩa HostBE trong JavaScript
+	var defaultAvatar = "/theme/dist/img/default-avatar.png";
+	// Hàm chuyển đổi đường dẫn ảnh
+	function imageExists(url, callback) {
+		var img = new Image();
+		img.onload = function () { callback(url); };  // Nếu ảnh tồn tại, trả về URL ảnh gốc
+		img.onerror = function () { callback(defaultAvatar); }; // Nếu lỗi, trả về ảnh mặc định
+		img.src = url;
+	}
+	function getImageUrl(imagePath, callback) {
+		if (!imagePath || imagePath.trim() === "") {
+			callback(defaultAvatar); // Ảnh mặc định nếu không có đường dẫn
+			return;
+		}
+
+		if (imagePath === "nu") {
+			callback("/theme/dist/img/avatar2.png");
+			return;
+		}
+		if (imagePath === "nam") {
+			callback("/theme/dist/img/avatar5.png");
+			return;
+		}
+
+		var imgUrl = HostBE + imagePath; // Kết hợp HostBE với đường dẫn ảnh
+		imageExists(imgUrl, callback);
+	}
+
+	// function getImageUrl(imagePath) {
+	// 	if (imagePath=== "nu") {
+
+	// 		return "/theme/dist/img/avatar2.png"; // Ảnh mặc định nếu không có ảnh đại diện
+	// 	}
+	// 	else if (imagePath === "nam" ) {
+
+	// 		return "/theme/dist/img/avatar5.png"; // Ảnh mặc định nếu không có ảnh đại diện
+	// 	}
+
+	// 	return HostBE + imagePath; // Kết hợp HostBE với đường dẫn ảnh
+	// }
+
+	// Xử lý ảnh sau khi template đã render
+	// function updateImages() {
+	// 	$(".task-avatar").each(function () {
+	// 		var img = $(this);
+	// 		var imagePath = img.data("src"); // Lấy giá trị từ data-src
+	// 		img.attr("src", getImageUrl(imagePath)); // Gán lại đường dẫn ảnh hợp lệ
+	// 	});
+	// }
+
+
+	function updateImages() {
+		$(".task-avatar").each(function () {
+			var img = $(this);
+			var imagePath = img.data("src"); // Lấy giá trị từ data-src
+
+			getImageUrl(imagePath, function (url) {
+				img.attr("src", url); // Gán lại đường dẫn ảnh hợp lệ
+			});
+		});
+	}
+</script>
+<style>
+	#drawerPanel {
+		margin-top: 27px;
+		position: fixed;
+		top: 0;
+		right: -500px;
+		width: 500px;
+		height: 90%;
+		transition: right 0.3s ease;
+		z-index: 1000;
+		padding: 13px;
+		overflow-y: auto;
+	}
+
+		#drawerPanel.open {
+			right: 0;
+		}
+
+	#closeDrawer {
+		cursor: pointer;
+		background: none;
+		border: none;
+		font-size: 1.5rem;
+		color: #333;
+	}
+
+	.card {
+		user-select: none;
+	}
+
+		.card a,
+		.card .text-secondary,
+		.card span {
+			user-select: text;
+		}
+
+
+	.k-taskboard-column-header {
+		padding: 0;
+	}
+
+	.card {
+		margin-top: 0 !important;
+	}
+
+	
+	.k-taskboard-column-header .taskboard-avatars > img {
+		width: 27px;
+		height: 27px;
+	}
+
+
+	
+	.k-taskboard-column-header > div > .card {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+		flex-wrap: nowrap;
+	}
+
+	.k-taskboard-column-header .card-header {
+		justify-content: flex-start;
+		flex: 1;
+		display: flex;
+		align-items: center;
+		flex-wrap: nowrap;
+	}
+
+		.card-header > span:first-child {
+			white-space: nowrap;
+		}
+
+	.k-taskboard-column-header .taskboard-avatars {
+		justify-content: flex-start;
+		display: flex;
+		align-items: center;
+		flex-wrap: nowrap;
+		overflow: hidden;
+	}
+
+	.img-count {
+		position: absolute;
+		top: -5px; 
+		right: -5px; 
+		background-color: red; 
+		color: white; 
+		font-size: 11px;
+		font-weight: bold;
+		padding: 2px 5px;
+		border-radius: 50%; 
+	}
+	.tab-content
+	{
+		padding:1px;
+	}
+</style>
+
+
+	@await Component.InvokeAsync("Navtabs", new { tabs = listtabs, activeTab = "TrangThaiCongViec", navId = "mynavtabs" })
+
+
+
+<div class="tab-content active" id="TrangThaiCongViecIndexTab">
+			<div id="accordion">
+				<div class="card card-info">
+
+						@if (Model.IsQuanTri)
+						{
+						<div id="divFilter" class="collapse" data-parent="#accordion" style="">
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList()
+																					.Name("FilterDuAnId")
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Tất cả dự án --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetAllComboBox", "QuanLyDuAn"); })
+																					)
+																					)
+																					.Events(e => e.Change("refreshCongViecGiaiDoan"))
+																					.HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList().Name("FilterGiaiDoanId")
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Tất cả giai đoạn --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetAllComboBox", "GiaiDoanDuAn"); })
+																					)
+																					)
+																					.Events(e => e.Change("refreshCongViecGiaiDoan"))
+																					.HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList().Name("FilterCongViecTrongGiaiDoanId")
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Tất cả công việc trong giai đoạn --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetAllComboBoxByGiaiDoan", "CongViecTrongGiaiDoan").Data("congViecGiaiDoanData"); })
+																					)
+																					.ServerFiltering(true) //Không có cái này thì cái CascadeFrom không chạy được
+																					)
+																					.CascadeFrom("FilterGiaiDoanId")
+																					.HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList().Name("FilterTrangThaiId")
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Tất cả trạng thái --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetComboBoxTrangThai", "QuanLyCongViec"); })
+																					)
+																					).HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DatePicker().Name("FilterTuNgay")
+																					.Format("dd/MM/yyyy")
+																					.Value(DateTime.ParseExact(DateTime.Now.ToString("01/MM/yyyy"), "dd/MM/yyyy", null))
+																					.HtmlAttributes(new { @class = "form-control", @style = "width: 100%; max-width: none;", @placeholder = "Từ ngày" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DatePicker().Name("FilterDenNgay")
+																					.Format("dd/MM/yyyy")
+																					.Value(DateTime.Now)
+																					.HtmlAttributes(new { @class = "form-control", @style = "width: 100%; max-width: none;", @placeholder = "Đến ngày" })
+																					)
+									</div>
+
+
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList().Name("FilterNguoiThucHienId")
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Tất cả người thực hiện --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
+																					)
+																					)
+																					.Value(userId.ToString() ?? "")
+																					.HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList().Name("FilterNguoiKiemTraId")
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Tất cả người kiểm tra --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
+																					)
+																					)
+																					.Value(userId.ToString() ?? "")
+																					.HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList().Name("FilterAssignToId")
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Assign to --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
+																					)
+																					)
+																					.Value(userId.ToString() ?? "")
+																					.HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3 d-flex" style="gap: 8px; padding-bottom: 0.3rem;">
+										<button class="btn btn-success" onclick="refreshTaskBoard()"><i class="fa fa-filter"></i> Lọc</button>
+										<button class="btn btn-primary" onclick="resetFilter()"><i class="fa fa-undo"></i> Đặt lại</button>
+									</div>
+								</div>
+
+							</div>
+						</div>
+						}
+						else
+						{
+						<div id="divFilter" class="collapse" data-parent="#accordion" style="">
+							<div class="card-body">
+								<div class="row">
+
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList()
+																					.Name("FilterDuAnId")
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Tất cả dự án --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetAllComboBox", "QuanLyDuAn"); })
+																					)
+																					)
+																					.Events(e => e.Change("refreshCongViecGiaiDoan"))
+																					.HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList().Name("FilterGiaiDoanId")
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Tất cả giai đoạn --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetAllComboBox", "GiaiDoanDuAn"); })
+																					)
+																					)
+																					.Events(e => e.Change("refreshCongViecGiaiDoan"))
+																					.HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList().Name("FilterCongViecTrongGiaiDoanId")
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Tất cả công việc trong giai đoạn --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetAllComboBoxByGiaiDoan", "CongViecTrongGiaiDoan").Data("congViecGiaiDoanData"); })
+																					)
+																					.ServerFiltering(true) //Không có cái này thì cái CascadeFrom không chạy được
+																					)
+																					.CascadeFrom("FilterGiaiDoanId")
+																					.HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList().Name("FilterTrangThaiId")
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Tất cả trạng thái --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetComboBoxTrangThai", "QuanLyCongViec"); })
+																					)
+																					).HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DatePicker().Name("FilterTuNgay")
+																					.Format("dd/MM/yyyy")
+																					.HtmlAttributes(new { @class = "form-control", @style = "width: 100%; max-width: none;", @placeholder = "Từ ngày" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DatePicker().Name("FilterDenNgay")
+																					.Format("dd/MM/yyyy")
+																					.HtmlAttributes(new { @class = "form-control", @style = "width: 100%; max-width: none;", @placeholder = "Đến ngày" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList().Name("FilterNguoiThucHienId").Enable(true)
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Tất cả người thực hiện --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
+																					)
+																					)
+																					.Value(userId.ToString() ?? "")
+																					.HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList().Name("FilterNguoiKiemTraId").Enable(true)
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Tất cả người kiểm tra --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
+																					)
+																					)
+																					.Value(userId.ToString() ?? "")
+																					.HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-3">
+											@(Html.Kendo().DropDownList().Name("FilterAssignToId").Enable(true)
+																					.DataTextField("Text")
+																					.DataValueField("Value")
+																					.OptionLabel("-- Assign to --")
+																					.Filter(FilterType.Contains)
+																					.DataSource(source => source
+																					.Custom()
+																					.Transport(transport => transport
+																					.Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
+																					)
+																					)
+																					.Value(userId.ToString() ?? "")
+																					.HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+																					)
+									</div>
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3 d-flex" style="gap: 8px; padding-bottom: 0.3rem;">
+										<button class="btn btn-success" onclick="refreshTaskBoard()"><i class="fa fa-filter"></i> Lọc</button>
+										<button class="btn btn-primary" onclick="resetFilter()"><i class="fa fa-undo"></i> Đặt lại</button>
+									</div>
+								</div>
+
+							</div>
+						</div>
+						}
+				</div>
+			</div>
+			<div class="container-boc">
+				<div>
+					<div>
+		
+				<script id="column-template" type="text/x-kendo-template">
+					<div class="w-100">
+						<div class="card" id="card-#= Id #">
+							<div class="card-header" >
+								<span>#: TenGoi #</span>
+								<span class="ml-1" id="status-#= Id #">0</span>
+							</div>
+							<div data-img="#= Id #" class="taskboard-avatars"></div>
+						</div>
+					</div>
+				</script>
+
+						
+
+						<script id="card-template" type="text/x-kendo-template">
+							# if( SoNgayConLai < 1 &&  TrangThaiId !== 6) { #
+							<div class="p-2 d-flex flex-column border-left border-danger" style="border-left-width: 5px !important;">
+								<div class="d-flex align-items-center info-phancong">
+
+										<div class="d-flex me-auto">
+									<img class="rounded-circle task-avatar Avatar-img-kiemtra"
+											 data-src="#= AnhDaiDienNguoiKiemTra #"
+											 alt="Avatar">
+										<span class="text-sm text-secondary" style="user-select: text;">#: NguoiKiemTra #</span>
+										</div>
+										<div class="d-flex ms-auto">
+									# if(DuKienTuNgay && DuKienDenNgay) { #
+										# if(SoNgayConLai > 0) { #
+											<span class="so-ngay" style="font-weight: bold; color: green !important;">#: SoNgayConLai # ngày</span>
+										# } else if(SoNgayConLai < 0) { #
+											<span class="so-ngay" style="font-weight: bold; color: red !important;">#: SoNgayConLai # ngày</span>
+										# } else { #
+											<span class="so-ngay" style="font-weight: bold; color: purple !important;">#: SoNgayConLai # ngày</span>
+										# } #
+									# } else { #
+										<span class="so-ngay"></span>
+									# } #
+								</div>
+								</div>
+
+
+									<hr width="94%" align="center"/>
+								<span class="ma-du-an pb-2" >#: TenDuAn #</span>
+								<a data-command="customSelectCardMenu" class=" text-dark" style="font-size: 1.1rem; user-select: text;">#: TenCongViec #</a>
+
+
+
+								<div class="d-flex align-items-center info-cv pt-2">
+									<span class="text-sm text-secondary" style="user-select: text;">
+										 # if(DuKienTuNgay) { #
+										Từ #: kendo.toString(kendo.parseDate(DuKienTuNgay), "dd/MM/yyyy") #
+									# } else { #
+										<span style="color: red; ">Ngày bắt đầu</span>
+									# } #
+
+										</span>
+									<div class="d-flex ms-auto">
+										<span class="text-sm text-secondary ms-2" style="user-select: text;">
+											 # if(DuKienDenNgay) { #
+										Đến #: kendo.toString(kendo.parseDate(DuKienDenNgay), "dd/MM/yyyy") #
+									# } else { #
+										<span style="color: red; ">Ngày kết thúc</span>
+									# } #
+
+										</span>
+									</div>
+								</div>
+								<hr width="94%" align="center"/>
+								<div class="d-flex align-items-center info-cv">
+									<img class="rounded-circle task-avatar Avatar-img-assign" data-id="#= AssignTo#"
+											 data-src="#= AnhDaiDienNguoiAssignTo #" data-tarboard="#= TrangThaiId #"
+											 alt="Avatar">
+										<span class="text-sm text-secondary" style="user-select: text;">#: NguoiAssignTo #</span>
+									<div class="d-flex ms-auto">
+										<span class="text-sm text-secondary" style="user-select: text;">
+											<i class="fas fa-paperclip"></i> #: SoLuongTepDinhKem #
+										</span>
+										<span class="text-sm text-secondary ms-2" style="user-select: text;">
+											<i class="fas fa-comment"></i> #: SoLuongPhanHoi #
+										</span>
+									</div>
+								</div>
+							</div>
+							# } else { #
+							<div class="p-2 d-flex flex-column">
+
+								<div class="d-flex align-items-center info-phancong">
+
+										<div class="d-flex me-auto">
+							<img class="rounded-circle task-avatar  Avatar-img-kiemtra"
+					data-src="#= AnhDaiDienNguoiKiemTra #"
+											 alt="Avatar">
+										<span class="text-sm text-secondary" style="user-select: text;">#: NguoiKiemTra #</span>
+										</div>
+												<div class="d-flex ms-auto">
+									# if(DuKienTuNgay && DuKienDenNgay) { #
+										# if(SoNgayConLai > 0) { #
+											<span class="so-ngay" style="font-weight: bold; color: green !important;">#: SoNgayConLai # ngày</span>
+										# } else if(SoNgayConLai < 0) { #
+											<span class="so-ngay" style="font-weight: bold; color: red !important;">#: SoNgayConLai # ngày</span>
+										# } else { #
+											<span class="so-ngay" style="font-weight: bold; color: purple !important;">#: SoNgayConLai # ngày</span>
+										# } #
+									# } else { #
+										<span class="so-ngay"></span> <!-- Trả về trống nếu không có ngày -->
+									# } #
+								</div>
+								</div>
+
+									<hr width="94%" align="center"/>
+
+									<span class="ma-du-an pb-2" >#: TenDuAn #</span>
+								<a data-command="customSelectCardMenu" class=" text-dark" style="font-size: 1.1rem; user-select: text;">#: TenCongViec #</a>
+									<div class="d-flex align-items-center info-cv pt-2">
+									<span class="text-sm text-secondary" style="user-select: text;">
+										 # if(DuKienTuNgay) { #
+										Từ #: kendo.toString(kendo.parseDate(DuKienTuNgay), "dd/MM/yyyy") #
+									# } else { #
+										<span style="color: red;">Ngày bắt đầu</span>
+									# } #
+
+										</span>
+									<div class="d-flex ms-auto">
+										<span class="text-sm text-secondary ms-2" style="user-select: text;">
+											 # if(DuKienDenNgay) { #
+										Đến #: kendo.toString(kendo.parseDate(DuKienDenNgay), "dd/MM/yyyy") #
+									# } else { #
+										<span style="color: red; ">Ngày kết thúc</span>
+									# } #
+
+										</span>
+									</div>
+								</div>
+								<hr width="94%" align="center"/>
+
+
+								<div class="d-flex align-items-center info-cv">
+									<img class="rounded-circle task-avatar Avatar-img-assign" data-id="#= AssignTo#"
+										 data-src="#= AnhDaiDienNguoiAssignTo #"  data-tarboard="#= TrangThaiId #"
+										 alt="Avatar">
+									<span class="text-sm text-secondary" style="user-select: text;">#: NguoiAssignTo #</span>
+									<div class="d-flex ms-auto">
+										<span class="text-sm text-secondary" style="user-select: text;">
+											<i class="fas fa-paperclip"></i> #: SoLuongTepDinhKem #
+										</span>
+										<span class="text-sm text-secondary ms-2" style="user-select: text;">
+											<i class="fas fa-comment"></i> #: SoLuongPhanHoi #
+										</span>
+									</div>
+								 </div>
+
+							</div>
+							# } #
+						</script>
+
+
+							@(Html.Kendo().TaskBoard<MODELCongViec, MODELTrangThaiCongViec>()
+														.Name("taskBoard")
+														.Toolbar(false)
+														.ColumnSettings(columnSettings =>
+														{
+															columnSettings.TemplateId("column-template");
+															columnSettings.DataTextField("TenGoi");
+															columnSettings.DataStatusField("Id");
+														})
+														.Columns(dataSource => dataSource
+														.Ajax()
+														.Read("GetTaskStatuses", "TrangThaiCongViec")
+														)
+														.DataTitleField("TenCongViec")
+														.DataStatusField("TrangThaiId")
+														.DataDescriptionField("TenCongViec")
+														.TemplateId("card-template")
+														.DataSource(dataSource => dataSource
+														.Ajax()
+														.Model(model => model.Id(p => p.Id))
+														.Read(read => read.Action("GetTask", "TrangThaiCongViec").Data("gridDataFilter"))
+														.PageSize(SYS_CONFIG.PAGE_SIZE_DEFAULT)
+														.ServerOperation(false)
+														.Events(e => e.Error("xoFunc.onErrorGrid"))
+														)
+														.Height("650px")
+														.CardMenu(m => m.Add().Name("CustomButton").Text("My Custom Tool").Icon("gear").Command("MyCustomCommand").Options("myvalue"))
+														.Events(ev =>
+														{
+															ev.DataBound("onDataBound");
+															ev.ColumnsDataBound("onColumnsDataBound");
+															ev.Execute("onExecute");
+															ev.MoveEnd("onTaskMoveEnd");
+														})
+														)
+
+
+					</div>
+
+					<div id="drawerPanel">
+						<button id="closeDrawer">&times;</button>
+						<div id="drawerContent">
+						</div>
+						<div class="modal-footer justify-content-between" style="float: inline-end;">
+							<div class="float-right">
+								<button type="button" class="btn btn-success" id="btnLuuTiep"><i class="fas fa-check-square"></i> Lưu </button>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+			@foreach (var tab in listtabs)
+			{
+	if (tab.Id != "TrangThaiCongViecIndexTab")
+	{
+		<div class="tab-content" id="@tab.ControllerName@tab.ActionName">
+		</div>
+	}
+			}
+	
+
+<script>
+	function updateColumnImages() {
+		$(".k-taskboard-column").each(function () {
+			var column = $(this);
+			var columnId = column.find(".taskboard-avatars").attr("data-img");
+
+			
+			$(".Avatar-img-assign[data-tarboard='" + columnId + "']").each(function () {
+				var clonedImg = $(this).clone();
+				console.log(clonedImg.attr("data-id"));
+				if (clonedImg) {
+					var imgContainer = column.find("div[data-img='" + columnId + "']");
+					var existingImg = imgContainer.find("img[data-id='" + clonedImg.attr("data-id") + "']");
+
+					if (existingImg.length > 0) {
+						
+						var countSpan = existingImg.siblings(".img-count");
+						if (countSpan.length > 0) {
+							countSpan.text(parseInt(countSpan.text()) + 1);
+						} else {
+						
+							existingImg.wrap("<div style='position: relative; display: inline-block;'></div>");
+							existingImg.after('<span class="img-count">2</span>');
+						}
+					} else {
+						
+						imgContainer.append(clonedImg.wrap("<div style='position: relative; display: inline-block;'></div>"));
+						clonedImg.after('<span class="img-count">1</span>');
+					}
+
+					
+				}
+
+			});
+
+			
+			
+			
+		});
+	}
+
+	
+
+	$(document).ready(function () {
+		localStorage.setItem("headerActive", "home");
+	
+	})
+
+	function refreshTaskBoard() {
+		var taskBoard = $("#taskBoard").data("kendoTaskBoard");
+		taskBoard.dataSource.read();
+	}
+
+	function onExecute(e) {
+		console.log("Execute event fired:", e.command);
+	}
+
+	var oldStatus = -1;
+	function onTaskMoveEnd(e) {
+		if (e.action === "remove") {
+			oldStatus = e.column.Id;
+		}
+		if (e.action === "receive") {
+			var id = e.card.Id;
+			var newStatus = e.column.Id;
+			if (newStatus !== oldStatus) {
+				updateTaskBoard(id, newStatus);
+			}
+		}
+	}
+	function onDataBound(e) {
+	
+
+		setBadgeText();
+		updateImages();
+		updateColumnImages(); 
+	}
+
+	function onColumnsDataBound(e) {
+		setBadgeText();
+		setCardColor();
+		updateImages();
+		//updateColumnImages();
+
+	}
+	function updateTaskBoard(idCongViec, newStatus) {
+		showLoadingElement(true, 'modalLoading');
+		var url = '@Url.Action("UpdateTask", "TrangThaiCongViec")';
+		var taskBoard = $("#taskBoard").data("kendoTaskBoard");
+		var updateRequest = {
+			Id: idCongViec,
+			TrangThaiId: newStatus
+		}
+		$.ajax({
+			url: url,
+			type: "POST",
+			data: updateRequest,
+			success: function (data) {
+
+				if (data.IsSuccess) {
+					refreshTaskBoard();
+					toastr.success("Chuyển trạng thái thành công");
+				} else {
+					toastr.error(data.Message);
+					taskBoard.dataSource.read();
+					refreshTaskBoard();
+				}
+			},
+			error: function (data) {
+				taskBoard.dataSource.read();
+				refreshTaskBoard();
+				toastr.error("Có lỗi xảy ra, vui lòng thử lại sau");
+			}
+		});
+		showLoadingElement(false, 'modalLoading');
+	}
+
+
+	function getColumnCount() {
+		var taskBoard = $("#taskBoard").data("kendoTaskBoard");
+
+		if (!taskBoard) {
+			console.error("TaskBoard chưa được khởi tạo.");
+			return 0;
+		}
+
+		var columns = taskBoard.columns();
+		return columns.length;
+	}
+
+	function setBadgeText() {
+		var taskBoard = $("#taskBoard").data("kendoTaskBoard");
+		for (var i = 0; i < taskBoard.columns().length; i++) {
+			var status = taskBoard.columnDataItem(taskBoard.columns()[i]).Id;
+			var totalCount = taskBoard.itemsByStatus(status).length;
+			initBadge(status, totalCount);
+		}
+	}
+
+	function initBadge(id, totalItems) {
+		$('#status-' + id).text("(" + totalItems + ")");
+	}
+	function drawerDetailCongViec(id) {
+		console.log(id);
+	}
+	function onSelect(e) {
+		var taskBoard = $("#taskBoard").data("kendoTaskBoard");
+		var selectedCard = e.card;
+		var CardData = taskBoard.dataItem(selectedCard);
+		console.log(CardData);
+		var TaskId = CardData.Id;
+		console.log(TaskId);
+
+	}
+
+	kendo.ui.taskboard.commands["customSelectCardMenu"] = kendo.ui.taskboard.Command.extend({
+		exec: function (e) {
+			var cardElm = this.options.cardElement;
+			var taskBoard = $("#taskBoard").data("kendoTaskBoard");
+			var cardData = taskBoard.dataItem(cardElm);
+
+			$(".k-card").removeClass("selected-card");
+			$(cardElm).addClass("selected-card").css({
+				"border": "2px solid #00aaff",
+				"background-color": "#f0f8ff"
+			});
+
+			showTaskDetails(cardData.Id);
+
+		}
+	});
+
+
+	function showTaskDetails(taskId) {
+		// getListPhanHoi(taskId);
+		var url = '@Url.Action("GetById", "TrangThaiCongViec")' + "?Id=" + taskId;
+		$.ajax({
+			url: url,
+			type: "GET",
+			success: function (data) {
+				if (data.Errors === null || data.Errors === "") {
+					console.log("Lỗi get công việc theo id");
+				} else {
+					showPanel();
+					$("#drawerContent").html(data);
+				}
+			},
+			error: function () {
+				toastr.error("Có lỗi xảy ra, vui lòng thử lại sau");
+			}
+		});
+	}
+
+	function showPanel() {
+		document.getElementById('drawerPanel').classList.add('open');
+	}
+
+	function hidePanel() {
+		document.getElementById('drawerPanel').classList.remove('open');
+	}
+
+	$("#closeDrawer").on("click", function () {
+		hidePanel();
+	});
+	function gridDataFilter() {
+		var duAnId = $("#FilterDuAnId").data("kendoDropDownList").value();
+		var giaiDoanId = $("#FilterGiaiDoanId").data("kendoDropDownList").value();
+		var congViecTrongGiaiDoanId = $("#FilterCongViecTrongGiaiDoanId").data("kendoDropDownList").value();
+		var trangThaiId = $("#FilterTrangThaiId").data("kendoDropDownList").value();
+		var nguoiThucHienId = $("#FilterNguoiThucHienId").data("kendoDropDownList").value();
+		var nguoiKiemTraId = $("#FilterNguoiKiemTraId").data("kendoDropDownList").value();
+		var assignToId = $("#FilterAssignToId").data("kendoDropDownList").value();
+		var tuNgay = $("#FilterTuNgay").data("kendoDatePicker").value();
+		var denNgay = $("#FilterDenNgay").data("kendoDatePicker").value();
+
+		filter = {
+			DuAnId: duAnId,
+			GiaiDoanId: giaiDoanId,
+			CongViecTrongGiaiDoanId: congViecTrongGiaiDoanId,
+			TrangThaiId: trangThaiId,
+			NguoiThucHienId: nguoiThucHienId,
+			NguoiKiemTraId: nguoiKiemTraId,
+			TuNgay: tuNgay === null ? tuNgay : tuNgay.toJSON(),
+			DenNgay: denNgay === null ? denNgay : denNgay.toJSON(),
+			AssignTo: assignToId,
+			TextSearch: $("#TextSearch").val()
+		}
+		return filter;
+	}
+
+	function congViecGiaiDoanData() {
+		var data = {
+			DuAnId: $("#FilterDuAnId").val(),
+			GiaiDoanId: $("#FilterGiaiDoanId").val()
+		};
+		return data;
+	}
+
+	function refreshCongViecGiaiDoan() {
+		var duAnId = $("#FilterDuAnId").val();
+		var giaiDoanId = $("#FilterGiaiDoanId").val();
+		var congViecGiaiDoan = $('#FilterCongViecTrongGiaiDoanId').data('kendoDropDownList');
+		if (duAnId !== '' && giaiDoanId !== '') {
+			congViecGiaiDoan.dataSource.read();
+		}
+	}
+
+	function resetFilter() {
+		$("#FilterDuAnId").data("kendoDropDownList").value("");
+		$("#FilterGiaiDoanId").data("kendoDropDownList").value("");
+		$("#FilterCongViecTrongGiaiDoanId").data("kendoDropDownList").value("");
+		$("#FilterTrangThaiId").data("kendoDropDownList").value("");
+		$("#FilterNguoiThucHienId").data("kendoDropDownList").value("");
+		$("#FilterNguoiKiemTraId").data("kendoDropDownList").value("");
+		$("#FilterAssignToId").data("kendoDropDownList").value("");
+
+		refreshTaskBoard();
+	}
+	$(document).ready(function () {
+		refreshTaskBoard();
+
+	});
+	
+	function getColor(id) {
+
+		let colors = ["#e95f31", "#13a3d9", "#F4A262", "#6f7cc7", "#F67268", "#3141A5"];
+		return colors[id];
+		
+	}
+	function setCardColor() {
+		var taskBoard = $("#taskBoard").data("kendoTaskBoard");
+		var cLength = taskBoard.columns().length;
+		for (var i = 0; i < cLength; i++) {
+			var status = taskBoard.columnDataItem(taskBoard.columns()[i]).Id;
+			if (status === cLength) {
+				var card = $(`#card-${status}`);
+				card.css("color", getColor(status - 1));
+			}
+			else {
+				var card = $(`#card-${status}`);
+				card.css("color", getColor(status - 1));
+			}
+		}
+
+	}
+
+	function loadTabContent($tab) {
+
+		var tabId = $tab.data('tab');
+		$('.tab-content').each(function () {
+			if (this.id !== "TrangThaiCongViecIndexTab") {
+				$(this).empty();
+			}
+		});
+		$('.tab-content').removeClass('active show');
+		var $tabPane = $('#' + tabId);
+
+		$tabPane.addClass('active show');
+
+		if ($tab.index() === 0) {
+			return;
+		}
+		
+	
+		var controllerName = $tab.data('controller');
+		var actionName = $tab.data('action');
+		var url = '/' + controllerName + '/' + actionName;
+		$.ajax({
+			url: url,
+			method: "GET",
+			dataType: "html",
+			success: function (data) {
+				
+				$tabPane.html(data);
+			},
+			error: function (xhr, status, error) {
+				console.error("Lỗi khi load nội dung của controller " + controllerName + ": " + error);
+			}
+		});
+
+	}
+
+	$(document).on('click', '#mynavtabs .tab', function (e) {
+		e.preventDefault();
+		var $tab = $(this);
+
+		
+		$('#mynavtabs .tab').removeClass('active');
+		
+		$tab.addClass('active');
+		loadTabContent($tab);
+	});
+
+	
+	$(document).ready(function () {
+		var $defaultTab = $('#mynavtabs .tab.active');
+		if ($defaultTab.length === 0) {
+			$defaultTab = $('#mynavtabs .tab').first();
+			$defaultTab.addClass('active');
+		}
+		loadTabContent($defaultTab);
+		
+	});
+	
+</script>
+
+

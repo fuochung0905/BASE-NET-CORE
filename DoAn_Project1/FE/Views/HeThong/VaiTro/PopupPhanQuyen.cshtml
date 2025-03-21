@@ -1,0 +1,190 @@
+﻿<style>
+    .nhomPQ {
+        height: 200px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid tomato;
+    }
+</style>
+
+<div class="modal-content" id="modalLoading">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmVaiTro" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            <h5 class="modal-title">Cập nhật phân quyền</h5>
+            <button type="button" class="close" onclick="closePopUp();">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="hdVaiTroId" value="@ViewBag.VaiTroId" />
+            <input type="hidden" id="hdNhomId" value="0" />
+            <div class="form-group">
+                @* <h5 class="card-title">
+                    Nhóm quyền
+                </h5> *@
+                @foreach (MODELS.BASE.MODELCombobox item in ViewBag.NhomPhanQuyen)
+                {
+                    <button type="button" class="btn btn-primary btn-sm" style="width: 120px;" onclick="nhomClick('@item.Value');">@item.Text</button>
+                }
+            </div>
+            <div class="form-group">
+                @(Html.Kendo().Grid<MODELS.HETHONG.VAITRO.Dtos.MODELVaiTro_PhanQuyen>()
+                .Name("gridPhanQuyen")
+                .HtmlAttributes(new { @class = "table table-hover" })
+                .Columns(columns =>
+                {
+                    columns.Bound(c => c.TenGoi).Title("Tên gọi").Width(153);
+                    columns.Bound(c => c.IsXem).Title("Xem").ClientTemplate("<input type='checkbox' id='chkXem' #= CoXem ? '' : disabled='disabled' # #= IsXem ? checked='checked' : '' # />").Width(80).HtmlAttributes(new { @style = "text-align:center;" });
+                    columns.Bound(c => c.IsThem).Title("Thêm").ClientTemplate("<input type='checkbox' id='chkThem' #= CoThem ? '' : disabled='disabled' # #= IsThem ? checked='checked' : '' # />").Width(80).HtmlAttributes(new { @style = "text-align:center;" });
+                    columns.Bound(c => c.IsCapNhat).Title("Cập nhật").ClientTemplate("<input type='checkbox' id='chkCapNhat' #= CoCapNhat ? '' : disabled='disabled' # #= IsCapNhat ? checked='checked' : '' # />").Width(80).HtmlAttributes(new { @style = "text-align:center;" });
+                    columns.Bound(c => c.IsXoa).Title("Xóa").ClientTemplate("<input type='checkbox' id='chkXoa' #= CoXoa ? '' : disabled='disabled' # #= IsXoa ? checked='checked' : '' # />").Width(80).HtmlAttributes(new { @style = "text-align:center;" });
+                    columns.Bound(c => c.IsDuyet).Title("Duyệt").ClientTemplate("<input type='checkbox' id='chkDuyet' #= CoDuyet ? '' : disabled='disabled' # #= IsDuyet ? checked='checked' : '' # />").Width(80).HtmlAttributes(new { @style = "text-align:center;" });
+                    columns.Bound(c => c.IsThongKe).Title("Thống kê").ClientTemplate("<input type='checkbox' id='chkThongKe' #= CoThongKe ? '' : disabled='disabled' # #= IsThongKe ? checked='checked' : '' # />").Width(100).HtmlAttributes(new { @style = "text-align:center;" });
+                })
+                .Resizable(x => x.Columns(true))
+                .EnableCustomBinding(true)
+                .PersistSelection()
+                .Scrollable()
+                .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .Model(model => model.Id(p => p.Id))
+                    .Read(read => read.Action("GetListPhanQuyenVaiTro", "VaiTro").Data("gridPhanQuyenDataFilter"))
+                    .PageSize(999)
+                    .Events(e => e.Error("xoFunc.onErrorGrid"))
+                )
+                .Events(e => { e.DataBinding("xoFunc.onDataBindingGrid"); })
+                .Pageable(pager => pager
+                .Refresh(true).Input(true).Numeric(false))
+                .NoRecords(n => n.Template("Không có dữ liệu"))
+            )
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="closePopUp();"><i class="fas fa-times-square"></i> Hủy</button>
+        </div>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+        //Sự kiện khi click checkbox "Xem"
+        $('#gridPhanQuyen').on('click', '#chkXem', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#gridPhanQuyen').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            //chkCongBo state
+            if (checked)
+                dataItem.set('IsXem', true);
+            else
+                dataItem.set('IsXem', false);
+            saveData(dataItem);
+        })
+
+        //Sự kiện khi click checkbox "Thêm"
+        $('#gridPhanQuyen').on('click', '#chkThem', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#gridPhanQuyen').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            if (checked)
+                dataItem.set('IsThem', true);
+            else
+                dataItem.set('IsThem', false);
+            saveData(dataItem);
+        })
+
+        //Sự kiện khi click checkbox "CapNhat"
+        $('#gridPhanQuyen').on('click', '#chkCapNhat', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#gridPhanQuyen').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            if (checked)
+                dataItem.set('IsCapNhat', true);
+            else
+                dataItem.set('IsCapNhat', false);
+            saveData(dataItem);
+        })
+
+        //Sự kiện khi click checkbox "Xoa"
+        $('#gridPhanQuyen').on('click', '#chkXoa', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#gridPhanQuyen').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            if (checked)
+                dataItem.set('IsXoa', true);
+            else
+                dataItem.set('IsXoa', false);
+            saveData(dataItem);
+        })
+
+        //Sự kiện khi click checkbox "Duyet"
+        $('#gridPhanQuyen').on('click', '#chkDuyet', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#gridPhanQuyen').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            if (checked)
+                dataItem.set('IsDuyet', true);
+            else
+                dataItem.set('IsDuyet', false);
+            saveData(dataItem);
+        })
+
+        //Sự kiện khi click checkbox "ThongKe"
+        $('#gridPhanQuyen').on('click', '#chkThongKe', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#gridPhanQuyen').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            //chkCongBo state
+            if (checked)
+                dataItem.set('IsThongKe', true);
+            else
+                dataItem.set('IsThongKe', false);
+            saveData(dataItem);
+        })
+    });
+
+    function saveData(data) {
+        $.ajax({
+            url: '@Url.Action("PostPhanQuyenVaiTro", "VaiTro")',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: data.Id,
+                vaiTroId: data.VaiTroId,
+                controllerName: data.ControllerName,
+                isXem: data.IsXem,
+                isThem: data.IsThem,
+                isCapNhat: data.IsCapNhat,
+                isXoa: data.IsXoa,
+                isDuyet: data.IsDuyet,
+                isThongKe: data.IsThongKe,
+            },
+            success: function (dataReturn) {
+                if (dataReturn.IsSuccess) {
+                    data.set('Id', dataReturn.Data);
+                }
+                else {
+                    showErrorNotify(dataReturn.Message);
+                }
+            },
+            error: function (request, status, err) {
+                showErrorNotify(errorMessage);
+            }
+        });
+    }
+
+    function nhomClick(nhomId) {
+        $('#hdNhomId').val(nhomId);
+        var grid = $("#gridPhanQuyen").data("kendoGrid");
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+    }
+
+    function closePopUp() {
+        refreshGrid();
+        hideModal();
+    }
+</script>

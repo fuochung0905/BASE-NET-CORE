@@ -1,0 +1,149 @@
+﻿@model IEnumerable<MODELS.DUAN.LICHSUCONGVIEC.Dtos.MODELLichSuCongViec>
+<style>
+    .modal-content .modal-body {
+        max-height: 84vh !important;
+        width: 710px;
+    }
+</style>
+<div class="modal-content" id="modalLoading">
+	<div class="modal-header">
+		<h5 class="modal-title">Lịch sử công việc: </h5>
+	</div>
+	<div class="table-wrapper" style="width:1300px;">
+		<table> 
+			<thead>
+			<tr>
+				<th>Người chịu trách nhiệm</th>
+				<th>Ngày bắt đầu</th>
+				<th>Trạng thái</th>
+			</tr>
+			</thead>
+			<tbody>
+			@if (Model is  null )
+			{
+				<tr>
+					<td colspan="4" style="text-align: center;">Không có dữ liệu</td>
+				</tr>
+			}
+			else
+			{
+				foreach (var item in Model)
+				{
+					<tr>
+						<td>@item.TenNguoiDangThucHien</td>
+						<td>@item.NgayBatDau</td>
+						<td>@item.TrangThai</td>
+					</tr>
+				}
+			}
+         
+			</tbody>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" onclick="closePopUp();"><i class="fas fa-times-square"></i> Hủy</button>
+	</div>
+</div>
+<script>
+    function closePopUp() {
+        refreshGrid();
+        hideModal();
+    }
+</script>
+<style>
+
+    .modal-content {
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        background-color: #ffffff; /* Added to ensure background color */
+        width: 100%; /* Set to full width */
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 10px;
+        background-color: #f8f9fa; /* Light background for header */
+        margin-bottom: 4px;
+    }
+
+        .modal-header .close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+        }
+
+    .table-wrapper {
+        max-height: calc(100vh - 150px); /* Adjust based on other elements like headers/footers */
+        overflow-y: auto;
+        margin: 4px 0;
+        width: 100%; /* Set to full width */
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 1em;
+        font-family: Arial, sans-serif;
+        min-width: 400px;
+    }
+
+        table thead tr {
+            background-color: #266cb4;
+            color: #ffffff;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 1; /* Ensure the header stays above the table rows */
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            border: 1px solid #dddddd;
+        }
+
+        table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+            table tbody tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            table tbody tr:last-of-type {
+                border-bottom: 2px solid #266cb4;
+            }
+
+            table tbody tr:hover {
+                background-color: #f1f1f1;
+            }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 10px;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .btn-close {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.875rem;
+    }
+
+        .btn-close i {
+            margin-right: 5px;
+        }
+
+        .btn-close:hover {
+            background-color: #c82333;
+        }
+
+</style>

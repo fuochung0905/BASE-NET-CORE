@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.HETHONG.VAITRO.Dtos
+namespace MODELS.HETHONG.VAITRO.Dtos
 {
     public class MODELVaiTro_PhanQuyen
     {
