@@ -17,5 +17,5 @@ namespace MODELS.DANHMUC.LOAITAIKHOAN.Requests
         [Required(AllowEmptyStrings =false,ErrorMessage = "Tên gọi bắt buộc nhập")]
         public string? TenGoi { get; set; }
     }
-
+ 
 }
