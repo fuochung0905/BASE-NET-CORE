@@ -49,8 +49,6 @@ namespace FE.Controllers.DUAN
                 new MODELS.HETHONG.TAB.Tab { Id = "ThongKeKetQuaCongViecIndexTabT", Name = "Kết quả Tuần", ControllerName = "ThongKeKetQuaCongViec" ,ActionName="IndexTabT" },
                 new MODELS.HETHONG.TAB.Tab { Id = "ThongKeKetQuaCongViecIndexTab", Name = "Kết quả tháng", ControllerName = "ThongKeKetQuaCongViec" ,ActionName="IndexTab" },
                 new MODELS.HETHONG.TAB.Tab { Id = "ThongKeKetQuaCongViecIndexTabY", Name = "Kết quả năm", ControllerName = "ThongKeKetQuaCongViec" ,ActionName="IndexTabY" },
-
-
             };
 
             ViewData["tabs"] = tabs;

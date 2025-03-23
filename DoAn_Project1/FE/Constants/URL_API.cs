@@ -108,32 +108,7 @@
         public const string PHONGBAN_DELETE = "phongban/delete";
         public const string PHONGBAN_DELETELIST = "phongban/delete-list";
 
-        //TINHTHANH
-        public const string DM_TinhThanh_GETLISTPAGING = "TinhThanh/get-list-paging";
-        public const string DM_TinhThanh_GETBYID = "TinhThanh/get-by-id";
-        public const string DM_TinhThanh_GETBYPOST = "TinhThanh/get-by-post";
-        public const string DM_TinhThanh_INSERT = "TinhThanh/insert";
-        public const string DM_TinhThanh_UPDATE = "TinhThanh/update";
-        public const string DM_TinhThanh_DELETELIST = "TinhThanh/delete-list";
-        public const string DM_TinhThanh_GETALLCOMBOBOX = "TinhThanh/get-all-combobox";
 
-        //QUANHUYEN
-        public const string DM_QuanHuyen_GETLISTPAGING = "QuanHuyen/get-list-paging";
-        public const string DM_QuanHuyen_GETBYID = "QuanHuyen/get-by-id";
-        public const string DM_QuanHuyen_GETBYPOST = "QuanHuyen/get-by-post";
-        public const string DM_QuanHuyen_INSERT = "QuanHuyen/insert";
-        public const string DM_QuanHuyen_UPDATE = "QuanHuyen/update";
-        public const string DM_QuanHuyen_DELETELIST = "QuanHuyen/delete-list";
-        public const string DM_QuanHuyen_GETALLCOMBOBOX = "QuanHuyen/get-all-combobox";
-
-        //PHUONGXA
-        public const string DM_PhuongXa_GETLISTPAGING = "PhuongXa/get-list-paging";
-        public const string DM_PhuongXa_GETBYID = "PhuongXa/get-by-id";
-        public const string DM_PhuongXa_GETBYPOST = "PhuongXa/get-by-post";
-        public const string DM_PhuongXa_INSERT = "PhuongXa/insert";
-        public const string DM_PhuongXa_UPDATE = "PhuongXa/update";
-        public const string DM_PhuongXa_DELETELIST = "PhuongXa/delete-list";
-        public const string DM_PhuongXa_GETALLCOMBOBOX = "PhuongXa/get-all-combobox";
 
         //GIAIDOANDUAN
         public const string GIAIDOANDUAN_GETLIST = "giaidoanduan/get-list";
@@ -171,54 +146,7 @@
         public const string CHUCVU_UPDATE = "chucvu/update";
         public const string CHUCVU_DELETE = "chucvu/delete";
         public const string CHUCVU_DELETELIST = "chucvu/delete-list";
-        //CONGTAC_PHUONGTIEN
-        public const string CONGTAC_PHUONGTIEN_GETALLFORCOMBOBOX = "congtac_phuongtien/get-all-combobox";//xemlai
-        public const string CONGTAC_PHUONGTIEN_GETLIST = "CONGTAC_PHUONGTIEN/get-list";
-        public const string CONGTAC_PHUONGTIEN_GETBYID = "CONGTAC_PHUONGTIEN/get-by-id";
-        public const string CONGTAC_PHUONGTIEN_GETBYPOST = "CONGTAC_PHUONGTIEN/get-by-post";
-        public const string CONGTAC_PHUONGTIEN_INSERT = "CONGTAC_PHUONGTIEN/insert";
-        public const string CONGTAC_PHUONGTIEN_UPDATE = "CONGTAC_PHUONGTIEN/update";
-        public const string CONGTAC_PHUONGTIEN_DELETE = "CONGTAC_PHUONGTIEN/delete";
-        public const string CONGTAC_PHUONGTIEN_DELETELIST = "CONGTAC_PHUONGTIEN/delete-list";
 
-        //QUANLYXE
-        public const string QUANLYXE_GETALLFORCOMBOBOX = "QUANLYXE/get-all-combobox";//xemlai
-        public const string QUANLYXE_GETLIST = "QUANLYXE/get-list";
-        public const string QUANLYXE_GETBYID = "QUANLYXE/get-by-id";
-        public const string QUANLYXE_GETBYPOST = "QUANLYXE/get-by-post";
-        public const string QUANLYXE_INSERT = "QUANLYXE/insert";
-        public const string QUANLYXE_UPDATE = "QUANLYXE/update";
-        public const string QUANLYXE_DELETE = "QUANLYXE/delete";
-        public const string QUANLYXE_DELETELIST = "QUANLYXE/delete-list";
-        //BAOCAOCONGTAC
-        public const string BAOCAOCONGTAC_GETALLFORCOMBOBOX = "BAOCAOCONGTAC/get-all-combobox";//xemlai
-        public const string BAOCAOCONGTAC_GETLIST = "BAOCAOCONGTAC/get-list";
-        //public const string BAOCAOCONGTAC_GETLISTPAGING = "BAOCAOCONGTAC/get-list";
-        public const string BAOCAOCONGTAC_GETBYID = "BAOCAOCONGTAC/get-by-id";
-        public const string BAOCAOCONGTAC_GETBYPOST = "BAOCAOCONGTAC/get-by-post";
-        public const string BAOCAOCONGTAC_INSERT = "BAOCAOCONGTAC/insert";
-        public const string BAOCAOCONGTAC_UPDATE = "BAOCAOCONGTAC/update";
-        public const string BAOCAOCONGTAC_DELETE = "BAOCAOCONGTACdelete";
-        public const string BAOCAOCONGTAC_DELETELIST = "BAOCAOCONGTAC/delete-list";
-        //LYDO
-        public const string LYDO_GETALLFORCOMBOBOX = "lydo/get-all-combobox";
-        public const string LYDO_GETALLFORCOMBOBOX_CHI = "lydo/get-all-combobox-chi";
-        public const string LYDO_GETLIST = "lydo/get-list";
-        public const string LYDO_GETBYID = "lydo/get-by-id";
-        public const string LYDO_GETBYPOST = "lydo/get-by-post";
-        public const string LYDO_INSERT = "lydo/insert";
-        public const string LYDO_UPDATE = "lydo/update";
-        public const string LYDO_DELETE = "lydo/delete";
-        public const string LYDO_DELETELIST = "lydo/delete-list";
-        //LOAITAICHINH
-        public const string LOAITAICHINH_GETALLFORCOMBOBOX = "loaitaichinh/get-all-combobox";
-        public const string LOAITAICHINH_GETLIST = "loaitaichinh/get-list";
-        public const string LOAITAICHINH_GETBYID = "loaitaichinh/get-by-id";
-        public const string LOAITAICHINH_GETBYPOST = "loaitaichinh/get-by-post";
-        public const string LOAITAICHINH_INSERT = "loaitaichinh/insert";
-        public const string LOAITAICHINH_UPDATE = "loaitaichinh/update";
-        public const string LOAITAICHINH_DELETE = "loaitaichinh/delete";
-        public const string LOAITAICHINH_DELETELIST = "loaitaichinh/delete-list";
 
         //LOAITAIKHOAN
         public const string LOAIHOSO_GETALLFORCOMBOBOX = "loaihoso/get-all-combobox";
@@ -229,24 +157,10 @@
         public const string LOAIHOSO_UPDATE = "loaihoso/update";
         public const string LOAIHOSO_DELETE = "loaihoso/delete";
         public const string LOAIHOSO_DELETELIST = "loaihoso/delete-list";
-        //QUANLYCHUNGTU
-        public const string QUANLYCHUNGTU_GETLIST = "quanlychungtu/get-list";
-        public const string QUANLYCHUNGTU_GETBYID = "quanlychungtu/get-by-id";
-        public const string QUANLYCHUNGTU_GETBYPOST = "quanlychungtu/get-by-post";
-        public const string QUANLYCHUNGTU_INSERT = "quanlychungtu/insert";
-        public const string QUANLYCHUNGTU_UPDATE = "quanlychungtu/update";
-        public const string QUANLYCHUNGTU_DELETE = "quanlychungtu/delete";
-        public const string QUANLYCHUNGTU_DELETELIST = "quanlychungtu/delete-list";
+   
         #endregion
 
-        //NGANHANG
-        public const string NGANHANG_GETLIST = "nganhang/get-list";
-        public const string NGANHANG_GETBYID = "nganhang/get-by-id";
-        public const string NGANHANG_GETBYPOST = "nganhang/get-by-post";
-        public const string NGANHANG_INSERT = "nganhang/insert";
-        public const string NGANHANG_UPDATE = "nganhang/update";
-        public const string NGANHANG_DELETELIST = "nganhang/delete-list";
-        public const string NGANHANG_GETALLFORCOMBOBOX = "nganhang/get-all-combobox";
+     
 
         #region ThongKeKetQua
         public const string THONGKEKETQUACONGVIEC_GETKETQUA = "THONGKEKETQUACONGVIEC/get-ket-qua";
@@ -316,91 +230,14 @@
         public const string QUANLYDUAN_DELETELIST = "quanlyduan/delete-list";
         public const string QUANLYDUAN_GETALLCOMBOBOX = "quanlyduan/get-all-combo-box";
         public const string QUANLYDUAN_GETTONGDUANTHEOTUNGIAIDOAN = "quanlyduan/get-tong-du-an";
-        //QUANLYDUAN_QUAHAN
-        public const string QUANLYDUAN_QUAHAN_GETLIST = "quanlyduan_quahan/get-list";
-        public const string QUANLYDUAN_QUAHAN_GETBYID = "quanlyduan_quahan/get-by-id";
-        public const string QUANLYDUAN_QUAHAN_GETBYPOST = "quanlyduan_quahan/get-by-post";
-        public const string QUANLYDUAN_QUAHAN_INSERT = "quanlyduan_quahan/insert";
-        public const string QUANLYDUAN_QUAHAN_UPDATE = "quanlyduan_quahan/update";
-        public const string QUANLYDUAN_QUAHAN_DELETE = "quanlyduan_quahan/delete";
-        public const string QUANLYDUAN_QUAHAN_DELETELIST = "quanlyduan_quahan/delete-list";
-        public const string QUANLYDUAN_QUAHAN_GETALLCOMBOBOX = "quanlyduan_quahan/get-all-combo-box";
-        public const string QUANLYDUAN_QUAHAN_GETTONGDUANTHEOTUNGIAIDOAN = "quanlyduan/get-tong-du-an";
-        // DANGKYLICHCONGTAC
-        public const string DANGKYLICHCONGTAC_GETALLFORCOMBOBOX = "dangkylichcongtac/get-all-combobox";
-        public const string DANGKYLICHCONGTAC_GETLIST = "dangkylichcongtac/get-list";
-        public const string DANGKYLICHCONGTAC_GETBYID = "dangkylichcongtac/get-by-id";
-        public const string DANGKYLICHCONGTAC_GETBYPOST = "dangkylichcongtac/get-by-post";
-        public const string DANGKYLICHCONGTAC_INSERT = "dangkylichcongtac/insert";
-        public const string DANGKYLICHCONGTAC_UPDATE = "dangkylichcongtac/update";
-        public const string DANGKYLICHCONGTAC_DELETE = "dangkylichcongtac/delete";
-        public const string DANGKYLICHCONGTAC_DELETELIST = "dangkylichcongtac/delete-list";
-        // DANGKYLICHCONGTAC_THANHPHAN
-        public const string DANGKYLICHCONGTAC_THANHPHAN_GETALLFORCOMBOBOX = "DANGKYLICHCONGTAC_THANHPHAN/get-all-combobox";
-  
-        public const string DANGKYLICHCONGTAC_THANHPHAN_GETLIST = "DANGKYLICHCONGTAC_THANHPHAN/get-list";
-        public const string DANGKYLICHCONGTAC_THANHPHAN_GETBYID = "DANGKYLICHCONGTAC_THANHPHAN/get-by-id";
-        public const string DANGKYLICHCONGTAC_THANHPHAN_GETBYPOST = "DANGKYLICHCONGTAC_THANHPHAN/get-by-post";
-        public const string DANGKYLICHCONGTACTHANHPHAN_INSERT = "DANGKYLICHCONGTAC_THANHPHAN/insert";
-        public const string DANGKYLICHCONGTAC_THANHPHAN_UPDATE = "DANGKYLICHCONGTAC_THANHPHAN/update";
-        public const string DANGKYLICHCONGTAC_THANHPHAN_DELETE = "DANGKYLICHCONGTAC_THANHPHAN/delete";
-        public const string DANGKYLICHCONGTAC_THANHPHAN_DELETELIST = "DANGKYLICHCONGTAC_THANHPHAN/delete-list";
 
-        //HOSODUAN
-        public const string HOSODUAN_GETLIST = "hosoduan/get-list";
-        public const string HOSODUAN_GETBYID = "hosoduan/get-by-id";
-        public const string HOSODUAN_GETBYPOST = "hosoduan/get-by-post";
-        public const string HOSODUAN_INSERT = "hosoduan/insert";
-        public const string HOSODUAN_UPDATE = "hosoduan/update";
-        public const string HOSODUAN_DELETE = "hosoduan/delete";
-        public const string HOSODUAN_DELETELIST = "hosoduan/delete-list";
-        public const string HOSODUAN_TEPDINHKEM_GETLIST = "hosoduan/get-list-tep-dinh-kem";
-        public const string HOSODUAN_TEPDINHKEM_INSERT = "hosoduan/insert-tep-dinh-kem";
-        public const string HOSODUAN_TEPDINHKEM_UPDATE = "hosoduan/update-tep-dinh-kem";
-        public const string HOSODUAN_TEPDINHKEM_DELETELIST = "hosoduan/delete-list-tep-dinh-kem";
-        public const string HOSODUAN_TEPDINHKEM_EXPORT = "hosoduan/export-tep-dinh-kem";
-        #endregion
 
-        #region NGHIEPVU
-
-        //HOSOMAU
-        public const string HOSOMAU_GETLIST = "hosomau/get-list";
-        public const string HOSOMAU_GETBYID = "hosomau/get-by-id";
-        public const string HOSOMAU_GETBYPOST = "hosomau/get-by-post";
-        public const string HOSOMAU_INSERT = "hosomau/insert";
-        public const string HOSOMAU_UPDATE = "hosomau/update";
-        public const string HOSOMAU_DELETE = "hosomau/delete";
-        public const string HOSOMAU_DELETELIST = "hosomau/delete-list";
-        public const string HOSOMAU_BIEUMAU_GETLIST = "hosomau/bieumau/get-list";
-        public const string HOSOMAU_BIEUMAU_INSERT = "hosomau/bieumau/insert";
-        public const string HOSOMAU_BIEUMAU_UPDATE = "hosomau/bieumau/update";
-        public const string HOSOMAU_BIEUMAU_DELETELIST = "hosomau/bieumau/delete-list";
 
         #endregion
 
-		#region TAICHINH
-        //QUANLYCHI
-		public const string QUANLYCHI_GETALLFORCOMBOBOX = "quanlychi/get-all-combobox";
-		public const string QUANLYCHI_GETLIST = "quanlychi/get-list";
-		public const string QUANLYCHI_GETBYID = "quanlychi/get-by-id";
-		public const string QUANLYCHI_GETBYPOST = "quanlychi/get-by-post";
-		public const string QUANLYCHI_INSERT = "quanlychi/insert";
-		public const string QUANLYCHI_UPDATE = "quanlychi/update";
-		public const string QUANLYCHI_DELETE = "quanlychi/delete";
-		public const string QUANLYCHI_DELETELIST = "quanlychi/delete-list";
-        //QUANLYTHU
-        public const string QUANLYTHU_GETLIST = "quanlythu/get-list";
-        public const string QUANLYTHU_GETBYID = "quanlythu/get-by-id";
-        public const string QUANLYTHU_GETBYPOST = "quanlythu/get-by-post";
-        public const string QUANLYTHU_INSERT = "quanlythu/insert";
-        public const string QUANLYTHU_UPDATE = "quanlythu/update";
-        public const string QUANLYTHU_DELETE = "quanlythu/delete";
-        public const string QUANLYTHU_DELETELIST = "quanlythu/delete-list";
-        public const string QUANLYTHUCHITIET_GETLIST = "quanlythu/get-list-chi-tiet";
-        public const string QUANLYTHUCHITIET_INSERT = "quanlythu/insert-chi-tiet";
-        public const string QUANLYTHUCHITIET_UPDATE = "quanlythu/update-chi-tiet";
-        public const string QUANLYTHUCHITIET_DELETELIST = "quanlythu/delete-list-chi-tiet";
-        #endregion
+
+ 
+
 
         #region THONGKE
         //QUANLICONGVIEC
