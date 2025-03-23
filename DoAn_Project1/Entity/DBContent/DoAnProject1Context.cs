@@ -21,6 +21,7 @@ public partial class DoAnProject1Context : DbContext
     public virtual DbSet<DM_GIAIDOANDUAN> DM_GIAIDOANDUANs { get; set; }
 
     public virtual DbSet<DM_LOAIDUAN> DM_LOAIDUANs { get; set; }
+    public virtual DbSet<DM_LOAITAIKHOAN> DM_LOAITAIKHOANs { get; set; }
 
     public virtual DbSet<DM_PHONGBAN> DM_PHONGBANs { get; set; }
 

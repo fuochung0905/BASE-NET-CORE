@@ -246,13 +246,15 @@
                 success: function (result) {
                     showLoading(false);
                     if (result.IsSuccess) {
-                  
-                            localStorage.setItem("itemActive", "index_trangthaicongviec");
-                            localStorage.setItem("headerActive", 'a39fbd7c-eaec-48b2-8df9-04afdf21a9f4');
-                            localStorage.setItem("subActive", "trangthaicongviec");
-                            window.location.href = "/TrangThaiCongViec/Index";
-                       
-                    
+                            if (result.Data !== "Quản trị") {
+                                localStorage.setItem("itemActive", "index_trangthaicongviec");
+                                localStorage.setItem("headerActive", 'a39fbd7c-eaec-48b2-8df9-04afdf21a9f4');
+                                localStorage.setItem("subActive", "trangthaicongviec");
+                                window.location.href = "/TrangThaiCongViec/Index";
+                            }
+                            else {
+                                window.location.href = "/Home/Index";
+                            }
                     } else {
                         // alert("Error: " + result.Message);
                         showErrorNotify(result.Message);

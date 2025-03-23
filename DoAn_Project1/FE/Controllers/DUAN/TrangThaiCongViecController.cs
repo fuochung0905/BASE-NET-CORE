@@ -28,34 +28,59 @@ namespace FE.Controllers.DUAN
 		    _contextAccessor = contextAccessor;
 	    }
 
-	    public IActionResult Index()
+        public IActionResult Index()
         {
-			GetPhanQuyen();
+
+            var breadcrumbs = new List<MODELS.BREADCRUMB.Breadcrumb>
+            {
+                new MODELS.BREADCRUMB.Breadcrumb { Name = "Trang chủ", Url = "/" },
+
+                new MODELS.BREADCRUMB.Breadcrumb { Name = "Trạng thái công việc", Url = "#", IsActive = true  }
+
+            };
+
+            ViewData["Breadcrumbs"] = breadcrumbs;
+
+
+
+            var tabs = new List<MODELS.HETHONG.TAB.Tab>
+            {
+                new MODELS.HETHONG.TAB.Tab { Id = "TrangThaiCongViecIndexTab", Name = "Trạng thái công việc", ControllerName = "TrangThaiCongViec" ,ActionName="IndexTab"},
+                new MODELS.HETHONG.TAB.Tab { Id = "ThongKeKetQuaCongViecIndexTabT", Name = "Kết quả Tuần", ControllerName = "ThongKeKetQuaCongViec" ,ActionName="IndexTabT" },
+                new MODELS.HETHONG.TAB.Tab { Id = "ThongKeKetQuaCongViecIndexTab", Name = "Kết quả tháng", ControllerName = "ThongKeKetQuaCongViec" ,ActionName="IndexTab" },
+                new MODELS.HETHONG.TAB.Tab { Id = "ThongKeKetQuaCongViecIndexTabY", Name = "Kết quả năm", ControllerName = "ThongKeKetQuaCongViec" ,ActionName="IndexTabY" },
+
+
+            };
+
+            ViewData["tabs"] = tabs;
+            GetPhanQuyen();
+
             var result = new MODELCheckPhanQuyen();
-	        var temp = new GetListPagingRequest();
-	        ResponseData response = this.PostAPI(URL_API.TRANGTHAICONGVIEC_CHECKROLE, temp);
-	        if (response.Status)
-	        {
-		        result = JsonConvert.DeserializeObject<MODELCheckPhanQuyen>(response.Data.ToString());
-	        }
-	        var user = _contextAccessor.HttpContext.User.Identity.Name;
-	        ResponseData response1 = this.PostAPI(URL_API.TAIKHOAN_GETBYUSERNAME, new GetByUserNameRequest { UserName = user });
-	        MODELTaiKhoan result1 = new();
-	        if (response1.Status)
-	        {
-		        result1 = JsonConvert.DeserializeObject<MODELTaiKhoan>(response1.Data.ToString());
-	        }
-	        if (result1.VaiTroId != Guid.Parse("F8ED5B61-4E04-4AE5-B84D-B21C42D4F7B3")) // Quản trị
-	        {
-		        ViewBag.UserId = result1.Id;
-	        }
-	        else
-	        {
-		        ViewBag.UserId = "";
-	        }
-			return View("~/Views/DuAn/TrangThaiCongViec/Index.cshtml", result);
+            var temp = new GetListPagingRequest();
+            ResponseData response = this.PostAPI(URL_API.TRANGTHAICONGVIEC_CHECKROLE, temp);
+            if (response.Status)
+            {
+                result = JsonConvert.DeserializeObject<MODELCheckPhanQuyen>(response.Data.ToString());
+            }
+            var user = _contextAccessor.HttpContext.User.Identity.Name;
+            ResponseData response1 = this.PostAPI(URL_API.TAIKHOAN_GETBYUSERNAME, new GetByUserNameRequest { UserName = user });
+            MODELTaiKhoan result1 = new();
+            if (response1.Status)
+            {
+                result1 = JsonConvert.DeserializeObject<MODELTaiKhoan>(response1.Data.ToString());
+            }
+            if (result1.VaiTroId != Guid.Parse("F8ED5B61-4E04-4AE5-B84D-B21C42D4F7B3")) // Quản trị
+            {
+                ViewBag.UserId = result1.Id;
+            }
+            else
+            {
+                ViewBag.UserId = "";
+            }
+            return View("~/Views/DuAn/TrangThaiCongViec/Index.cshtml", result);
         }
-	    public IActionResult GetTask([DataSourceRequest] DataSourceRequest request, PostTrangThaiCongViecGetListPagingRequest param)
+        public IActionResult GetTask([DataSourceRequest] DataSourceRequest request, PostTrangThaiCongViecGetListPagingRequest param)
 	    {
 		    try
 		    {
