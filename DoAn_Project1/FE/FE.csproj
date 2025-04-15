@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Model\MODELS.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\DanhMuc\Team\" />
+  </ItemGroup>
+
 </Project>

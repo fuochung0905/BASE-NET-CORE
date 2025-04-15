@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Model.BASE;
 using MODELS;
-using MODELS.BASE;
 using MODELS.HETHONG.MENU.Requests;
 using MODELS.HETHONG.TAIKHOAN.Dtos;
 using Repository;

@@ -148,6 +148,26 @@
         public const string CHUCVU_DELETELIST = "chucvu/delete-list";
 
 
+        //MONHOC
+        public const string MONHOC_GETALLFORCOMBOBOX = "chucvu/get-all-combobox";
+        public const string MONHOC_GETLIST = "chucvu/get-list";
+        public const string MONHOC_GETBYID = "chucvu/get-by-id";
+        public const string MONHOC_GETBYPOST = "chucvu/get-by-post";
+        public const string MONHOC_INSERT = "chucvu/insert";
+        public const string MONHOC_UPDATE = "chucvu/update";
+        public const string MONHOC_DELETE = "chucvu/delete";
+        public const string MONHOC_DELETELIST = "chucvu/delete-list";
+
+        //TEAM
+        public const string TEAM_GETALLFORCOMBOBOX = "chucvu/get-all-combobox";
+        public const string TEAM_GETLIST = "chucvu/get-list";
+        public const string TEAM_GETBYID = "chucvu/get-by-id";
+        public const string TEAM_GETBYPOST = "chucvu/get-by-post";
+        public const string TEAM_INSERT = "chucvu/insert";
+        public const string TEAM_UPDATE = "chucvu/update";
+        public const string TEAM_DELETE = "chucvu/delete";
+        public const string TEAM_DELETELIST = "chucvu/delete-list";
+
         //LOAITAIKHOAN
         public const string LOAIHOSO_GETALLFORCOMBOBOX = "loaihoso/get-all-combobox";
         public const string LOAIHOSO_GETLIST = "loaihoso/get-list";
