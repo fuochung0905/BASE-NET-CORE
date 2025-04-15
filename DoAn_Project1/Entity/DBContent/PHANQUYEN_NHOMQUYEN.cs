@@ -16,4 +16,6 @@ public partial class PHANQUYEN_NHOMQUYEN
     public bool IsActived { get; set; }
 
     public Guid? ParentId { get; set; }
+
+    public ICollection<SYS_MENU> Menus { get; set; }                                                                                      
 }

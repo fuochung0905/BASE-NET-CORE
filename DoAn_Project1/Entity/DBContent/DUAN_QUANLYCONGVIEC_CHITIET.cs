@@ -14,6 +14,7 @@ public partial class DUAN_QUANLYCONGVIEC_CHITIET
     public DateTime NgayHoanThanh { get; set; }
 
     public Guid CongViecId { get; set; }
+    public DUAN_QUANLYCONGVIEC DUAN_QUANLYCONGVIEC { get; set; }
 
     public int TrangThaiId { get; set; }
 

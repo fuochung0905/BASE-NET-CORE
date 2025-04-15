@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ENTITIES.DBContent;
 
 public partial class SYS_MENU
 {
+    [Key]
+    public string Id { get; set; }
     public string ControllerName { get; set; } = null!;
 
     public string Controller { get; set; } = null!;
@@ -14,6 +17,7 @@ public partial class SYS_MENU
     public string TenGoi { get; set; } = null!;
 
     public Guid NhomQuyenId { get; set; }
+    public PHANQUYEN_NHOMQUYEN PHANQUYEN_NHOMQUYEN { get; set; }
 
     public int? Sort { get; set; }
 

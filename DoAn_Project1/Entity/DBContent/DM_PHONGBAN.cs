@@ -6,9 +6,10 @@ namespace ENTITIES.DBContent;
 public partial class DM_PHONGBAN
 {
     public Guid Id { get; set; }
+    
 
     public Guid DonViId { get; set; }
-
+    public DM_DONVI DM_DONVI { get; set; }
     public string? Ma { get; set; }
 
     public string TenGoi { get; set; } = null!;
@@ -28,4 +29,5 @@ public partial class DM_PHONGBAN
     public bool IsActived { get; set; }
 
     public bool IsDeleted { get; set; }
+    public ICollection<TAIKHOAN> Taikhoans { get; set; }
 }

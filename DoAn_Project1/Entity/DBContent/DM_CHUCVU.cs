@@ -26,4 +26,5 @@ public partial class DM_CHUCVU
     public bool IsActived { get; set; }
 
     public bool IsDeleted { get; set; }
+    public ICollection<TAIKHOAN> Taikhoans { get; set; }
 }

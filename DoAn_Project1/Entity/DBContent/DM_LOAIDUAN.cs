@@ -28,4 +28,5 @@ public partial class DM_LOAIDUAN
     public bool IsDeleted { get; set; }
 
     public bool? IsThuyetTrinh { get; set; }
+    public ICollection<DUAN_QUANLYDUAN> dUAN_QUANLYDUANs { get; set; }
 }

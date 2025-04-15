@@ -11,9 +11,9 @@ public partial class DUAN_QUANLYDUAN
 
     public string TenDuAn { get; set; } = null!;
 
-    public string? ChuDauTu { get; set; }
 
     public Guid? GiaiDoanId { get; set; }
+    public DM_GIAIDOANDUAN DM_GIAIDOANDUAN {  get; set; }
 
     public DateTime? ThoiGianBatDau { get; set; }
 
@@ -39,13 +39,13 @@ public partial class DUAN_QUANLYDUAN
 
     public bool IsDeleted { get; set; }
 
-    public int? LoaiDuAn { get; set; }
-
-    public double? ChiPhiHoSo { get; set; }
-
-    public double? ChiPhiTrienKhai { get; set; }
-
-    public double? ChiPhiCode { get; set; }
+    public Guid? LoaiDuAn { get; set; }
+    public DM_LOAIDUAN DM_LOAIDUAN { get; set; }
 
     public bool? IsCanhBaoHetHan { get; set; }
+    public ICollection<DUAN_DANHSACHNGUOITHUCHIEN> DUAN_DANHSACHNGUOITHUCHIENs { get; set; }
+    public ICollection<DUAN_QUANLYCONGVIEC> dUAN_QUANLYCONGVIECs { get; set; }
+    public ICollection<QUANLYDUAN_NGUOIDUNG> QUANLYDUAN_NGUOIDUNGs { get; set; }
+    public ICollection<TAIKHOAN> tAIKHOANs { get; set; }
+
 }

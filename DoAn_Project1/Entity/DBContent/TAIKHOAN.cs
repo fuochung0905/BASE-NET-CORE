@@ -9,20 +9,16 @@ public partial class TAIKHOAN
 
     public string UserName { get; set; } = null!;
 
-    public Guid? TinhId { get; set; }
-
-    public Guid? HuyenId { get; set; }
-
-    public Guid? XaId { get; set; }
-
     public Guid VaiTroId { get; set; }
-
+    public VAITRO VAITRO { get; set; }
+    public Guid? LoaiTaiKhoanId { get; set; }
+    public DM_LOAITAIKHOAN DM_LOAITAIKHOAN { get; set; }
     public Guid? DonViId { get; set; }
+    public DM_DONVI DM_DONVI { get; set; }
 
     public Guid? PhongBanId { get; set; }
-
+    public DM_PHONGBAN DM_PHONGBAN { get; set; }
     public Guid? NguoiQuanLyId { get; set; }
-
     public string? SoDienThoai { get; set; }
 
     public string? Email { get; set; }
@@ -66,7 +62,13 @@ public partial class TAIKHOAN
     public bool? IsFirstLogin { get; set; }
 
     public Guid? ChucVuID { get; set; }
-
+    public DM_CHUCVU CHUCVU { get; set; }
     public Guid? DuAnId { get; set; }
+    public DUAN_QUANLYDUAN DUAN_QUANLYDUAN {get ; set; }
+    public ICollection<DUAN_DANHSACHNGUOITHUCHIEN> DUAN_DANHSACHNGUOITHUCHIENs { get; set; }
+    public ICollection<DUAN_QUANLYCONGVIEC> DUAN_QUANLYCONGVIECs { get; set; }
+    public ICollection<QUANLYDUAN_NGUOIDUNG> QUANLYDUAN_NGUOIDUNGs { get; set; }
+    public ICollection<MONHOC_NGUOITHAMGIA> mONHOC_NGUOITHAMGIAs { get; set; }
+    public ICollection<TEAM_NGUOITHAMGIA> tEAM_NGUOITHAMGIAs{ get; set; }
 
 }

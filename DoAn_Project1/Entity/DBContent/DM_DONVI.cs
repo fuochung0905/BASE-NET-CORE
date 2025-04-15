@@ -34,4 +34,6 @@ public partial class DM_DONVI
     public bool IsActived { get; set; }
 
     public bool IsDeleted { get; set; }
+    public ICollection<DM_PHONGBAN> DM_PHONGBANs { get; set; }
+    public ICollection<TAIKHOAN> TAIKHOANs { get; set;}
 }

@@ -28,4 +28,5 @@ public partial class HETHONG_THONGBAO
     public bool IsActived { get; set; }
 
     public bool IsDeleted { get; set; }
+    public ICollection<HETHONG_THONGBAO_TEPDINHKEM> HETHONG_THONGBAO_TEPDINHKEMs { get; set; }
 }

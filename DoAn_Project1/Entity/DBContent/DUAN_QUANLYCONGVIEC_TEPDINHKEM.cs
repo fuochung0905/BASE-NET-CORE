@@ -8,6 +8,7 @@ public partial class DUAN_QUANLYCONGVIEC_TEPDINHKEM
     public Guid Id { get; set; }
 
     public Guid LienKetId { get; set; }
+    public DUAN_QUANLYCONGVIEC DUAN_QUANLYCONGVIEC { get; set; }
 
     public string TenFile { get; set; } = null!;
 

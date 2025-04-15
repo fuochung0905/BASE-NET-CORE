@@ -8,8 +8,9 @@ public partial class DUAN_QUANLYCONGVIEC_PHANHOI
     public Guid Id { get; set; }
 
     public Guid? ParentId { get; set; }
-
+    
     public Guid LienKetId { get; set; }
+    public DUAN_QUANLYCONGVIEC DUAN_QUANLYCONGVIEC { get; set; }
 
     public Guid NguoiGuiId { get; set; }
 

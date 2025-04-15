@@ -8,6 +8,7 @@ public partial class DUAN_LICHSUGIAOVIEC
     public Guid Id { get; set; }
 
     public Guid CongViecId { get; set; }
+    public DUAN_QUANLYCONGVIEC DUAN_QUANLYCONGVIEC {  get; set; }
 
     public Guid? NguoiDangThucHien { get; set; }
 

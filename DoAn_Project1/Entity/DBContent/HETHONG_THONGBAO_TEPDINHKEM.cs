@@ -8,6 +8,7 @@ public partial class HETHONG_THONGBAO_TEPDINHKEM
     public Guid Id { get; set; }
 
     public Guid LienKetId { get; set; }
+    public HETHONG_THONGBAO HETHONG_THONGBAO { get; set; }
 
     public Guid BieuMauId { get; set; }
 

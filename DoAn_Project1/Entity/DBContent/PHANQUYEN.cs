@@ -8,6 +8,7 @@ public partial class PHANQUYEN
     public Guid Id { get; set; }
 
     public Guid VaiTroId { get; set; }
+    public VAITRO VAITRO { get; set; }
 
     public string ControllerName { get; set; } = null!;
 

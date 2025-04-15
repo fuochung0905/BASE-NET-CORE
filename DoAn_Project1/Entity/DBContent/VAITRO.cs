@@ -24,4 +24,6 @@ public partial class VAITRO
     public bool IsActived { get; set; }
 
     public bool IsDeleted { get; set; }
+    public ICollection<PHANQUYEN> PHANQUYENs { get; set; }
+    public ICollection<TAIKHOAN> TAIKHOANs { get; set; }
 }

@@ -10,11 +10,13 @@ public partial class DUAN_QUANLYCONGVIEC
     public string TenCongViec { get; set; } = null!;
 
     public Guid DuAnId { get; set; }
+    public DUAN_QUANLYDUAN DUAN_QUANLYDUAN { get; set; }
 
     public Guid? GiaiDoanId { get; set; }
+    public DM_GIAIDOANDUAN DM_GIAIDOANDUAN { get; set; }
 
     public Guid? CongViecGiaiDoanId { get; set; }
-
+    
     public Guid? CongViecLienQuanId { get; set; }
 
     public string? GhiChu { get; set; }
@@ -26,6 +28,7 @@ public partial class DUAN_QUANLYCONGVIEC
     public Guid? AssignTo { get; set; }
 
     public int TrangThaiId { get; set; }
+    public SYS_TRANGTHAICONGVIEC SYS_TRANGTHAICONGVIEC { get; set; }
 
     public DateTime? DuKienTuNgay { get; set; }
 
@@ -76,4 +79,8 @@ public partial class DUAN_QUANLYCONGVIEC
     public DateTime? NgayHoanThanh { get; set; }
 
     public double? SoGioCong { get; set; }
+    public ICollection<DUAN_LICHSUGIAOVIEC> DUAN_LICHSUGIAOVIECs { get; set; }
+    public ICollection<DUAN_QUANLYCONGVIEC_CHITIET> DUAN_QUANLYCONGVIEC_CHITIET {  get; set; }
+    public ICollection<DUAN_QUANLYCONGVIEC_TEPDINHKEM> dUAN_QUANLYCONGVIEC_TEPDINHKEMs { get; set; }
+    public ICollection<DUAN_QUANLYCONGVIEC_PHANHOI> dUAN_QUANLYCONGVIEC_PHANHOIs { get; set; }
 }

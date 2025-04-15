@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Entity.Migrations
+namespace ENTITIES.Migrations
 {
     [DbContext(typeof(DoAnProject1Context))]
     partial class DoAnProject1ContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,7 @@ namespace Entity.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.13")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -25,130 +25,106 @@ namespace Entity.Migrations
             modelBuilder.Entity("ENTITIES.DBContent.DM_CHUCVU", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsActived")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("MaChucVu")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("NgaySua")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("NgayTao")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgayXoa")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NguoiSua")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiTao")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiXoa")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenChucVu")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DM_CHUCVU", (string)null);
+                    b.ToTable("DM_CHUCVUs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.DM_DONVI", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DiaChi")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DienThoai")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActived")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("NgaySua")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("NgayTao")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgayXoa")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NguoiLienHe")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiSua")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiTao")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiXoa")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenGoi")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Website")
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DM_DONVI", (string)null);
+                    b.ToTable("DM_DONVIs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.DM_GIAIDOANDUAN", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsActived")
@@ -161,47 +137,40 @@ namespace Entity.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Ma")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("NgaySua")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("NgayTao")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgayXoa")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NguoiSua")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiTao")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiXoa")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenGoi")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DM_GIAIDOANDUAN", (string)null);
+                    b.ToTable("DM_GIAIDOANDUANs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.DM_LOAIDUAN", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsActived")
@@ -214,119 +183,264 @@ namespace Entity.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Ma")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("NgaySua")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("NgayTao")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgayXoa")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NguoiSua")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiTao")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiXoa")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenGoi")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DM_LOAIDUAN", (string)null);
+                    b.ToTable("DM_LOAIDUANs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DM_LOAITAIKHOAN", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActived")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Ma")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("NgaySua")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("NgayTao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgayXoa")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NguoiSua")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NguoiTao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NguoiXoa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TenGoi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DM_LOAITAIKHOANs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DM_MONHOC", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeOnly>("GioBatDau")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("GioKetThuc")
+                        .HasColumnType("time");
+
+                    b.Property<bool>("IsActived")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Ma")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly?>("NgayBatDau")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("NgayKetThuc")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("NgaySua")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgayXoa")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NguoiSua")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NguoiTao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NguoiXoa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhongHoc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SoLuongMax")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SoLuongThucTe")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SoTinChi")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TenGoi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ThuTrongTuan")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DM_MONHOC");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.DM_PHONGBAN", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("DonViId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsActived")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Ma")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("NgaySua")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgayTao")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgayXoa")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NguoiSua")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiTao")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)")
-                        .HasDefaultValueSql("(((((0)-(0))-(0))-(0))-(0.0))");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiXoa")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenGoi")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id")
-                        .HasName("PK_PHONGBAN");
+                    b.HasKey("Id");
 
-                    b.ToTable("DM_PHONGBAN", (string)null);
+                    b.HasIndex("DonViId");
+
+                    b.ToTable("DM_PHONGBANs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DM_TEAM", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActived")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Ma")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("NgaySua")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgayXoa")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NguoiSua")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NguoiTao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NguoiXoa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TenGoi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DM_TEAM");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.DUAN_DANHSACHNGUOITHUCHIEN", b =>
                 {
-                    b.Property<Guid>("DuAnId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("DuAnId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("NguoiThucHienId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.ToTable("DUAN_DANHSACHNGUOITHUCHIEN", (string)null);
+                    b.Property<Guid>("TAIKHOANId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DuAnId");
+
+                    b.HasIndex("TAIKHOANId");
+
+                    b.ToTable("DUAN_DANHSACHNGUOITHUCHIENs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.DUAN_LICHSUGIAOVIEC", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CongViecId")
@@ -339,44 +453,49 @@ namespace Entity.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("NgayBatDau")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgaySua")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("NgayTao")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgayXoa")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("NguoiDangThucHien")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NguoiSua")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiTao")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiXoa")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SYS_TRANGTHAICONGVIECId")
+                        .HasColumnType("int");
 
                     b.Property<int>("TrangThaiId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DUAN_LICHSUGIAOVIEC", (string)null);
+                    b.HasIndex("CongViecId");
+
+                    b.HasIndex("SYS_TRANGTHAICONGVIECId");
+
+                    b.ToTable("DUAN_LICHSUGIAOVIECs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("AssignTo")
@@ -392,10 +511,10 @@ namespace Entity.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DuKienDenNgay")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DuKienTuNgay")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("GhiChu")
                         .HasColumnType("nvarchar(max)");
@@ -404,8 +523,7 @@ namespace Entity.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<double?>("GioCongDuKien")
-                        .HasColumnType("float")
-                        .HasComment("Tính theo giờ");
+                        .HasColumnType("float");
 
                     b.Property<string>("HuongDanSuDungNhanh")
                         .HasColumnType("nvarchar(max)");
@@ -423,35 +541,29 @@ namespace Entity.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgaySua")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("NgayTao")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgayXoa")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("NguoiKiemTraId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NguoiSua")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiTao")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("NguoiThucHienId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NguoiXoa")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
@@ -462,20 +574,21 @@ namespace Entity.Migrations
                     b.Property<double?>("SoGioThucTe")
                         .HasColumnType("float");
 
+                    b.Property<Guid?>("TAIKHOANId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("TenCongViec")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("ThoiGianTest")
-                        .HasColumnType("float")
-                        .HasComment("Tính theo giờ");
+                        .HasColumnType("float");
 
                     b.Property<DateTime?>("ThucTeDenNgay")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("ThucTeTuNgay")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<double?>("TienDo")
                         .HasColumnType("float");
@@ -488,12 +601,79 @@ namespace Entity.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DUAN_QUANLYCONGVIEC", (string)null);
+                    b.HasIndex("DuAnId");
+
+                    b.HasIndex("GiaiDoanId");
+
+                    b.HasIndex("TAIKHOANId");
+
+                    b.HasIndex("TrangThaiId");
+
+                    b.ToTable("DUAN_QUANLYCONGVIECs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_CHITIET", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CongViecId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool?>("IsActived")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("NgayHoanThanh")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgaySua")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgayTao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgayXoa")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NguoiSua")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NguoiTao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NguoiXoa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SYS_TRANGTHAICONGVIECId")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("SoGioCong")
+                        .HasColumnType("float");
+
+                    b.Property<string>("TenCongViecCon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TrangThaiId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CongViecId");
+
+                    b.HasIndex("SYS_TRANGTHAICONGVIECId");
+
+                    b.ToTable("DUAN_QUANLYCONGVIEC_CHITIET");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_LOI_TEPDINHKEM", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("DoLon")
@@ -504,29 +684,25 @@ namespace Entity.Migrations
 
                     b.Property<string>("TenFile")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenMoRong")
                         .IsRequired()
-                        .HasMaxLength(7)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(7)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id")
-                        .HasName("PK_QUANLYCONGVIEC_LOI_TEPDINHkEM");
+                    b.HasKey("Id");
 
-                    b.ToTable("DUAN_QUANLYCONGVIEC_LOI_TEPDINHKEM", (string)null);
+                    b.ToTable("DUAN_QUANLYCONGVIEC_LOI_TEPDINHKEMs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_PHANHOI", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
@@ -536,7 +712,7 @@ namespace Entity.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("NgayGui")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("NguoiGuiId")
                         .HasColumnType("uniqueidentifier");
@@ -550,12 +726,15 @@ namespace Entity.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DUAN_QUANLYCONGVIEC_PHANHOI", (string)null);
+                    b.HasIndex("LienKetId");
+
+                    b.ToTable("DUAN_QUANLYCONGVIEC_PHANHOIs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_TEPDINHKEM", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("DoLon")
@@ -566,42 +745,28 @@ namespace Entity.Migrations
 
                     b.Property<string>("TenFile")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenMoRong")
                         .IsRequired()
-                        .HasMaxLength(7)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(7)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DUAN_QUANLYCONGVIEC_TEPDINHKEM", (string)null);
+                    b.HasIndex("LienKetId");
+
+                    b.ToTable("DUAN_QUANLYCONGVIEC_TEPDINHKEMs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYDUAN", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<double?>("ChiPhiCode")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("ChiPhiHoSo")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("ChiPhiTrienKhai")
-                        .HasColumnType("float");
-
-                    b.Property<string>("ChuDauTu")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("GhiChu")
                         .HasColumnType("nvarchar(max)");
@@ -618,111 +783,105 @@ namespace Entity.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("LoaiDuAn")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("LoaiDuAn")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("MaDuAn")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("NgaySua")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("NgayTao")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgayXoa")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NguoiSua")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiTao")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiXoa")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenDuAn")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ThoiGianBatDau")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("ThoiGianKetThuc")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<double?>("TienDo")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DUAN_QUANLYDUAN", (string)null);
+                    b.HasIndex("GiaiDoanId");
+
+                    b.HasIndex("LoaiDuAn");
+
+                    b.ToTable("DUAN_QUANLYDUANs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.HETHONG_THONGBAO", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsActived")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("NgaySua")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("NgayTao")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgayXoa")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NguoiSua")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiTao")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiXoa")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NoiDung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TieuDe")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("HETHONG_THONGBAO", (string)null);
+                    b.ToTable("HETHONG_THONGBAOs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.HETHONG_THONGBAO_TEPDINHKEM", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("BieuMauId")
@@ -732,45 +891,60 @@ namespace Entity.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("GhiChu")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("LienKetId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TenFile")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenMoRong")
                         .IsRequired()
-                        .HasMaxLength(7)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(7)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("HETHONG_THONGBAO_TEPDINHKEM", (string)null);
+                    b.HasIndex("LienKetId");
+
+                    b.ToTable("HETHONG_THONGBAO_TEPDINHKEMs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.MONHOC_NGUOITHAMGIA", b =>
+                {
+                    b.Property<Guid?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("MonHocId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("TaiKhoanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MonHocId");
+
+                    b.HasIndex("TaiKhoanId");
+
+                    b.ToTable("MONHOC_NGUOITHAMGIA");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.PHANQUYEN", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("(newid())");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ControllerName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsCapNhat")
                         .HasColumnType("bit");
@@ -795,23 +969,22 @@ namespace Entity.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PHANQUYEN", (string)null);
+                    b.HasIndex("VaiTroId");
+
+                    b.ToTable("PHANQUYENs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.PHANQUYEN_NHOMQUYEN", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Icon")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActived")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
@@ -821,17 +994,17 @@ namespace Entity.Migrations
 
                     b.Property<string>("TenGoi")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("PHANQUYEN_NHOMQUYEN", (string)null);
+                    b.ToTable("PHANQUYEN_NHOMQUYENs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.QUANLYDUAN_NGUOIDUNG", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("DuAnId")
@@ -848,21 +1021,21 @@ namespace Entity.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("QUANLYDUAN_NGUOIDUNG", (string)null);
+                    b.HasIndex("DuAnId");
+
+                    b.HasIndex("TaiKhoanId");
+
+                    b.ToTable("QUANLYDUAN_NGUOIDUNGs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.SYS_MENU", b =>
                 {
-                    b.Property<string>("ControllerName")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Action")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("CoCapNhat")
                         .HasColumnType("bit");
@@ -884,19 +1057,17 @@ namespace Entity.Migrations
 
                     b.Property<string>("Controller")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ControllerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActived")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsShowMenu")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("NhomQuyenId")
                         .HasColumnType("uniqueidentifier");
@@ -906,13 +1077,13 @@ namespace Entity.Migrations
 
                     b.Property<string>("TenGoi")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ControllerName")
-                        .HasName("PK_PHANQUYEN_QUYEN");
+                    b.HasKey("Id");
 
-                    b.ToTable("SYS_MENU", (string)null);
+                    b.HasIndex("NhomQuyenId");
+
+                    b.ToTable("SYS_MENUs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.SYS_TRANGTHAICONGVIEC", b =>
@@ -935,18 +1106,17 @@ namespace Entity.Migrations
             modelBuilder.Entity("ENTITIES.DBContent.TAIKHOAN", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AnhDaiDien")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ChucVuID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CountLoginFail")
-                        .HasColumnType("int")
-                        .HasComment("Số lần đăng nhập sai");
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("DonViId")
                         .HasColumnType("uniqueidentifier");
@@ -955,20 +1125,13 @@ namespace Entity.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("GioiTinh")
-                        .HasColumnType("int")
-                        .HasComment("0: nam, 1: nữ");
+                        .HasColumnType("int");
 
                     b.Property<string>("HoLot")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<Guid?>("HuyenId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActived")
                         .HasColumnType("bit");
@@ -977,109 +1140,125 @@ namespace Entity.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool?>("IsFirstLogin")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasComment("Là đăng nhập lần đầu");
+                        .HasColumnType("bit");
 
                     b.Property<Guid?>("LoaiTaiKhoanId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("MatKhau")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MatKhauSalt")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("NgaySinh")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("NgaySinh")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgaySua")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("NgayTao")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgayXoa")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("NguoiQuanLyId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NguoiSua")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiTao")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiXoa")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("PhongBanId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("SoDienThoai")
-                        .HasMaxLength(12)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(12)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ten")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("TimeChangePassword")
-                        .HasColumnType("datetime")
-                        .HasComment("Thời gian đổi mật khẩu gần nhất");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("TimeLoginFail")
-                        .HasColumnType("datetime")
-                        .HasComment("Thời gian đăng nhập sai gần nhất");
-
-                    b.Property<Guid?>("TinhId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("VaiTroId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("XaId")
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChucVuID");
+
+                    b.HasIndex("DonViId");
+
+                    b.HasIndex("DuAnId");
+
+                    b.HasIndex("LoaiTaiKhoanId");
+
+                    b.HasIndex("PhongBanId");
+
+                    b.HasIndex("VaiTroId");
+
+                    b.ToTable("TAIKHOANs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.TEAM_NGUOITHAMGIA", b =>
+                {
+                    b.Property<Guid?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsLeader")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("TaiKhoanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("TeamId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TAIKHOAN", (string)null);
+                    b.HasIndex("TaiKhoanId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("TEAM_NGUOITHAMGIA");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.THONGBAO_NGUOIDUNG", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("Delivered_At")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("HETHONG_THONGBAOId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool?>("Is_Read")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("Read_At")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("TaiKhoanId")
                         .HasColumnType("uniqueidentifier");
@@ -1089,12 +1268,17 @@ namespace Entity.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("THONGBAO_NGUOIDUNG", (string)null);
+                    b.HasIndex("HETHONG_THONGBAOId");
+
+                    b.HasIndex("TaiKhoanId");
+
+                    b.ToTable("THONGBAO_NGUOIDUNGs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.VAITRO", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsActived")
@@ -1104,39 +1288,406 @@ namespace Entity.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("NgaySua")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("NgayTao")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgayXoa")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NguoiSua")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiTao")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NguoiXoa")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenGoi")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id")
-                        .HasName("PK_VAITRO_1");
+                    b.HasKey("Id");
 
-                    b.ToTable("VAITRO", (string)null);
+                    b.ToTable("VAITROs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DM_PHONGBAN", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.DM_DONVI", "DM_DONVI")
+                        .WithMany("DM_PHONGBANs")
+                        .HasForeignKey("DonViId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DM_DONVI");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DUAN_DANHSACHNGUOITHUCHIEN", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.DUAN_QUANLYDUAN", "DUAN_QUANLYDUAN")
+                        .WithMany("DUAN_DANHSACHNGUOITHUCHIENs")
+                        .HasForeignKey("DuAnId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ENTITIES.DBContent.TAIKHOAN", "TAIKHOAN")
+                        .WithMany("DUAN_DANHSACHNGUOITHUCHIENs")
+                        .HasForeignKey("TAIKHOANId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DUAN_QUANLYDUAN");
+
+                    b.Navigation("TAIKHOAN");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DUAN_LICHSUGIAOVIEC", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC", "DUAN_QUANLYCONGVIEC")
+                        .WithMany("DUAN_LICHSUGIAOVIECs")
+                        .HasForeignKey("CongViecId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ENTITIES.DBContent.SYS_TRANGTHAICONGVIEC", null)
+                        .WithMany("DUAN_LICHSUGIAOVIECs")
+                        .HasForeignKey("SYS_TRANGTHAICONGVIECId");
+
+                    b.Navigation("DUAN_QUANLYCONGVIEC");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.DUAN_QUANLYDUAN", "DUAN_QUANLYDUAN")
+                        .WithMany("dUAN_QUANLYCONGVIECs")
+                        .HasForeignKey("DuAnId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ENTITIES.DBContent.DM_GIAIDOANDUAN", "DM_GIAIDOANDUAN")
+                        .WithMany("qUANLYCONGVIECs")
+                        .HasForeignKey("GiaiDoanId");
+
+                    b.HasOne("ENTITIES.DBContent.TAIKHOAN", null)
+                        .WithMany("DUAN_QUANLYCONGVIECs")
+                        .HasForeignKey("TAIKHOANId");
+
+                    b.HasOne("ENTITIES.DBContent.SYS_TRANGTHAICONGVIEC", "SYS_TRANGTHAICONGVIEC")
+                        .WithMany("DUAN_QUANLYCONGVIEC")
+                        .HasForeignKey("TrangThaiId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DM_GIAIDOANDUAN");
+
+                    b.Navigation("DUAN_QUANLYDUAN");
+
+                    b.Navigation("SYS_TRANGTHAICONGVIEC");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_CHITIET", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC", "DUAN_QUANLYCONGVIEC")
+                        .WithMany("DUAN_QUANLYCONGVIEC_CHITIET")
+                        .HasForeignKey("CongViecId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ENTITIES.DBContent.SYS_TRANGTHAICONGVIEC", null)
+                        .WithMany("dUAN_QUANLYCONGVIEC_CHITIETs")
+                        .HasForeignKey("SYS_TRANGTHAICONGVIECId");
+
+                    b.Navigation("DUAN_QUANLYCONGVIEC");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_PHANHOI", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC", "DUAN_QUANLYCONGVIEC")
+                        .WithMany("dUAN_QUANLYCONGVIEC_PHANHOIs")
+                        .HasForeignKey("LienKetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DUAN_QUANLYCONGVIEC");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_TEPDINHKEM", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC", "DUAN_QUANLYCONGVIEC")
+                        .WithMany("dUAN_QUANLYCONGVIEC_TEPDINHKEMs")
+                        .HasForeignKey("LienKetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DUAN_QUANLYCONGVIEC");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYDUAN", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.DM_GIAIDOANDUAN", "DM_GIAIDOANDUAN")
+                        .WithMany("dUAN_QUANLYDUANs")
+                        .HasForeignKey("GiaiDoanId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ENTITIES.DBContent.DM_LOAIDUAN", "DM_LOAIDUAN")
+                        .WithMany("dUAN_QUANLYDUANs")
+                        .HasForeignKey("LoaiDuAn")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("DM_GIAIDOANDUAN");
+
+                    b.Navigation("DM_LOAIDUAN");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.HETHONG_THONGBAO_TEPDINHKEM", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.HETHONG_THONGBAO", "HETHONG_THONGBAO")
+                        .WithMany("HETHONG_THONGBAO_TEPDINHKEMs")
+                        .HasForeignKey("LienKetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HETHONG_THONGBAO");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.MONHOC_NGUOITHAMGIA", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.DM_MONHOC", "DM_MONHOC")
+                        .WithMany("mONHOC_NGUOITHAMGIAs")
+                        .HasForeignKey("MonHocId");
+
+                    b.HasOne("ENTITIES.DBContent.TAIKHOAN", "TAIKHOAN")
+                        .WithMany("mONHOC_NGUOITHAMGIAs")
+                        .HasForeignKey("TaiKhoanId");
+
+                    b.Navigation("DM_MONHOC");
+
+                    b.Navigation("TAIKHOAN");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.PHANQUYEN", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.VAITRO", "VAITRO")
+                        .WithMany("PHANQUYENs")
+                        .HasForeignKey("VaiTroId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("VAITRO");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.QUANLYDUAN_NGUOIDUNG", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.DUAN_QUANLYDUAN", "DUAN_QUANLYDUAN")
+                        .WithMany("QUANLYDUAN_NGUOIDUNGs")
+                        .HasForeignKey("DuAnId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ENTITIES.DBContent.TAIKHOAN", "TAIKHOAN")
+                        .WithMany("QUANLYDUAN_NGUOIDUNGs")
+                        .HasForeignKey("TaiKhoanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DUAN_QUANLYDUAN");
+
+                    b.Navigation("TAIKHOAN");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.SYS_MENU", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.PHANQUYEN_NHOMQUYEN", "PHANQUYEN_NHOMQUYEN")
+                        .WithMany("Menus")
+                        .HasForeignKey("NhomQuyenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PHANQUYEN_NHOMQUYEN");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.TAIKHOAN", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.DM_CHUCVU", "CHUCVU")
+                        .WithMany("Taikhoans")
+                        .HasForeignKey("ChucVuID");
+
+                    b.HasOne("ENTITIES.DBContent.DM_DONVI", "DM_DONVI")
+                        .WithMany("TAIKHOANs")
+                        .HasForeignKey("DonViId");
+
+                    b.HasOne("ENTITIES.DBContent.DUAN_QUANLYDUAN", "DUAN_QUANLYDUAN")
+                        .WithMany("tAIKHOANs")
+                        .HasForeignKey("DuAnId");
+
+                    b.HasOne("ENTITIES.DBContent.DM_LOAITAIKHOAN", "DM_LOAITAIKHOAN")
+                        .WithMany("Taikhoans")
+                        .HasForeignKey("LoaiTaiKhoanId");
+
+                    b.HasOne("ENTITIES.DBContent.DM_PHONGBAN", "DM_PHONGBAN")
+                        .WithMany("Taikhoans")
+                        .HasForeignKey("PhongBanId");
+
+                    b.HasOne("ENTITIES.DBContent.VAITRO", "VAITRO")
+                        .WithMany("TAIKHOANs")
+                        .HasForeignKey("VaiTroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CHUCVU");
+
+                    b.Navigation("DM_DONVI");
+
+                    b.Navigation("DM_LOAITAIKHOAN");
+
+                    b.Navigation("DM_PHONGBAN");
+
+                    b.Navigation("DUAN_QUANLYDUAN");
+
+                    b.Navigation("VAITRO");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.TEAM_NGUOITHAMGIA", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.TAIKHOAN", "TAIKHOAN")
+                        .WithMany("tEAM_NGUOITHAMGIAs")
+                        .HasForeignKey("TaiKhoanId");
+
+                    b.HasOne("ENTITIES.DBContent.DM_TEAM", "DM_TEAM")
+                        .WithMany("tEAM_NGUOITHAMGIAs")
+                        .HasForeignKey("TeamId");
+
+                    b.Navigation("DM_TEAM");
+
+                    b.Navigation("TAIKHOAN");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.THONGBAO_NGUOIDUNG", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.HETHONG_THONGBAO", "HETHONG_THONGBAO")
+                        .WithMany()
+                        .HasForeignKey("HETHONG_THONGBAOId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ENTITIES.DBContent.TAIKHOAN", "TAIKHOAN")
+                        .WithMany()
+                        .HasForeignKey("TaiKhoanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HETHONG_THONGBAO");
+
+                    b.Navigation("TAIKHOAN");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DM_CHUCVU", b =>
+                {
+                    b.Navigation("Taikhoans");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DM_DONVI", b =>
+                {
+                    b.Navigation("DM_PHONGBANs");
+
+                    b.Navigation("TAIKHOANs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DM_GIAIDOANDUAN", b =>
+                {
+                    b.Navigation("dUAN_QUANLYDUANs");
+
+                    b.Navigation("qUANLYCONGVIECs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DM_LOAIDUAN", b =>
+                {
+                    b.Navigation("dUAN_QUANLYDUANs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DM_LOAITAIKHOAN", b =>
+                {
+                    b.Navigation("Taikhoans");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DM_MONHOC", b =>
+                {
+                    b.Navigation("mONHOC_NGUOITHAMGIAs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DM_PHONGBAN", b =>
+                {
+                    b.Navigation("Taikhoans");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DM_TEAM", b =>
+                {
+                    b.Navigation("tEAM_NGUOITHAMGIAs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC", b =>
+                {
+                    b.Navigation("DUAN_LICHSUGIAOVIECs");
+
+                    b.Navigation("DUAN_QUANLYCONGVIEC_CHITIET");
+
+                    b.Navigation("dUAN_QUANLYCONGVIEC_PHANHOIs");
+
+                    b.Navigation("dUAN_QUANLYCONGVIEC_TEPDINHKEMs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYDUAN", b =>
+                {
+                    b.Navigation("DUAN_DANHSACHNGUOITHUCHIENs");
+
+                    b.Navigation("QUANLYDUAN_NGUOIDUNGs");
+
+                    b.Navigation("dUAN_QUANLYCONGVIECs");
+
+                    b.Navigation("tAIKHOANs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.HETHONG_THONGBAO", b =>
+                {
+                    b.Navigation("HETHONG_THONGBAO_TEPDINHKEMs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.PHANQUYEN_NHOMQUYEN", b =>
+                {
+                    b.Navigation("Menus");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.SYS_TRANGTHAICONGVIEC", b =>
+                {
+                    b.Navigation("DUAN_LICHSUGIAOVIECs");
+
+                    b.Navigation("DUAN_QUANLYCONGVIEC");
+
+                    b.Navigation("dUAN_QUANLYCONGVIEC_CHITIETs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.TAIKHOAN", b =>
+                {
+                    b.Navigation("DUAN_DANHSACHNGUOITHUCHIENs");
+
+                    b.Navigation("DUAN_QUANLYCONGVIECs");
+
+                    b.Navigation("QUANLYDUAN_NGUOIDUNGs");
+
+                    b.Navigation("mONHOC_NGUOITHAMGIAs");
+
+                    b.Navigation("tEAM_NGUOITHAMGIAs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.VAITRO", b =>
+                {
+                    b.Navigation("PHANQUYENs");
+
+                    b.Navigation("TAIKHOANs");
                 });
 #pragma warning restore 612, 618
         }
