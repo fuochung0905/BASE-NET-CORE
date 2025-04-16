@@ -18,6 +18,7 @@ namespace ENTITIES.Configurations
             builder.Property(x=>x.MaDuAn).IsRequired();
             builder.HasOne(x=>x.DM_GIAIDOANDUAN).WithMany(x=>x.dUAN_QUANLYDUANs).HasForeignKey(x=>x.GiaiDoanId).OnDelete(DeleteBehavior.Restrict); ;
             builder.HasOne(x => x.DM_LOAIDUAN).WithMany(x => x.dUAN_QUANLYDUANs).HasForeignKey(x => x.LoaiDuAn).OnDelete(DeleteBehavior.Restrict); ;
+            builder.HasOne(x => x.DM_MONHOC).WithMany(x => x.dUAN_QUANLYDUANs).HasForeignKey(x => x.MonHocId);
         }
     }
 }

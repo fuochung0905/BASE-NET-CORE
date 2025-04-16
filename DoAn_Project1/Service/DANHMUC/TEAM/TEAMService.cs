@@ -30,7 +30,7 @@ namespace Service.DANHMUC.TEAM
         }
 
         //GET LIST
-        public BaseResponse<GetListPagingResponse> GetList(GetListPagingRequest request)
+        public BaseResponse<GetListPagingResponse> GetList(PostMonHocGetListPagingRequest request)
         {
             var response = new BaseResponse<GetListPagingResponse>();
             try
@@ -44,6 +44,7 @@ namespace Service.DANHMUC.TEAM
 
                 var parameters = new[]
                 {
+                    new SqlParameter("@iMonHocId", request.MonHocId) ,
                     new SqlParameter("@iTextSearch", request.TextSearch),
                     new SqlParameter("@iPageIndex", request.PageIndex),
                     new SqlParameter("@iRowsPerPage", request.RowPerPage),

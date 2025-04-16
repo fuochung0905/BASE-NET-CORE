@@ -7,7 +7,6 @@ public partial class DM_PHONGBAN
 {
     public Guid Id { get; set; }
     
-
     public Guid DonViId { get; set; }
     public DM_DONVI DM_DONVI { get; set; }
     public string? Ma { get; set; }
@@ -30,4 +29,6 @@ public partial class DM_PHONGBAN
 
     public bool IsDeleted { get; set; }
     public ICollection<TAIKHOAN> Taikhoans { get; set; }
+    public ICollection<DM_CHUCVU> dM_CHUCVUs { get; set; }
+    public ICollection<DM_MONHOC> dM_MONHOCs { get; set; }
 }

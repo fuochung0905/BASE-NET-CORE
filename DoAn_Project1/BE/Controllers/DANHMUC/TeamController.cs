@@ -21,7 +21,7 @@ namespace BE.Controllers.DANHMUC
         }
 
         [HttpPost, Route("get-list")]
-        public IActionResult GetList(GetListPagingRequest request)
+        public IActionResult GetList(PostMonHocGetListPagingRequest request)
         {
             try
             {

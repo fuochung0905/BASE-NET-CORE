@@ -15,7 +15,7 @@ namespace Service.DANHMUC.TEAM
 {
     public interface ITEAMService
     {
-        BaseResponse<GetListPagingResponse> GetList(GetListPagingRequest request);
+        BaseResponse<GetListPagingResponse> GetList(PostMonHocGetListPagingRequest request);
         BaseResponse<MODELTeam> GetById(GetByIdRequest request);
         BaseResponse<PostTeamRequest> GetByPost(GetByIdRequest request);
         BaseResponse<MODELTeam> Insert(PostTeamRequest request);

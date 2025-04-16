@@ -7,7 +7,7 @@ namespace ENTITIES.DBContent;
 public partial class SYS_MENU
 {
     [Key]
-    public string Id { get; set; }
+    public Guid Id { get; set; }
     public string ControllerName { get; set; } = null!;
 
     public string Controller { get; set; } = null!;

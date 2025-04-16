@@ -10,6 +10,8 @@ public partial class DM_CHUCVU
     public string MaChucVu { get; set; } = null!;
 
     public string TenChucVu { get; set; } = null!;
+    public Guid PhongBanId { get; set; }
+    public DM_PHONGBAN DM_PHONGBAN { get; set; }
 
     public DateTime NgayTao { get; set; }
 

@@ -149,14 +149,14 @@
 
 
         //MONHOC
-        public const string MONHOC_GETALLFORCOMBOBOX = "chucvu/get-all-combobox";
-        public const string MONHOC_GETLIST = "chucvu/get-list";
-        public const string MONHOC_GETBYID = "chucvu/get-by-id";
-        public const string MONHOC_GETBYPOST = "chucvu/get-by-post";
-        public const string MONHOC_INSERT = "chucvu/insert";
-        public const string MONHOC_UPDATE = "chucvu/update";
-        public const string MONHOC_DELETE = "chucvu/delete";
-        public const string MONHOC_DELETELIST = "chucvu/delete-list";
+        public const string MONHOC_GETALLFORCOMBOBOX = "monhoc/get-all-combobox";
+        public const string MONHOC_GETLIST = "monhoc/get-list";
+        public const string MONHOC_GETBYID = "monhoc/get-by-id";
+        public const string MONHOC_GETBYPOST = "monhoc/get-by-post";
+        public const string MONHOC_INSERT = "monhoc/insert";
+        public const string MONHOC_UPDATE = "monhoc/update";
+        public const string MONHOC_DELETE = "monhoc/delete";
+        public const string MONHOC_DELETELIST = "monhoc/delete-list";
 
         //TEAM
         public const string TEAM_GETALLFORCOMBOBOX = "chucvu/get-all-combobox";

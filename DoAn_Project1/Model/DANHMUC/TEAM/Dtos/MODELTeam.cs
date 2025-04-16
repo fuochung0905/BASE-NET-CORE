@@ -12,5 +12,7 @@ namespace MODELS.DANHMUC.TEAM.Dtos
         public Guid Id { get; set; }
         public string Ma { get; set; }
         public string TenGoi { get; set; } = null!;
+        public string TenMonHoc { get; set; }
+
     }
 }

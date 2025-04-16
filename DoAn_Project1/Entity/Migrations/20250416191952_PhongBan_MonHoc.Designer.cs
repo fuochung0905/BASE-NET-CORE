@@ -4,6 +4,7 @@ using ENTITIES.DBContent;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ENTITIES.Migrations
 {
     [DbContext(typeof(DoAnProject1Context))]
-    partial class DoAnProject1ContextModelSnapshot : ModelSnapshot
+    [Migration("20250416191952_PhongBan_MonHoc")]
+    partial class PhongBan_MonHoc
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,127 +24,6 @@ namespace ENTITIES.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ENTITIES.DBContent.CHAT_CONVERSATION", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActived")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsGroup")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("MonHocId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("NgaySua")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("NgayTao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("NgayXoa")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("NguoiSua")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NguoiTao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NguoiXoa")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("TeamId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MonHocId");
-
-                    b.ToTable("CHAT_CONVERSATION");
-                });
-
-            modelBuilder.Entity("ENTITIES.DBContent.CHAT_CONVERSATIONMEMBER", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ConversationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("NgayThamGia")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("TaiKhoanId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("TaiKhoanId");
-
-                    b.ToTable("CHAT_CONVERSATIONMEMBER");
-                });
-
-            modelBuilder.Entity("ENTITIES.DBContent.CHAT_MESSAGE", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ConversationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActived")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("NgaySua")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("NgayTao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("NgayXoa")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("NguoiGuiId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("NguoiSua")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NguoiTao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NguoiXoa")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("NguoiGuiId");
-
-                    b.ToTable("CHAT_MESSAGE");
-                });
 
             modelBuilder.Entity("ENTITIES.DBContent.DM_CHUCVU", b =>
                 {
@@ -932,9 +814,6 @@ namespace ENTITIES.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("MonHocId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("NgaySua")
                         .HasColumnType("datetime2");
 
@@ -972,8 +851,6 @@ namespace ENTITIES.Migrations
                     b.HasIndex("GiaiDoanId");
 
                     b.HasIndex("LoaiDuAn");
-
-                    b.HasIndex("MonHocId");
 
                     b.ToTable("DUAN_QUANLYDUANs");
                 });
@@ -1463,55 +1340,6 @@ namespace ENTITIES.Migrations
                     b.ToTable("VAITROs");
                 });
 
-            modelBuilder.Entity("ENTITIES.DBContent.CHAT_CONVERSATION", b =>
-                {
-                    b.HasOne("ENTITIES.DBContent.DM_MONHOC", "DM_MONHOC")
-                        .WithMany("cHAT_CONVERSATIONs")
-                        .HasForeignKey("MonHocId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DM_MONHOC");
-                });
-
-            modelBuilder.Entity("ENTITIES.DBContent.CHAT_CONVERSATIONMEMBER", b =>
-                {
-                    b.HasOne("ENTITIES.DBContent.CHAT_CONVERSATION", "CHAT_CONVERSATION")
-                        .WithMany("CHAT_CONVERSATIONMEMBERs")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ENTITIES.DBContent.TAIKHOAN", "TAIKHOAN")
-                        .WithMany("CHAT_CONVERSATIONMEMBERs")
-                        .HasForeignKey("TaiKhoanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CHAT_CONVERSATION");
-
-                    b.Navigation("TAIKHOAN");
-                });
-
-            modelBuilder.Entity("ENTITIES.DBContent.CHAT_MESSAGE", b =>
-                {
-                    b.HasOne("ENTITIES.DBContent.CHAT_CONVERSATION", "Conversation")
-                        .WithMany("ChatMessages")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ENTITIES.DBContent.TAIKHOAN", "TAIKHOAN")
-                        .WithMany("cHAT_MESSAGEs")
-                        .HasForeignKey("NguoiGuiId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("TAIKHOAN");
-                });
-
             modelBuilder.Entity("ENTITIES.DBContent.DM_CHUCVU", b =>
                 {
                     b.HasOne("ENTITIES.DBContent.DM_PHONGBAN", "DM_PHONGBAN")
@@ -1668,17 +1496,9 @@ namespace ENTITIES.Migrations
                         .HasForeignKey("LoaiDuAn")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ENTITIES.DBContent.DM_MONHOC", "DM_MONHOC")
-                        .WithMany("dUAN_QUANLYDUANs")
-                        .HasForeignKey("MonHocId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("DM_GIAIDOANDUAN");
 
                     b.Navigation("DM_LOAIDUAN");
-
-                    b.Navigation("DM_MONHOC");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.HETHONG_THONGBAO_TEPDINHKEM", b =>
@@ -1823,13 +1643,6 @@ namespace ENTITIES.Migrations
                     b.Navigation("TAIKHOAN");
                 });
 
-            modelBuilder.Entity("ENTITIES.DBContent.CHAT_CONVERSATION", b =>
-                {
-                    b.Navigation("CHAT_CONVERSATIONMEMBERs");
-
-                    b.Navigation("ChatMessages");
-                });
-
             modelBuilder.Entity("ENTITIES.DBContent.DM_CHUCVU", b =>
                 {
                     b.Navigation("Taikhoans");
@@ -1861,11 +1674,7 @@ namespace ENTITIES.Migrations
 
             modelBuilder.Entity("ENTITIES.DBContent.DM_MONHOC", b =>
                 {
-                    b.Navigation("cHAT_CONVERSATIONs");
-
                     b.Navigation("dM_TEAMs");
-
-                    b.Navigation("dUAN_QUANLYDUANs");
 
                     b.Navigation("mONHOC_NGUOITHAMGIAs");
                 });
@@ -1927,15 +1736,11 @@ namespace ENTITIES.Migrations
 
             modelBuilder.Entity("ENTITIES.DBContent.TAIKHOAN", b =>
                 {
-                    b.Navigation("CHAT_CONVERSATIONMEMBERs");
-
                     b.Navigation("DUAN_DANHSACHNGUOITHUCHIENs");
 
                     b.Navigation("DUAN_QUANLYCONGVIECs");
 
                     b.Navigation("QUANLYDUAN_NGUOIDUNGs");
-
-                    b.Navigation("cHAT_MESSAGEs");
 
                     b.Navigation("mONHOC_NGUOITHAMGIAs");
 

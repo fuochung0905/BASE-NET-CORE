@@ -11,6 +11,7 @@ namespace MODELS.HETHONG.MENU.Requests
 {
     public class PostMenuRequest : BaseRequest
     {
+        public Guid? Id { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "ControllerName bắt buộc nhập")]
         public string? ControllerName { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "Controller bắt buộc nhập")]

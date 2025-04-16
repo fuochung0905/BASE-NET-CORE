@@ -70,5 +70,7 @@ public partial class TAIKHOAN
     public ICollection<QUANLYDUAN_NGUOIDUNG> QUANLYDUAN_NGUOIDUNGs { get; set; }
     public ICollection<MONHOC_NGUOITHAMGIA> mONHOC_NGUOITHAMGIAs { get; set; }
     public ICollection<TEAM_NGUOITHAMGIA> tEAM_NGUOITHAMGIAs{ get; set; }
+    public ICollection<CHAT_MESSAGE> cHAT_MESSAGEs { get; set; }
+    public ICollection<CHAT_CONVERSATIONMEMBER> CHAT_CONVERSATIONMEMBERs { get; set; }
 
 }

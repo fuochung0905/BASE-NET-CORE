@@ -14,5 +14,7 @@ namespace MODELS.DANHMUC.CHUCVU.Dtos
         public string MaChucVu { get; set; } = null!;
 
         public string TenChucVu { get; set; } = null!;
+        public Guid? PhongBanId { get; set; }
+        public string TenPhongBan { get; set; }
     }
 }

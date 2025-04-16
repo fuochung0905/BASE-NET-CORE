@@ -11,7 +11,6 @@ public partial class DUAN_QUANLYDUAN
 
     public string TenDuAn { get; set; } = null!;
 
-
     public Guid? GiaiDoanId { get; set; }
     public DM_GIAIDOANDUAN DM_GIAIDOANDUAN {  get; set; }
 
@@ -41,7 +40,8 @@ public partial class DUAN_QUANLYDUAN
 
     public Guid? LoaiDuAn { get; set; }
     public DM_LOAIDUAN DM_LOAIDUAN { get; set; }
-
+    public Guid MonHocId { get; set; }
+    public DM_MONHOC DM_MONHOC { get; set; }
     public bool? IsCanhBaoHetHan { get; set; }
     public ICollection<DUAN_DANHSACHNGUOITHUCHIEN> DUAN_DANHSACHNGUOITHUCHIENs { get; set; }
     public ICollection<DUAN_QUANLYCONGVIEC> dUAN_QUANLYCONGVIECs { get; set; }

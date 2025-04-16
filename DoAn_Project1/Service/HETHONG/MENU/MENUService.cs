@@ -120,6 +120,7 @@ namespace REPONSITORY.HETHONG.MENU
                 var data = _unitOfWork.GetRepository<ENTITIES.DBContent.SYS_MENU>().Find(x => x.ControllerName == request.ControllerName);
                 if (data == null)
                 {
+                    result.Id = Guid.NewGuid();
                     result.IsEdit = false;
                 }
                 else

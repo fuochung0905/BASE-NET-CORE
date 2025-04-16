@@ -16,6 +16,7 @@ namespace ENTITIES.Configurations
             builder.HasKey(x=>x.Id);
             builder.Property(x => x.TenGoi).IsRequired();
             builder.Property(x=>x.Ma).IsRequired();
+            builder.HasOne(x => x.DM_MONHOC).WithMany(x => x.dM_TEAMs).HasForeignKey(x => x.MonHocId);
         }
     }
 }

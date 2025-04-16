@@ -18,7 +18,9 @@
             </button>
         </div>
         <div class="modal-body">
-            @Html.HiddenFor(model => model.IsEdit)
+             @Html.HiddenFor(model => model.IsEdit)
+            @Html.HiddenFor(model => model.Id)
+            
             <div class="row">
                 <div class="col-md-6">
                     <label>Controller Name <span class="text-danger">(*)</span></label>

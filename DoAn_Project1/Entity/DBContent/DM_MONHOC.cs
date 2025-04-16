@@ -21,12 +21,12 @@ namespace ENTITIES.DBContent
 
         public string? PhongHoc { get; set; }
 
-        public DateOnly? NgayBatDau { get; set; }
+        public DateTime? NgayBatDau { get; set; }
 
-        public DateOnly NgayKetThuc { get; set; }
+        public DateTime NgayKetThuc { get; set; }
         public int ThuTrongTuan { get; set; }
-        public TimeOnly GioBatDau { get; set; }
-        public TimeOnly GioKetThuc { get; set; }
+        public TimeSpan GioBatDau { get; set; }
+        public TimeSpan GioKetThuc { get; set; }
         public DateTime? NgayTao {  get; set; }
 
         public string NguoiTao { get; set; } = null!;
@@ -42,6 +42,11 @@ namespace ENTITIES.DBContent
         public bool IsActived { get; set; }
 
         public bool IsDeleted { get; set; }
+        public ICollection<DUAN_QUANLYDUAN> dUAN_QUANLYDUANs { get; set; }
         public ICollection<MONHOC_NGUOITHAMGIA> mONHOC_NGUOITHAMGIAs   { get; set; }
+        public ICollection<CHAT_CONVERSATION> cHAT_CONVERSATIONs { get; set; }
+        public ICollection<DM_TEAM> dM_TEAMs { get; set; }
+        public Guid PhongBanId { get; set; }
+        public DM_PHONGBAN DM_PHONGBAN { get; set; }
     }
 }

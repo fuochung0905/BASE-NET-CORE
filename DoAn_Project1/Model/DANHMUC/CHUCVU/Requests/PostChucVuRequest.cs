@@ -10,6 +10,7 @@ namespace MODELS.DANHMUC.CHUCVU.Requests
         public string MaChucVu { get; set; } = null!;
         [Required(AllowEmptyStrings = false, ErrorMessage = "Tên chức vụ không được rỗng")]
         public string TenChucVu { get; set; } = null!;
+        public Guid? PhongBanId { get; set; }
     }
    
 }

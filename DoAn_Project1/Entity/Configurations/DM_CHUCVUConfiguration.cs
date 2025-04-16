@@ -15,6 +15,7 @@ namespace ENTITIES.Configurations
         {
             builder.HasKey(pc=> pc.Id);
             builder.Property(x => x.TenChucVu).IsRequired();
+            builder.HasOne(x => x.DM_PHONGBAN).WithMany(x => x.dM_CHUCVUs).HasForeignKey(x => x.PhongBanId);
         }
     }
 }

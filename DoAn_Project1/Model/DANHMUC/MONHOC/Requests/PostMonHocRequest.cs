@@ -19,11 +19,12 @@ namespace MODELS.DANHMUC.MONHOC.Requests
 
         public string? PhongHoc { get; set; }
 
-        public DateOnly? NgayBatDau { get; set; }
+        public DateTime? NgayBatDau { get; set; }
 
-        public DateOnly NgayKetThuc { get; set; }
+        public DateTime NgayKetThuc { get; set; }
         public int ThuTrongTuan { get; set; }
-        public TimeOnly GioBatDau { get; set; }
-        public TimeOnly GioKetThuc { get; set; }
+        public TimeSpan? GioBatDau { get; set; }
+        public TimeSpan? GioKetThuc { get; set; }
+        public Guid? PhongBanId { get; set; }
     }
 }

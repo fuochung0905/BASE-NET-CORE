@@ -1,0 +1,185 @@
+﻿@model MODELS.DANHMUC.MONHOC.Requests.PostMonHocRequest
+
+<div class="modal-content" id="modalLoading">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMonHoc", @class = "forms-sample" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            @if (!Model.IsEdit)
+            {
+                <h4 class="modal-title">Thêm mới môn học</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Cập nhật môn học</h4>
+            }
+            <button type="button" class="close" onclick="closePopUp();" aria-label="Close" data-bs-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(model => model.IsEdit)
+            @Html.HiddenFor(model => model.Id)
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Mã môn học <span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().TextAreaFor(model => model.Ma).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.Ma, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Tên môn học <span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().TextAreaFor(model => model.TenGoi).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.TenGoi, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Phòng ban <span class="text-danger">*</span></label>
+                    @(Html.Kendo().DropDownListFor(m => m.PhongBanId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .OptionLabel("-- Chọn phòng ban --")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetList_Combobox", "PhongBan");
+                        })))
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.PhongBanId, "", new { @class = "text-danger" })
+                </div>
+               
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Số tín chỉ <span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().NumericTextBoxFor(model => model.SoTinChi).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.SoTinChi, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Số lượng tối đa <span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().NumericTextBoxFor(model => model.SoLuongMax).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.SoLuongMax, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Phòng học <span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().TextBoxFor(model => model.PhongHoc).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.PhongHoc, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Thứ trong tuần <span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().NumericTextBoxFor(model => model.ThuTrongTuan).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.ThuTrongTuan, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Ngày bắt đầu <span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().DatePickerFor(model => model.NgayBatDau).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.NgayBatDau, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label>Ngày kết thúc <span class="text-danger">(*)</span></label>
+                    @(Html.Kendo().DatePickerFor(model => model.NgayKetThuc).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.NgayKetThuc, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+           
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Trạng thái</label>
+                    @(Html.Kendo().DropDownList().Name("IsActived")
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .BindTo(SYS_CONFIG.TRANG_THAI)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.IsActived, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6"></div>
+            </div>
+        </div>
+           
+      
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" onclick="closePopUp();"><i class="fas fa-times-square"></i> Hủy</button>
+            <div>
+                <button type="submit" id="btnLuu" class="btn btn-success"><i class="fas fa-check-square"></i> Lưu</button>
+                @if (!Model.IsEdit)
+                {
+                    <button type="button" class="btn btn-success" id="btnLuuTiep"><i class="fas fa-check-square"></i> Lưu và thêm </button>
+                }
+            </div>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $("#frmMonHoc").find("span.field-validation-valid").hide();
+        //validate
+        var validator = $("#frmMonHoc").kendoValidator().data("kendoValidator");
+        //Thêm tiếp
+        $("#btnLuuTiep").click(function (event) {
+            event.preventDefault();
+            if (validator.validate()) { //nhập hợp lệ
+                showLoadingElement(true, 'modalLoading');
+                $.ajax({
+                    url: '/MonHoc/Post',
+                    type: "POST",
+                    data: $("#frmMonHoc").serialize(),
+                    success: function (data) {
+                        if (data.IsSuccess) {
+                            showSuccessNotify(addSuccess);
+                            var url = '@Url.Action("ShowInsertPopup", "MonHoc")';
+                            reloadModal(url);
+                        }
+                        else {
+                            showErrorNotify(data.Message);
+                        }
+                    }
+                });
+                showLoadingElement(false, 'modalLoading');
+            }
+        });
+
+        //Lưu
+        $("#frmMonHoc").submit(function (event) {
+            event.preventDefault();
+            if (validator.validate()) { //Nhập hợp lệ
+                showLoadingElement(true, 'modalLoading');
+                $.ajax({
+                    url: '/MonHoc/Post',
+                    type: "POST",
+                    data: $("#frmMonHoc").serialize(),
+                    success: function (data) {
+                        if (data.IsSuccess) {
+                            if (data.Data)
+                                showSuccessNotify(updateSuccess);
+                            else
+                                showSuccessNotify(addSuccess);
+                            closePopUp();
+                        }
+                        else {
+                            showErrorNotify(data.Message);
+                        }
+                    }
+                });
+                showLoadingElement(false, 'modalLoading');
+            }
+        });
+
+    });
+
+    function closePopUp() {
+        refreshGrid();
+        hideModal();
+    }
+</script>
+
+
+
+

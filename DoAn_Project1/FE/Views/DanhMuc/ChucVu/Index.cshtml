@@ -44,6 +44,7 @@
                     columns.Bound("").ClientTemplate("#= xoFunc.renderNumberGrid() #").Title("STT").Width(72).Filterable(false).Sortable(false).HtmlAttributes(new { @class = "text-center" });
                     columns.Bound(c => c.MaChucVu).Title("Mã Chức Vụ").Width(220);
                     columns.Bound(c => c.TenChucVu).Title("Tên chức vụ").Width(300);
+                    columns.Bound(c => c.TenPhongBan).Title("Tên phòng ban").Width(300);
                     columns.Bound(c => c.IsActived).Title("Trạng thái").ClientTemplate(
                     "# if(IsActived) { #" + //Trạng thái đang hoạt động
                     "<button type='button' class='btn btn-outline-success btn-sm btn-flat'>Đang hoạt động</button>" +
@@ -81,7 +82,7 @@
                     )
                 )
         }
-    </div><a href="c:\users\lan\desktop\quan-ly-du-an\projectbase\fe\views\danhmuc\chucvu\index.cshtml">c:\users\lan\desktop\quan-ly-du-an\projectbase\fe\views\danhmuc\chucvu\index.cshtml</a>
+   
     <!-- /.container-fluid -->
 </section>
 
