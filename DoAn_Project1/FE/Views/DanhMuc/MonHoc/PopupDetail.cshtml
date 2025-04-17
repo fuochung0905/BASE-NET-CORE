@@ -53,6 +53,26 @@
                
             </div>
             <div class="row">
+                <div class="col-md-12">
+                    <label>Niên khóa <span class="text-danger">*</span></label>
+                    @(Html.Kendo().DropDownListFor(m => m.NienKhoaId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .OptionLabel("-- Chọn niên khóa --")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetList_Combobox", "NienKhoa");
+                        })))
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.PhongBanId, "", new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="row">
                 <div class="col-md-6">
                     <label>Số tín chỉ <span class="text-danger">(*)</span></label>
                     @(Html.Kendo().NumericTextBoxFor(model => model.SoTinChi).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))

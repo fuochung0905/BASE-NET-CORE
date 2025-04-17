@@ -25,6 +25,7 @@ namespace MODELS.DANHMUC.MONHOC.Requests
         public int ThuTrongTuan { get; set; }
         public TimeSpan? GioBatDau { get; set; }
         public TimeSpan? GioKetThuc { get; set; }
+        public Guid? NienKhoaId { get; set; }
         public Guid? PhongBanId { get; set; }
     }
 }

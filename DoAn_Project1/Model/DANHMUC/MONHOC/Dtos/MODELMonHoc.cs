@@ -30,6 +30,7 @@ namespace MODELS.DANHMUC.MONHOC.Dtos
         public TimeSpan GioBatDau { get; set; }
         public TimeSpan GioKetThuc { get; set; }
         public string TenPhongBan { get; set; }
+        public string TenNienKhoa { get; set; }
         
         
     }

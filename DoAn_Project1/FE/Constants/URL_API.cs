@@ -168,6 +168,15 @@
         public const string TEAM_DELETE = "chucvu/delete";
         public const string TEAM_DELETELIST = "chucvu/delete-list";
 
+        public const string NIENKHOA_GETALLFORCOMBOBOX = "nienkhoa/get-all-combobox";
+        public const string NIENKHOA_GETLIST = "nienkhoa/get-list";
+        public const string NIENKHOA_GETBYID = "nienkhoa/get-by-id";
+        public const string NIENKHOA_GETBYPOST = "nienkhoa/get-by-post";
+        public const string NIENKHOA_INSERT = "nienkhoa/insert";
+        public const string NIENKHOA_UPDATE = "nienkhoa/update";
+        public const string NIENKHOA_DELETE = "nienkhoa/delete";
+        public const string NIENKHOA_DELETELIST = "nienkhoa/delete-list";
+
         //LOAITAIKHOAN
         public const string LOAIHOSO_GETALLFORCOMBOBOX = "loaihoso/get-all-combobox";
         public const string LOAIHOSO_GETLIST = "loaihoso/get-list";

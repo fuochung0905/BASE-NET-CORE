@@ -4,6 +4,7 @@ using ENTITIES.DBContent;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ENTITIES.Migrations
 {
     [DbContext(typeof(DoAnProject1Context))]
-    partial class DoAnProject1ContextModelSnapshot : ModelSnapshot
+    [Migration("20250417222532_NienKhoa")]
+    partial class NienKhoa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

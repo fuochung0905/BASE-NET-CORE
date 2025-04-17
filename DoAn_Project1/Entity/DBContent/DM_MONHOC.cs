@@ -10,7 +10,8 @@ namespace ENTITIES.DBContent
     {
         public Guid Id { get; set; }
         public string Ma {  get; set; }
-
+        public Guid NienKhoaId { get; set; }
+        public DM_NIENKHOA DM_NIENKHOA { get; set; }
         public string TenGoi { get; set; } = null!;
 
         public int? SoTinChi { get; set; }

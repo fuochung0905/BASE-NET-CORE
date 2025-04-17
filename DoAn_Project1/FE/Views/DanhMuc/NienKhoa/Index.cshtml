@@ -19,12 +19,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">QUẢN LÝ MÔN HỌC</h1>
+                <h1 class="m-0">QUẢN LÝ NIÊN KHÓA</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="#">Danh mục</a></li>
-                    <li class="breadcrumb-item active">Môn học</li>
+                    <li class="breadcrumb-item active">Niên khóa</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -35,27 +35,25 @@
     <div class="container-fluid">
         @if (Model.IsXem)
         {
-            @(Html.Kendo().Grid<MODELS.DANHMUC.MONHOC.Dtos.MODELMonHoc>()
+            @(Html.Kendo().Grid<MODELS.DANHMUC.NIENKHOA.Dtos.MODELNienKhoa>()
                 .Name("gridData")
                 .HtmlAttributes(new { @class = "table table-hover" })
                 .Columns(columns =>
                 {
                     columns.Select().HtmlAttributes(new { @style = "text-align:center;" }).Width(68);
                     columns.Bound("").ClientTemplate("#= xoFunc.renderNumberGrid() #").Title("STT").Width(72).Filterable(false).Sortable(false).HtmlAttributes(new { @class = "text-center" });
-                    columns.Bound(c => c.Ma).Title("Mã môn học").Width(180);
-                    columns.Bound(c => c.TenGoi).Title("Tên gọi").Width(200);
-                    columns.Bound(c => c.PhongHoc).Title("Phòng học").Width(280);
-                    columns.Bound(c => c.ThuTrongTuan).Title("Lịch học").Width(280);
-                    columns.Bound(c => c.GioBatDau).Title("Giờ bắt đầu").Width(280);
-                    columns.Bound(c => c.GioKetThuc).Title("Giờ kết thúc").Width(280);
-                    columns.Bound(c => c.NgayBatDau).Title("Ngày bắt đầu").HtmlAttributes(new { @style = "text-align:center;" }).Format("{0: dd/MM/yyyy}").Width(280);
-                    columns.Bound(c => c.NgayKetThuc).Title("Tên phòng ban").HtmlAttributes(new { @style = "text-align:center;" }).Format("{0: dd/MM/yyyy}").Width(280);
-                    columns.Bound(c => c.TenPhongBan).Title("Tên phòng ban").Width(280);
-                    columns.Bound(c => c.TenNienKhoa).Title("Tên niên khóa").Width(280);
+                    columns.Bound(c => c.Ma).Title("Mã nhóm").Width(180);
+                    columns.Bound(c => c.TenGoi).Title("Tên gọi").Width(300);
+                    columns.Bound(c => c.IsHienTai).Title("Hiện nay").ClientTemplate(
+                    "# if(IsHienTai) { #" + 
+                    "<button type='button' class='btn btn-outline-success btn-sm btn-flat'>Chính xác</button>" +
+                    "# } else { #" +  
+                    "<button type='button' class='btn btn-outline-danger btn-sm btn-flat'>Không chính xác</button>" +
+                    "# } #").Width(170).HtmlAttributes(new { @class = "text-center" });
                     columns.Bound(c => c.IsActived).Title("Trạng thái").ClientTemplate(
-                    "# if(IsActived) { #" + 
+                    "# if(IsActived) { #" + //Trạng thái đang hoạt động
                     "<button type='button' class='btn btn-outline-success btn-sm btn-flat'>Đang hoạt động</button>" +
-                    "# } else { #" + 
+                    "# } else { #" +  //Trạng thái không hoạt động (màu đỏ)
                     "<button type='button' class='btn btn-outline-danger btn-sm btn-flat'>Không hoạt động</button>" +
                     "# } #").Width(170).HtmlAttributes(new { @class = "text-center" });
                 })
@@ -73,7 +71,7 @@
                 .DataSource(dataSource => dataSource
                 .Ajax()
                 .Model(model => model.Id(p => p.Id))
-                .Read(read => read.Action("GetList", "MonHoc").Data("gridDataFilter"))
+                .Read(read => read.Action("GetList", "NienKhoa").Data("gridDataFilter"))
                 .PageSize(SYS_CONFIG.PAGE_SIZE_DEFAULT)
                 .Events(e => e.Error("xoFunc.onErrorGrid"))
                 )
@@ -91,34 +89,34 @@
 @*TOOLBAR TEMPLATE*@
 <script id="GridToolbarTemplate" type="text/x-kendo-template">
     @{
-            <div style="width:100%;">
-                <div style="width:70%;">
+                    <div style="width:100%;">
+                        <div style="width:70%;">
                 @{
                     if (Model.IsXem)
                     {
-                                    <a class="btn btn-info ml-1" onclick="xemThongTin()"><i class="fa fa-eye"></i> Xem </a>
+                                                            <a class="btn btn-info ml-1" onclick="xemThongTin()"><i class="fa fa-eye"></i> Xem </a>
                     }
                     if (Model.IsThem)
                     {
-                                    <a class="btn btn-success ml-1" onclick="themThongTin()"><i class="fas fa-layer-plus"></i>&nbsp; Thêm</a>
+                                                            <a class="btn btn-success ml-1" onclick="themThongTin()"><i class="fas fa-layer-plus"></i>&nbsp; Thêm</a>
                     }
                     if (Model.IsCapNhat)
                     {
-                                    <a class="btn btn-primary ml-1" onclick="suaThongTin()"><i class="fas fa-wrench"></i> Cập nhật </a>
+                                                            <a class="btn btn-primary ml-1" onclick="suaThongTin()"><i class="fas fa-wrench"></i> Cập nhật </a>
                     }
                     if (Model.IsXoa)
                     {
-                                    <a class="btn btn-danger ml-1" onclick="xoaThongTin()"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Xóa </a>
+                                                            <a class="btn btn-danger ml-1" onclick="xoaThongTin()"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Xóa </a>
                     }
                 }
-                </div>
-                <div style="width:30%;" class="input-group">
-                    <input id="TextSearch" type="text" class="form-control" placeholder="Tìm kiếm..." onchange="refreshGrid()">
-                    <span class="input-group-append">
-                        <button onclick="refreshGrid()" class="btn btn-default" type="button"><i class="fas fa-search"></i></button>
-                    </span>
-                </div>
-            </div>
+                        </div>
+                        <div style="width:30%;" class="input-group">
+                            <input id="TextSearch" type="text" class="form-control" placeholder="Tìm kiếm..." onchange="refreshGrid()">
+                            <span class="input-group-append">
+                                <button onclick="refreshGrid()" class="btn btn-default" type="button"><i class="fas fa-search"></i></button>
+                            </span>
+                        </div>
+                    </div>
     }
 </script>
 
@@ -131,14 +129,14 @@
             return;
         }
 
-        var url = '@Url.Action("ShowViewPopup", "MonHoc")' + "?id=" + itemSelectedIds[0];
+        var url = '@Url.Action("ShowViewPopup", "NienKhoa")' + "?id=" + itemSelectedIds[0];
 
         showModal(url, "lg");
     }
 
     //Thêm thông tin.
     function themThongTin() {
-        var url = '@Url.Action("ShowInsertPopup", "MonHoc")';
+        var url = '@Url.Action("ShowInsertPopup", "NienKhoa")';
 
         showModal(url, "lg");
     }
@@ -151,7 +149,7 @@
             return;
         }
 
-        var url = '@Url.Action("ShowUpdatePopup", "MonHoc")' + "?id=" + itemSelectedIds[0];
+        var url = '@Url.Action("ShowUpdatePopup", "NienKhoa")' + "?id=" + itemSelectedIds[0];
 
         showModal(url, "lg");
     }
@@ -167,7 +165,7 @@
         var XoaThongTin = function () {
             showLoading(true);
             $.ajax({
-                url: '@Url.Action("Delete", "MonHoc")',
+                url: '@Url.Action("Delete", "NienKhoa")',
                 type: 'POST',
                 dataType: 'json',
                 data: {
