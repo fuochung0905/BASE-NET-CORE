@@ -29,4 +29,5 @@ public partial class HETHONG_THONGBAO
 
     public bool IsDeleted { get; set; }
     public ICollection<HETHONG_THONGBAO_TEPDINHKEM> HETHONG_THONGBAO_TEPDINHKEMs { get; set; }
+    public ICollection<THONGBAO_NGUOIDUNG> tHONGBAO_NGUOIDUNGs { get; set; }
 }

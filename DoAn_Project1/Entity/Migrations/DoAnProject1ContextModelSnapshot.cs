@@ -701,6 +701,9 @@ namespace ENTITIES.Migrations
                     b.Property<Guid?>("CongViecLienQuanId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("DoKhoCongViec")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("DuAnId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1006,6 +1009,9 @@ namespace ENTITIES.Migrations
                     b.Property<string>("NguoiXoa")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("TeamId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("TenDuAn")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1026,6 +1032,8 @@ namespace ENTITIES.Migrations
                     b.HasIndex("LoaiDuAn");
 
                     b.HasIndex("MonHocId");
+
+                    b.HasIndex("TeamId");
 
                     b.ToTable("DUAN_QUANLYDUANs");
                 });
@@ -1123,7 +1131,7 @@ namespace ENTITIES.Migrations
                     b.Property<Guid?>("MonHocId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("TaiKhoanId")
+                    b.Property<Guid>("TaiKhoanId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -1198,6 +1206,27 @@ namespace ENTITIES.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PHANQUYEN_NHOMQUYENs");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.PHONGBAN_NGUOITHAMGIA", b =>
+                {
+                    b.Property<Guid?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PhongBanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TaiKhoanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhongBanId");
+
+                    b.HasIndex("TaiKhoanId");
+
+                    b.ToTable("PHONGBAN_NGUOITHAMGIA");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.QUANLYDUAN_NGUOIDUNG", b =>
@@ -1427,7 +1456,7 @@ namespace ENTITIES.Migrations
                     b.Property<bool>("IsLeader")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("TaiKhoanId")
+                    b.Property<Guid>("TaiKhoanId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("TeamId")
@@ -1451,9 +1480,6 @@ namespace ENTITIES.Migrations
                     b.Property<DateTime?>("Delivered_At")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("HETHONG_THONGBAOId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool?>("Is_Read")
                         .HasColumnType("bit");
 
@@ -1468,9 +1494,9 @@ namespace ENTITIES.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HETHONG_THONGBAOId");
-
                     b.HasIndex("TaiKhoanId");
+
+                    b.HasIndex("ThongBaoId");
 
                     b.ToTable("THONGBAO_NGUOIDUNGs");
                 });
@@ -1734,11 +1760,18 @@ namespace ENTITIES.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ENTITIES.DBContent.DM_TEAM", "DM_TEAM")
+                        .WithMany("dUAN_QUANLYDUANs")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("DM_GIAIDOANDUAN");
 
                     b.Navigation("DM_LOAIDUAN");
 
                     b.Navigation("DM_MONHOC");
+
+                    b.Navigation("DM_TEAM");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.HETHONG_THONGBAO_TEPDINHKEM", b =>
@@ -1760,7 +1793,9 @@ namespace ENTITIES.Migrations
 
                     b.HasOne("ENTITIES.DBContent.TAIKHOAN", "TAIKHOAN")
                         .WithMany("mONHOC_NGUOITHAMGIAs")
-                        .HasForeignKey("TaiKhoanId");
+                        .HasForeignKey("TaiKhoanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("DM_MONHOC");
 
@@ -1776,6 +1811,23 @@ namespace ENTITIES.Migrations
                         .IsRequired();
 
                     b.Navigation("VAITRO");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.PHONGBAN_NGUOITHAMGIA", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.DM_PHONGBAN", "DM_PHONGBAN")
+                        .WithMany("dM_PHONGBAN_NHGIA")
+                        .HasForeignKey("PhongBanId");
+
+                    b.HasOne("ENTITIES.DBContent.TAIKHOAN", "TAIKHOAN")
+                        .WithMany("pHONGBAN_NGUOITHAMGIAs")
+                        .HasForeignKey("TaiKhoanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DM_PHONGBAN");
+
+                    b.Navigation("TAIKHOAN");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.QUANLYDUAN_NGUOIDUNG", b =>
@@ -1853,7 +1905,9 @@ namespace ENTITIES.Migrations
                 {
                     b.HasOne("ENTITIES.DBContent.TAIKHOAN", "TAIKHOAN")
                         .WithMany("tEAM_NGUOITHAMGIAs")
-                        .HasForeignKey("TaiKhoanId");
+                        .HasForeignKey("TaiKhoanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ENTITIES.DBContent.DM_TEAM", "DM_TEAM")
                         .WithMany("tEAM_NGUOITHAMGIAs")
@@ -1866,15 +1920,15 @@ namespace ENTITIES.Migrations
 
             modelBuilder.Entity("ENTITIES.DBContent.THONGBAO_NGUOIDUNG", b =>
                 {
-                    b.HasOne("ENTITIES.DBContent.HETHONG_THONGBAO", "HETHONG_THONGBAO")
-                        .WithMany()
-                        .HasForeignKey("HETHONG_THONGBAOId")
+                    b.HasOne("ENTITIES.DBContent.TAIKHOAN", "TAIKHOAN")
+                        .WithMany("tHONGBAO_NGUOIDUNGs")
+                        .HasForeignKey("TaiKhoanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ENTITIES.DBContent.TAIKHOAN", "TAIKHOAN")
-                        .WithMany()
-                        .HasForeignKey("TaiKhoanId")
+                    b.HasOne("ENTITIES.DBContent.HETHONG_THONGBAO", "HETHONG_THONGBAO")
+                        .WithMany("tHONGBAO_NGUOIDUNGs")
+                        .HasForeignKey("ThongBaoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1942,10 +1996,14 @@ namespace ENTITIES.Migrations
                     b.Navigation("dM_CHUCVUs");
 
                     b.Navigation("dM_MONHOCs");
+
+                    b.Navigation("dM_PHONGBAN_NHGIA");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.DM_TEAM", b =>
                 {
+                    b.Navigation("dUAN_QUANLYDUANs");
+
                     b.Navigation("tEAM_NGUOITHAMGIAs");
                 });
 
@@ -1974,6 +2032,8 @@ namespace ENTITIES.Migrations
             modelBuilder.Entity("ENTITIES.DBContent.HETHONG_THONGBAO", b =>
                 {
                     b.Navigation("HETHONG_THONGBAO_TEPDINHKEMs");
+
+                    b.Navigation("tHONGBAO_NGUOIDUNGs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.PHANQUYEN_NHOMQUYEN", b =>
@@ -2004,7 +2064,11 @@ namespace ENTITIES.Migrations
 
                     b.Navigation("mONHOC_NGUOITHAMGIAs");
 
+                    b.Navigation("pHONGBAN_NGUOITHAMGIAs");
+
                     b.Navigation("tEAM_NGUOITHAMGIAs");
+
+                    b.Navigation("tHONGBAO_NGUOIDUNGs");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.VAITRO", b =>

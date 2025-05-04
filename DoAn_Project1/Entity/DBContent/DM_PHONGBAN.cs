@@ -31,4 +31,5 @@ public partial class DM_PHONGBAN
     public ICollection<TAIKHOAN> Taikhoans { get; set; }
     public ICollection<DM_CHUCVU> dM_CHUCVUs { get; set; }
     public ICollection<DM_MONHOC> dM_MONHOCs { get; set; }
+    public ICollection<PHONGBAN_NGUOITHAMGIA> dM_PHONGBAN_NHGIA { get; set; }
 }

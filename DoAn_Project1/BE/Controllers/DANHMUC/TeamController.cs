@@ -220,5 +220,29 @@ namespace BE.Controllers.DANHMUC
                 return Ok(new ApiResponse(false, 500, ex.Message));
             }
         }
+        [HttpPost, Route("get-all-combobox-OfMonHoc")]
+        public IActionResult GetAllForComboboxOfMonHoc(GetByIdRequest request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    throw new Exception(MODELS.COMMON.CommonFunc.GetModelStateAPI(ModelState));
+                }
+                var result = _service.GetAllForComboboxWithMonHoc(request);
+                if (result.Error)
+                {
+                    throw new Exception(result.Message);
+                }
+                else
+                {
+                    return Ok(new ApiOkResponse(result.Data));
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ApiResponse(false, 500, ex.Message));
+            }
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace Service.DANHMUC.MONHOC
 {
     public interface IMONHOCService
     {
-        BaseResponse<GetListPagingResponse> GetList(GetListPagingRequest request);
+        BaseResponse<GetListPagingResponse> GetList(PostMonHocGetListPagingRequest request);
         BaseResponse<MODELMonHoc> GetById(GetByIdRequest request);
         BaseResponse<PostMonHocRequest> GetByPost(GetByIdRequest request);
         BaseResponse<MODELMonHoc> Insert(PostMonHocRequest request);

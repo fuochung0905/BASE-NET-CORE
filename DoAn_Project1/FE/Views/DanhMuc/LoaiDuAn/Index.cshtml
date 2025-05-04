@@ -1,0 +1,204 @@
+﻿@model MODELS.HETHONG.TAIKHOAN.Dtos.MODELPhanQuyen
+
+<script>
+    function getListIdSelected() {
+        var g = $("#gridData").getKendoGrid();
+        return g.selectedKeyNames();
+    }
+
+    function gridDataFilter() {
+        filter = {
+            TextSearch: $("#TextSearch").val()
+        }
+        return filter;
+    }
+</script>
+
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">QUẢN LÝ LOẠI DỰ ÁN</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Danh mục</a></li>
+                    <li class="breadcrumb-item active">Loại Dự Án</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        @if (Model.IsXem)
+        {
+            @(Html.Kendo().Grid<MODELS.DANHMUC.LOAIDUAN.Dtos.MODELLoaiDuAn>()
+                .Name("gridData")
+                .HtmlAttributes(new { @class = "table table-hover" })
+                .Columns(columns =>
+                {
+                    columns.Select().HtmlAttributes(new { @style = "text-align:center;" }).Width(68);
+                    columns.Bound("").ClientTemplate("#= xoFunc.renderNumberGrid() #").Title("STT").Width(72).Filterable(false).Sortable(false).HtmlAttributes(new { @class = "text-center" });
+                    columns.Bound(c => c.Ma).Title("Mã loại dự án").Width(220);
+                    columns.Bound(c => c.TenGoi).Title("Tên loại dự án").Width(300);             
+                    columns.Bound(c => c.IsActived).Title("Trạng thái").ClientTemplate(
+                    "# if(IsActived) { #" + //Trạng thái đang hoạt động
+                    "<button type='button' class='btn btn-outline-success btn-sm btn-flat'>Đang hoạt động</button>" +
+                    "# } else { #" +  //Trạng thái không hoạt động (màu đỏ)
+                    "<button type='button' class='btn btn-outline-danger btn-sm btn-flat'>Không hoạt động</button>" +
+                    "# } #").Width(170).HtmlAttributes(new { @class = "text-center" });
+                })
+                .Sortable()
+                .ToolBar(toolbar =>
+                {
+                    toolbar.ClientTemplateId("GridToolbarTemplate");
+                })
+                .Resizable(x => x.Columns(true))
+                //.Filterable(TelerikGridHelper.CustomStringFilterOperator())
+                .Pageable()
+                .EnableCustomBinding(true)
+                .PersistSelection()
+                .Scrollable()
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .Model(model => model.Id(p => p.Id))
+                .Read(read => read.Action("GetList", "LoaiDuAn").Data("gridDataFilter"))
+                .PageSize(SYS_CONFIG.PAGE_SIZE_DEFAULT)
+                .Events(e => e.Error("xoFunc.onErrorGrid"))
+                )
+                .Events(e => { e.DataBinding("xoFunc.onDataBindingGrid"); })
+                .Pageable(pager => pager
+                .Refresh(true).Input(true).Numeric(false)
+                .PageSizes(SYS_CONFIG.PAGE_SIZES))
+                .NoRecords(n => n.Template("Không có dữ liệu"))
+                .Excel(excel =>
+                excel.FileName("DanhSachLoaiDuAn.xlsx")
+                .Filterable(true) // Thêm lọc trên các cột excel
+                .AllPages(true) // Xuất tất cả các trang
+                )
+                )
+        }
+
+        <!-- /.container-fluid -->
+</section>
+
+@*TOOLBAR TEMPLATE*@
+<script id="GridToolbarTemplate" type="text/x-kendo-template">
+    @{
+                    <div style="width:100%;">
+                        <div style="width:70%;">
+                @{
+                    if (Model.IsXem)
+                    {
+                                                            <a class="btn btn-info ml-1" onclick="xemThongTin()"><i class="fa fa-eye"></i> Xem </a>
+                    }
+                    if (Model.IsThem)
+                    {
+                                                            <a class="btn btn-success ml-1" onclick="themThongTin()"><i class="fas fa-layer-plus"></i>&nbsp; Thêm</a>
+                    }
+                    if (Model.IsCapNhat)
+                    {
+                                                            <a class="btn btn-primary ml-1" onclick="suaThongTin()"><i class="fas fa-wrench"></i> Cập nhật </a>
+                    }
+                    if (Model.IsXoa)
+                    {
+                                                            <a class="btn btn-danger ml-1" onclick="xoaThongTin()"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Xóa </a>
+                    }
+
+                }
+                        <a class="btn btn-success" onclick="xuatExcel()"><i class="fa fa-file-excel" aria-hidden="true"></i>&nbsp; Xuất excel </a>
+                        </div>
+                        <div style="width:30%;" class="input-group">
+                            <input id="TextSearch" type="text" class="form-control" placeholder="Tìm kiếm..." onchange="refreshGrid()">
+                            <span class="input-group-append">
+                                <button onclick="refreshGrid()" class="btn btn-default" type="button"><i class="fas fa-search"></i></button>
+                            </span>
+                        </div>
+                    </div>
+    }
+</script>
+
+<script>
+    //Xem thông tin.
+    function xemThongTin() {
+        var itemSelectedIds = getListIdSelected();
+        if(!checkMultiSelectInGrid(itemSelectedIds))
+        {
+            return;
+        }
+
+        var url = '@Url.Action("ShowViewPopup", "LoaiDuAn")' + "?id=" + itemSelectedIds[0];
+
+        showModal(url, "lg");
+    }
+
+    //Thêm thông tin.
+    function themThongTin() {
+        var url = '@Url.Action("ShowInsertPopup", "LoaiDuAn")';
+
+        showModal(url, "lg");
+    }
+
+    //Sửa thông tin.
+    function suaThongTin() {
+        var itemSelectedIds = getListIdSelected();
+        if(!checkMultiSelectInGrid(itemSelectedIds))
+        {
+            return;
+        }
+
+        var url = '@Url.Action("ShowUpdatePopup", "LoaiDuAn")' + "?id=" + itemSelectedIds[0];
+
+        showModal(url, "lg");
+    }
+
+    //xóa thông tin
+    function xoaThongTin() {
+        var itemSelectedIds = getListIdSelected();
+        if (itemSelectedIds.length == 0) {
+            showErrorNotify(noDataMessage);
+            return;
+        }
+
+        var XoaThongTin = function () {
+            showLoading(true);
+            $.ajax({
+                url: '@Url.Action("Delete", "LoaiDuAn")',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    listSelectedId: itemSelectedIds
+                },
+                success: function (data) {
+                    if (data.IsSuccess) {
+                        showSuccessNotify(deleteSuccess);
+                        refreshGrid();
+                    }
+                    else {
+                        showErrorNotify(data.Message);
+                    }
+                },
+                error: function (request, status, err) {
+                    showErrorNotify(errorMessage);
+                }
+            });
+            showLoading(false);
+        }
+        return xoFunc.confirmDialogYesNo(deleteContent, titleConfirm, XoaThongTin);
+    }
+       //Xuất excel
+    function xuatExcel() {
+        var gridExcel = $("#gridData").data("kendoGrid")
+        gridExcel.saveAsExcel();
+    }
+    // clear grid
+    function refreshGrid() {
+        var grid = $("#gridData").data("kendoGrid");
+        grid.clearSelection();
+        grid.dataSource.page(0);
+        showLoading(false);
+    }
+</script>

@@ -66,6 +66,26 @@
                     @Html.ValidationMessageFor(model => model.IsActived, "", new { @class = "text-danger" })
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Thành viên <span class="text-danger">*</span></label>
+                    @(Html.Kendo().MultiSelectFor(m => m.taiKhoanIds)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Placeholder("-- Chọn tài khoản tham gia --")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetList_Combobox", "TaiKhoan");
+                        })))
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.taiKhoanIds, "", new { @class = "text-danger" })
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-6">
                     <label>

@@ -6,14 +6,10 @@ namespace ENTITIES.DBContent;
 public partial class DUAN_QUANLYDUAN
 {
     public Guid Id { get; set; }
-
     public string? MaDuAn { get; set; }
-
     public string TenDuAn { get; set; } = null!;
-
     public Guid? GiaiDoanId { get; set; }
     public DM_GIAIDOANDUAN DM_GIAIDOANDUAN {  get; set; }
-
     public DateTime? ThoiGianBatDau { get; set; }
 
     public DateTime? ThoiGianKetThuc { get; set; }
@@ -33,15 +29,14 @@ public partial class DUAN_QUANLYDUAN
     public DateTime? NgayXoa { get; set; }
 
     public string? NguoiXoa { get; set; }
-
     public bool IsActived { get; set; }
-
     public bool IsDeleted { get; set; }
-
     public Guid? LoaiDuAn { get; set; }
     public DM_LOAIDUAN DM_LOAIDUAN { get; set; }
     public Guid MonHocId { get; set; }
     public DM_MONHOC DM_MONHOC { get; set; }
+    public Guid? TeamId { get; set; }
+    public DM_TEAM DM_TEAM { get; set; }
     public bool? IsCanhBaoHetHan { get; set; }
     public ICollection<DUAN_DANHSACHNGUOITHUCHIEN> DUAN_DANHSACHNGUOITHUCHIENs { get; set; }
     public ICollection<DUAN_QUANLYCONGVIEC> dUAN_QUANLYCONGVIECs { get; set; }

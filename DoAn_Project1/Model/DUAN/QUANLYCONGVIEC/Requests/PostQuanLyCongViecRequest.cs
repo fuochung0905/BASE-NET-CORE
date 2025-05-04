@@ -16,6 +16,7 @@ public class PostQuanLyCongViecRequest : BaseRequest
 	public Guid? CongViecGiaiDoanId { get; set; }
     public Guid? CongViecLienQuanId { get; set; }
 	//[Required(ErrorMessage = "Người thực hiện bắt buộc chọn")]
+	public int DoKhoCongViec { get; set; }
     public Guid? NguoiThucHienId { get; set; }
 	//[Required(ErrorMessage = "Người kiểm tra bắt buộc chọn")]
 	public Guid? NguoiKiemTraId { get; set; }

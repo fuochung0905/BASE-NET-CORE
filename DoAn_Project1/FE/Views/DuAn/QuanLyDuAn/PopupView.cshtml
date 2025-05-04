@@ -14,50 +14,15 @@
             <div class="row form-group">
                 <div class="col-md-6">
                     <label>
-                        Mã dự án <span class="text-danger">*</span>
+                        Mã dự án  <span class="text-danger">*</span>
                     </label>
-                    @(Html.Kendo().TextBoxFor(m => m.MaDuAn)
-                        .Enable(false)
-                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                    @(Html.Kendo().TextBoxFor(m => m.MaDuAn).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
                     @Html.ValidationMessageFor(model => model.MaDuAn, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-6">
                     <label>Tên dự án <span class="text-danger">*</span></label>
-                    @(Html.Kendo().TextBoxFor(m => m.TenDuAn)
-                        .Enable(false)
-                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                    @(Html.Kendo().TextBoxFor(m => m.TenDuAn).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
                     @Html.ValidationMessageFor(model => model.TenDuAn, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="row form-group">
-                <div class="col-md-6">
-                    <label>Chủ đầu tư</label>
-                    @(Html.Kendo().TextBoxFor(m => m.ChuDauTu)
-                        .Enable(false)
-                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
-                    @Html.ValidationMessageFor(model => model.ChuDauTu, "", new { @class = "text-danger" })
-                </div>
-                <div class="col-md-6">
-                    <label>
-                        Giai đoạn dự án
-                    </label>
-                    @(Html.Kendo().DropDownListFor(m => m.GiaiDoanId)
-                        .DataTextField("Text")
-                        .DataValueField("Value")
-                        .OptionLabel("-- Chọn giai đoạn dự án --")
-                        .DataSource(source => source
-                            .Custom()
-                            .Transport(transport => transport
-                                .Read(read =>
-                                {
-                                    read.Action("GetAllComboBox", "GiaiDoanDuAn");
-                                })
-                            )
-                        )
-                        .Enable(false)
-                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
-                    )
-                    @Html.ValidationMessageFor(model => model.GiaiDoanId, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="row form-group">
@@ -65,9 +30,11 @@
                     <label>
                         Thời gian bắt đầu
                     </label>
-                    @(Html.Kendo().DatePickerFor(m => m.ThoiGianBatDau).Format("dd/MM/yyyy")
-                        .Enable(false)
-                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
+                    @(Html.Kendo().DatePickerFor(m => m.ThoiGianBatDau).Enable(false)
+                        .Format("dd/MM/yyyy")
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;" })
+                        )
+
                 </div>
                 <div class="col-md-6">
                     <label>
@@ -75,28 +42,35 @@
                     </label>
                     @(Html.Kendo().DatePickerFor(m => m.ThoiGianKetThuc).Enable(false)
                         .Format("dd/MM/yyyy")
-                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;", data_val_ignore = "true" })
+                        .HtmlAttributes(new
+                        {
+                            @class = "form-control",
+                            @style = "width:100%;",
+                            data_val_ignore = "true",
+                            placeholder = "Chưa chọn ngày"
+                        })
                         )
-
-
-                   
                 </div>
+
+
             </div>
             <div class="row form-group">
-                <div class="col-md-4">
-                    <label>Chi phí hồ sơ</label>
-                    @(Html.Kendo().NumericTextBoxFor(m => m.ChiPhiHoSo).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%; " }))
-                    @Html.ValidationMessageFor(model => model.ChiPhiHoSo, "", new { @class = "text-danger" })
-                </div>
-                <div class="col-md-4">
-                    <label>Chi phí triển khai</label>
-                    @(Html.Kendo().NumericTextBoxFor(m => m.ChiPhiTrienKhai).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%; " }))
-                    @Html.ValidationMessageFor(model => model.ChiPhiTrienKhai, "", new { @class = "text-danger" })
-                </div>
-                <div class="col-md-4">
-                    <label>Chi phí code</label>
-                    @(Html.Kendo().NumericTextBoxFor(m => m.ChiPhiCode).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%; " }))
-                    @Html.ValidationMessageFor(model => model.ChiPhiCode, "", new { @class = "text-danger" })
+                <div class="col-md-12">
+                    <label>Giai đoạn dự án <span class="text-danger">*</span></label>
+                    @(Html.Kendo().DropDownListFor(m => m.GiaiDoanId).Enable(false)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .OptionLabel("-- Chọn giai đoạn dự án --")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetList_Combobox", "MonHoc");
+                        })))
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.GiaiDoanId, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="row form-group">
@@ -104,11 +78,10 @@
                     <label>
                         Loại dự án
                     </label>
-                    @(Html.Kendo().DropDownListFor(m => m.LoaiDuAn)
+                    @(Html.Kendo().DropDownListFor(m => m.LoaiDuAn).Enable(false)
                         .DataTextField("Text")
                         .DataValueField("Value")
                         .BindTo(SYS_CONFIG.LOAIDUAN)
-                        .Enable(false)
                         .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
                     @Html.ValidationMessageFor(model => model.LoaiDuAn, "", new { @class = "text-danger" })
                 </div>
@@ -116,28 +89,28 @@
                     <label>
                         Trạng thái
                     </label>
-                    @(Html.Kendo().DropDownListFor(m => m.IsActived)
+                    @(Html.Kendo().DropDownListFor(m => m.IsActived).Enable(false)
                         .DataTextField("Text")
                         .DataValueField("Value")
                         .BindTo(SYS_CONFIG.TRANG_THAI)
-                        .Enable(false)
                         .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
                     @Html.ValidationMessageFor(model => model.IsActived, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-6">
                     <label for="CanhBaoHetHan">Cảnh báo hết hạn</label>
-                    @(Html.CheckBoxFor(m => m.IsCanhBaoHetHan, new { @class = "form-check-input", style = "margin-left:8px;height:1em;width:1em;", disabled = "disabled" }))
+                    @(Html.CheckBoxFor(m => m.IsCanhBaoHetHan, new { @class = "form-check-input", style = "margin-left:8px;height:1em;width:1em;" }))
+
+                </div>
 
 
-
-
-                </div>>
             </div>
+
             <div class="row form-group">
                 <div class="col-md-12">
                     <label>Ghi chú</label>
-                    @(Html.Kendo().TextAreaFor(m => m.GhiChu).HtmlAttributes(new { @class = "form-control", @style = "width:100%; height: 250px;", disabled = "disabled" }))
+                    @(Html.Kendo().TextAreaFor(m => m.GhiChu).Enable(false).HtmlAttributes(new { @class = "form-control", @style = "width:100%; height: 250px;" }))
                     @Html.ValidationMessageFor(model => model.GhiChu, "", new { @class = "text-danger" })
+
                 </div>
             </div>
 

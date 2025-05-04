@@ -1,5 +1,7 @@
 ﻿using AutoDependencyRegistration.Attributes;
 using AutoMapper;
+using Azure;
+using ENTITIES.DBContent;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
@@ -8,6 +10,7 @@ using Model.BASE;
 using MODELS;
 using MODELS.BASE;
 using MODELS.COMMON;
+using MODELS.DANHMUC.MONHOC.Dtos;
 using MODELS.HETHONG;
 using MODELS.HETHONG.TAIKHOAN.Dtos;
 using MODELS.HETHONG.TAIKHOAN.Requests;
@@ -241,8 +244,7 @@ namespace REPONSITORY.HETHONG.TAIKHOAN
                 var regexCheck = new Regex(@"^(?=[a-zA-Z])[-\w.\w@]{2,24}([a-zA-Z\d]|(?<![-.@])_)$");
                 if (CommonFunc.RemoveSign4VietnameseString(request.UserName) != request.UserName)
                     throw new Exception("Tài khoản không chứa chữ có dấu.");
-                if (!regexCheck.IsMatch(request.UserName))
-                    throw new Exception("Tài khoản phải có độ dài từ 3 - 25. <br/>Bắt đầu phải là chữ. <br/>Chỉ bao gồm các ký tự .,_,-,@. <br/>Kết thúc không được là ký tự.");
+                
 
                 var data = _unitOfWork.GetRepository<ENTITIES.DBContent.TAIKHOAN>().GetAll(x => (x.UserName == request.UserName)
                     && x.IsDeleted == false).FirstOrDefault();
@@ -256,8 +258,6 @@ namespace REPONSITORY.HETHONG.TAIKHOAN
 
                 if (!CommonFunc.IsValidPhone(request.SoDienThoai))
                     throw new Exception("Số điện thoại không đúng định dạng");
-
-               
 
                 var add = _mapper.Map<ENTITIES.DBContent.TAIKHOAN>(request);
                 var salt = Encrypt_Decrypt.GenerateSalt();
@@ -805,6 +805,63 @@ namespace REPONSITORY.HETHONG.TAIKHOAN
            
         }
 
-      
+        public BaseResponse<List<MODELCombobox>> GetComboBoxOfMonHoc(GetByIdRequest request)
+        {
+            var response = new BaseResponse<List<MODELCombobox>>();
+            var parameters = new[]
+               {
+                    new SqlParameter("@iMonHocId", request.Id.HasValue ? request.Id : Guid.Empty),
+                };
+
+            var data = _unitOfWork.GetRepository<ENTITIES.DBContent.TAIKHOAN>().ExcuteStoredProcedure("sp_TAIKHOAN_TRONGMONHOC_GetList", parameters).ToList();
+            response.Data = data.OrderBy(x => x.UserName).Select(x => new MODELCombobox
+            {
+                Text = x.UserName + " - " + (string.IsNullOrWhiteSpace(x.HoLot) ? "" : x.HoLot + " ") + x.Ten,
+                Value = x.Id.ToString(),
+            }).OrderBy(x => x.Sort).ToList();
+
+            return response;
+        }
+        
+        public BaseResponse<List<MODELCombobox>> GetComboBoxOfPhongBan(GetByIdRequest request)
+        {
+            var response = new BaseResponse<List<MODELCombobox>>();
+            var parameters = new[]
+               {
+                    new SqlParameter("@iPhongBanId", request.Id.HasValue ? request.Id : Guid.Empty),
+                };
+
+            var data = _unitOfWork.GetRepository<ENTITIES.DBContent.TAIKHOAN>().ExcuteStoredProcedure("sp_TAIKHOAN_TRONGPHONGBAN_GetList", parameters).ToList();
+            response.Data = data.OrderBy(x => x.UserName).Select(x => new MODELCombobox
+            {
+                Text = x.UserName + " - " + (string.IsNullOrWhiteSpace(x.HoLot) ? "" : x.HoLot + " ") + x.Ten,
+                Value = x.Id.ToString(),
+            }).OrderBy(x => x.Sort).ToList();
+
+            return response;
+        }
+
+        public BaseResponse<List<MODELCombobox>> GetComboBoxOfNhomMonHoc(GetAllRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public BaseResponse<List<MODELCombobox>> GetComboBoxOfDuAn(GetByIdRequest request)
+        {
+            var response = new BaseResponse<List<MODELCombobox>>();
+            var parameters = new[]
+               {
+                    new SqlParameter("@iDuAnId", request.Id.HasValue ? request.Id : Guid.Empty),
+                };
+
+            var data = _unitOfWork.GetRepository<ENTITIES.DBContent.TAIKHOAN>().ExcuteStoredProcedure("sp_TAIKHOAN_TRONGDUAN_GetList", parameters).ToList();
+            response.Data = data.OrderBy(x => x.UserName).Select(x => new MODELCombobox
+            {
+                Text = x.UserName + " - " + (string.IsNullOrWhiteSpace(x.HoLot) ? "" : x.HoLot + " ") + x.Ten,
+                Value = x.Id.ToString(),
+            }).OrderBy(x => x.Sort).ToList();
+
+            return response;
+        }
     }
 }

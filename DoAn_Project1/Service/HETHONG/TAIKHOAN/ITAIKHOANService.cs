@@ -27,5 +27,10 @@ namespace REPONSITORY.HETHONG.TAIKHOAN
         BaseResponse<GetListPagingResponse> GetListNhatKyThaoTac(GetListNhatKyRequest request);
         BaseResponse<List<MODELCombobox>> GetAllForCombobox(GetAllRequest request);
         BaseResponse<List<MODELCombobox>> GetComboBoxNguoiQuanLy(GetAllRequest request);
+        BaseResponse<List<MODELCombobox>> GetComboBoxOfMonHoc(GetByIdRequest request);
+        BaseResponse<List<MODELCombobox>> GetComboBoxOfPhongBan(GetByIdRequest request);
+        BaseResponse<List<MODELCombobox>> GetComboBoxOfNhomMonHoc(GetAllRequest request);
+        BaseResponse<List<MODELCombobox>> GetComboBoxOfDuAn(GetByIdRequest request);
+
     }
 }

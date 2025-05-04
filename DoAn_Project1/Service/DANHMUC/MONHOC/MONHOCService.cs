@@ -1,5 +1,6 @@
 ﻿using AutoDependencyRegistration.Attributes;
 using AutoMapper;
+using ENTITIES.DBContent;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Model.BASE;
@@ -9,6 +10,7 @@ using MODELS.DANHMUC.Dtos;
 using MODELS.DANHMUC.MONHOC.Dtos;
 using MODELS.DANHMUC.MONHOC.Requests;
 using MODELS.DANHMUC.Requests;
+using MODELS.HETHONG.HETHONGTHONGBAO.Dtos;
 using Repository;
 using System;
 using System.Collections.Generic;
@@ -37,7 +39,7 @@ namespace Service.DANHMUC.MONHOC
         }
 
         //GET LIST
-        public BaseResponse<GetListPagingResponse> GetList(GetListPagingRequest request)
+        public BaseResponse<GetListPagingResponse> GetList(PostMonHocGetListPagingRequest request)
         {
             var response = new BaseResponse<GetListPagingResponse>();
             try
@@ -51,6 +53,8 @@ namespace Service.DANHMUC.MONHOC
 
                 var parameters = new[]
                 {
+                    new SqlParameter("@iNienKhoaId", request.NienKhoaId.HasValue ? request.NienKhoaId : Guid.Empty),
+                    new SqlParameter("@iPhongBanId", request.NienKhoaId.HasValue ? request.NienKhoaId : Guid.Empty),
                     new SqlParameter("@iTextSearch", request.TextSearch),
                     new SqlParameter("@iPageIndex", request.PageIndex),
                     new SqlParameter("@iRowsPerPage", request.RowPerPage),
@@ -116,6 +120,8 @@ namespace Service.DANHMUC.MONHOC
                 else
                 {
                     result = _mapper.Map<PostMonHocRequest>(data);
+                    var tkIds = _unitOfWork.GetRepository<MONHOC_NGUOITHAMGIA>().GetAll(x => x.MonHocId == request.Id).Select(x => x.TaiKhoanId).ToList();
+                    result.taiKhoanIds = tkIds;
                     result.IsEdit = true;
                 }
                 response.Data = result;
@@ -142,6 +148,34 @@ namespace Service.DANHMUC.MONHOC
                 add.NgaySua = DateTime.Now;
                 _unitOfWork.GetRepository<ENTITIES.DBContent.DM_MONHOC>().add(add);
                 _unitOfWork.Commit();
+                if (request.taiKhoanIds.Count > 0)
+                {
+                    List<MONHOC_NGUOITHAMGIA> tk_mk = new List<MONHOC_NGUOITHAMGIA>();
+                    foreach (var id in request.taiKhoanIds)
+                    {
+                        var item = new MONHOC_NGUOITHAMGIA
+                        {
+                            Id = Guid.NewGuid(),
+                            MonHocId = add.Id,
+                            TaiKhoanId = id,
+                        };
+                        tk_mk.Add(item);
+                    }
+                    _unitOfWork.GetRepository<MONHOC_NGUOITHAMGIA>().addRange(tk_mk);
+                    _unitOfWork.Commit();
+                    //response.Data = _mapper.Map<MODELThongBao>(add);
+                    //response.Data.UserId = new List<string>();
+                    //foreach (var item in utb)
+                    //{
+                    //    var userName = _unitOfWork.GetRepository<ENTITIES.DBContent.TAIKHOAN>().Find(x => x.Id == item.TaiKhoanId);
+                    //    if (userName != null)
+                    //    {
+                    //        response.Data.UserId.Add(userName.UserName);
+                    //    }
+                    //}
+
+                }
+               
 
                 response.Data = _mapper.Map<MODELMonHoc>(add);
             }
@@ -170,7 +204,28 @@ namespace Service.DANHMUC.MONHOC
                     _unitOfWork.GetRepository<ENTITIES.DBContent.DM_MONHOC>().update(update);
                     _unitOfWork.Commit();
 
-                    response.Data = _mapper.Map<MODELMonHoc>(update);
+                    var listTaiKhoanCurrent = _unitOfWork.GetRepository<MONHOC_NGUOITHAMGIA>().GetAll(x => x.MonHocId == request.Id).ToList();
+                    var currentUserIds = listTaiKhoanCurrent.Select(x => x.TaiKhoanId).ToHashSet();
+                    var newUserIds = request.taiKhoanIds.ToHashSet();
+                    var toAdd = newUserIds.Except(currentUserIds);
+                    foreach(var id in toAdd)
+                    {
+                        var newEnti = new MONHOC_NGUOITHAMGIA
+                        {
+                            Id = Guid.NewGuid(),
+                            TaiKhoanId = id,
+                            MonHocId = request.Id
+                        };
+                        _unitOfWork.GetRepository<MONHOC_NGUOITHAMGIA>().add(newEnti);
+                    }
+
+                    var toRemove = listTaiKhoanCurrent.Where(x => !newUserIds.Contains(x.TaiKhoanId)).ToList();
+                    foreach(var entry in toRemove)
+                    {
+                        _unitOfWork.GetRepository<MONHOC_NGUOITHAMGIA>().delete(entry);
+                    }
+                    _unitOfWork.Commit();
+                    response.Data = _mapper.Map<MODELMonHoc>(update);                   
                 }
                 else
                 {

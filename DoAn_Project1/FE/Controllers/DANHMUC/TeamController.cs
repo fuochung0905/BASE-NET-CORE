@@ -205,5 +205,13 @@ namespace FE.Controllers.DANHMUC
             var result = JsonConvert.DeserializeObject<List<MODELCombobox>>(response.Data.ToString());
             return Json(result);
         }
+        public ActionResult GetList_ComboboxOfMonHoc(Guid? MonHocId)
+        {
+            var request = new GetByIdRequest();
+            request.Id = MonHocId;  
+            ResponseData response = this.PostAPI(URL_API.TEAM_GETALLCOMBOBOXOFMONHOC, request);
+            var result = JsonConvert.DeserializeObject<List<MODELCombobox>>(response.Data.ToString());
+            return Json(result);
+        }
     }
 }

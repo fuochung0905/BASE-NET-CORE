@@ -22,22 +22,20 @@
             @Html.HiddenFor(model => model.Id)
             <div class="row">
                 <div class="col-md-6">
-                    <label>Mã môn học <span class="text-danger">(*)</span></label>
+                    <label>Mã niên khóa <span class="text-danger">(*)</span></label>
                     @(Html.Kendo().TextAreaFor(model => model.Ma).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
                     @Html.ValidationMessageFor(model => model.Ma, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-6">
-                    <label>Tên môn học <span class="text-danger">(*)</span></label>
+                    <label>Tên niên khóa <span class="text-danger">(*)</span></label>
                     @(Html.Kendo().TextAreaFor(model => model.TenGoi).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
                     @Html.ValidationMessageFor(model => model.TenGoi, "", new { @class = "text-danger" })
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
+            <div class="row">    
                     <label>Hiện tại <span class="text-danger">*</span></label>
-                    @(Html.Kendo().RadioButtonFor(model => model.IsHienTai).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
-                    @Html.ValidationMessageFor(model => model.IsHienTai, "", new { @class = "text-danger" })
-                </div>
+                    @(Html.Kendo().CheckBoxFor(model => model.IsHienTai).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.IsHienTai, "", new { @class = "text-danger" })              
             </div>
             <div class="row">
                 <div class="col-md-12">

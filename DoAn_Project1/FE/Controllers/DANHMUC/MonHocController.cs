@@ -20,7 +20,7 @@ namespace FE.Controllers.DANHMUC
             return View("~/Views/DanhMuc/MonHoc/Index.cshtml", GetPhanQuyen());
         }
 
-        public IActionResult GetList([DataSourceRequest] DataSourceRequest request, GetListPagingRequest param)
+        public IActionResult GetList([DataSourceRequest] DataSourceRequest request, PostMonHocGetListPagingRequest param)
         {
             try
             {

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AutoDependencyRegistration.Attributes;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Model.BASE;
@@ -10,6 +11,7 @@ using Repository;
 
 namespace Service.DANHMUC.NIENKHOA
 {
+    [RegisterClassAsTransient]
     public class NIENKHOAService : INIENKHOAService
     {
         private IUnitOfWork _unitOfWork;

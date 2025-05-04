@@ -18,6 +18,7 @@ public partial class DUAN_QUANLYCONGVIEC
     public Guid? CongViecGiaiDoanId { get; set; }
     
     public Guid? CongViecLienQuanId { get; set; }
+    public int DoKhoCongViec { get; set; }
 
     public string? GhiChu { get; set; }
 

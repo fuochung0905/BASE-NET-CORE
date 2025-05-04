@@ -9,7 +9,7 @@ namespace ENTITIES.DBContent
     public partial class TEAM_NGUOITHAMGIA
     {
         public Guid? Id { get; set; }
-        public Guid? TaiKhoanId { get; set; }
+        public Guid TaiKhoanId { get; set; }
         public TAIKHOAN TAIKHOAN { get; set; }
         public Guid? TeamId { get; set; }
         public DM_TEAM DM_TEAM { get; set; }

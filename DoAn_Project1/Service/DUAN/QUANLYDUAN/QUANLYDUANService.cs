@@ -150,10 +150,7 @@ public class QUANLYDUANService : IQUANLYDUANService
                 add.IsCanhBaoHetHan = false;
             }    
             _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYDUAN>().add(add);
-         
-            
-
-
+        
             _unitOfWork.Commit();
             response.Data = _mapper.Map<MODELQuanLyDuAn>(add);
         }

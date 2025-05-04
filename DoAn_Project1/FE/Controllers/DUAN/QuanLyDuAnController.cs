@@ -87,8 +87,8 @@ namespace FE.Controllers.DUAN
             if (response.Status)
             {
                 var dataResult = JsonConvert.DeserializeObject<GetListPagingResponse>(response.Data.ToString());
-                result = JsonConvert.DeserializeObject<List<MODELQuanLyDuAn>>(dataResult.Data.ToString());
-                return Json(dataResult.TotalRow);
+                //result = JsonConvert.DeserializeObject<List<MODELQuanLyDuAn>>(dataResult.Data.ToString());
+                return Json(0);
             }
 
             return Json(0);

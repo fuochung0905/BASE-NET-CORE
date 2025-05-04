@@ -297,6 +297,31 @@ namespace FE.Controllers.HETHONG
             return Json(result);
         }
 
+        public ActionResult GetComboBoxOfMonHoc(Guid? MonHocId)
+        {
+            var request = new GetByIdRequest();
+            request.Id = MonHocId;
+            var response = this.PostAPI(URL_API.TAIKHOAN_GETCOMBOBOXOFMONHOC, request);
+            var result = JsonConvert.DeserializeObject<List<MODELCombobox>>(response.Data.ToString());
+            return Json(result);
+        }
+        public ActionResult GetComboBoxOfPhongBan(Guid? PhongBanId)
+        {
+            var request = new GetByIdRequest();
+            request.Id = PhongBanId;
+            var response = this.PostAPI(URL_API.TAIKHOAN_GETCOMBOBOXOFPHONGBAN, request);
+            var result = JsonConvert.DeserializeObject<List<MODELCombobox>>(response.Data.ToString());
+            return Json(result);
+        }
+        public ActionResult GetComboBoxOfDuAn(Guid? DuAnId)
+        {
+            var request = new GetByIdRequest();
+            request.Id = DuAnId;
+            var response = this.PostAPI(URL_API.TAIKHOAN_GETCOMBOBOXOFDUAN, request);
+            var result = JsonConvert.DeserializeObject<List<MODELCombobox>>(response.Data.ToString());
+            return Json(result);
+        }
+
         public ActionResult GetById(Guid id)
         {
             try

@@ -1,5 +1,21 @@
 ﻿@model MODELS.DANHMUC.TEAM.Requests.PostTeamRequest
 
+<script>
+    function taiKhoanTrongMonHoc() 
+    {
+       var monHocId = $("#MonHocId").val();
+        console.log("Selected MonHocId:", monHocId);
+        return { MonHocId: monHocId };
+    }
+    $("#MonHocId").change(function () {
+        console.log("#MonHocId");
+        var multiselect = $("#taiKhoanIds").data("kendoMultiSelect");
+        multiselect.dataSource.read();  
+        multiselect.value([]); 
+        
+    });
+</script>
+
 <div class="modal-content" id="modalLoading">
     @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmTeam", @class = "forms-sample" }))
     {
@@ -51,6 +67,25 @@
                         })))
                         .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
                     @Html.ValidationMessageFor(model => model.MonHocId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Thành viên <span class="text-danger">*</span></label>
+                    @(Html.Kendo().MultiSelectFor(m => m.taiKhoanIds)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Filter(FilterType.Contains)
+                        .Placeholder("-- Chọn tài khoản tham gia --")
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read => { read.Action("GetComboBoxOfMonHoc", "TaiKhoan").Data("taiKhoanTrongMonHoc"); })
+                        )
+                        .ServerFiltering(true)
+                        )
+                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.taiKhoanIds, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="row">

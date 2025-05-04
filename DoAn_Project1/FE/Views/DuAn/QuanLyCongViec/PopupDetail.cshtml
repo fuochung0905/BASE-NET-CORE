@@ -1,6 +1,21 @@
 @model MODELS.DUAN.QUANLYCONGVIEC.Requests.PostQuanLyCongViecRequest
 
 <script>
+    function taiKhoanTrongDuAn()
+    {
+        var duAnId = $("#DuAnId").data("kendoDropDownList").value();
+        return { DuAnId: duAnId };
+    }
+    $(document).ready(function () {
+        $("#DuAnId").data("kendoDropDownList").bind("change", function () {
+            var teamDropdown = $("#AssignTo").data("kendoDropDownList");
+            if (teamDropdown) {
+                teamDropdown.dataSource.read();
+                teamDropdown.value(""); 
+            }
+        });
+    });
+
     $(document).ready(function () {
         //process reader dialogLoi
         var dialogLoiReader = $("#popupLoiWindowModal");
@@ -414,73 +429,25 @@
             )
                 @Html.ValidationMessageFor(model => model.DuAnId, "", new { @class = "text-danger" })
             </div>
-            <div class="col-md-6">
-                <label>
-                    Giai đoạn dự án
-                </label>
-                @(Html.Kendo().DropDownListFor(m => m.GiaiDoanId)
-                .DataTextField("Text")
-                .DataValueField("Value")
-                //.Filter(FilterType.Contains)
-                .OptionLabel("-- Chọn giai đoạn dự án --")
-                .DataSource(source => source
-                    .Custom()
-                    .Transport(transport => transport
-                        .Read(read =>
-                        {
-                            read.Action("GetAllComboBox", "GiaiDoanDuAn");
-                        })
-                    )
-                )
-                .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
-            //.Events(e => e.Change("refreshCongViecGiaiDoan"))
-            )
-                @Html.ValidationMessageFor(model => model.GiaiDoanId, "", new { @class = "text-danger" })
-            </div>
-
-        </div>
-        <div class="row form-group">
-            <div class="col-md-6">
-                <label>
-                    Công việc trong giai đoạn
-                </label>
-                @(Html.Kendo().DropDownListFor(m => m.CongViecGiaiDoanId)
-                .DataTextField("Text")
-                .DataValueField("Value")
-                .Filter(FilterType.Contains)
-                .OptionLabel("-- Chọn công việc trong giai đoạn --")
-                .DataSource(source => source
-                    .Custom()
-                    .Transport(transport => transport
-                        .Read(read => { read.Action("GetAllComboBoxByGiaiDoan", "CongViecTrongGiaiDoan").Data("congViecGiaiDoanData");})
-                    )
-                    .ServerFiltering(true)
-                )
-                .CascadeFrom("GiaiDoanId")
-                .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
-                @Html.ValidationMessageFor(model => model.CongViecGiaiDoanId, "", new { @class = "text-danger" })
-            </div>
-            <div class="col-md-6">
-                <label>
-                    Assign To
-                </label>
-                @(Html.Kendo().DropDownListFor(m => m.AssignTo)
+                <div class="col-md-6">
+                    <label>
+                        Assign To
+                    </label>
+                    @(Html.Kendo().DropDownListFor(m => m.AssignTo)
                         .DataTextField("Text")
                         .DataValueField("Value")
-                        .Filter(FilterType.Contains)
                         .OptionLabel("-- Chọn Assign To --")
+                        .Filter(FilterType.Contains)
                         .DataSource(source => source
                         .Custom()
                         .Transport(transport => transport
-                        .Read(read =>
-                        {
-                            read.Action("GetComboBoxNguoiQuanLy", "TaiKhoan");
-                        })
+                        .Read(read => { read.Action("GetComboBoxOfDuAn", "TaiKhoan").Data("taiKhoanTrongDuAn"); })
                         )
+                        .ServerFiltering(true)
                         )
                         .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
-                @Html.ValidationMessageFor(model => model.AssignTo, "", new { @class = "text-danger" })
-            </div>
+                    @Html.ValidationMessageFor(model => model.AssignTo, "", new { @class = "text-danger" })
+                </div>
 
         </div>
         <div class="row form-group">
@@ -500,47 +467,19 @@
                         .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
                 @Html.ValidationMessageFor(model => model.TrangThaiId, "", new { @class = "text-danger" })
             </div>
-            <div class="col-md-6">
-                <label>Người thực hiện </label>
-                @(Html.Kendo().DropDownListFor(m => m.NguoiThucHienId)
-                .DataTextField("Text")
-                .DataValueField("Value")
-                .Filter(FilterType.Contains)
-                .OptionLabel("-- Chọn người thực hiện --")
-                .DataSource(source => source
-                    .Custom()
-                    .Transport(transport => transport
-                        .Read(read =>
-                        {
-                            read.Action("GetComboBoxNguoiQuanLy", "TaiKhoan");
-                        })
-                    )
-                )
-                .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
-                @Html.ValidationMessageFor(model => model.NguoiThucHienId, "", new { @class = "text-danger" })
-            </div>
+                <div class="col-md-6">
+                    <label>
+                       Độ khó công việc
+                    </label>
+                    @(Html.Kendo().DropDownListFor(m => m.DoKhoCongViec)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .BindTo(SYS_CONFIG.DOKHO_CONGVIEC)
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.DoKhoCongViec, "", new { @class = "text-danger" })
+                </div>
         </div>
-        <div class="row form-group">
-            <div class="col-md-6">
-                <label>Người kiểm tra</label>
-                @(Html.Kendo().DropDownListFor(m => m.NguoiKiemTraId)
-                    .DataTextField("Text")
-                    .DataValueField("Value")
-                    .Filter(FilterType.Contains)
-                    .OptionLabel("-- Chọn người kiểm tra --")
-                    .DataSource(source => source
-                    .Custom()
-                    .Transport(transport => transport
-                    .Read(read =>
-                    {
-                        read.Action("GetComboBoxNguoiQuanLy", "TaiKhoan");
-                    })
-                    )
-                    )
-                    .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
-                @Html.ValidationMessageFor(model => model.NguoiKiemTraId, "", new { @class = "text-danger" })
-            </div>
-        </div>
+ 
         <div class="row form-group">
             <div class="col-md-12">
                 <label>
@@ -635,13 +574,7 @@
                         .Events(e => e.Change("calculateTongThoiGianThucHien"))
                     )
                 </div>
-                <div class="col-md-6">
-                    <label>
-                        Tiến độ (%)
-                    </label>
-                    @(Html.Kendo().NumericTextBoxFor(m => m.TienDo).Min(0).Max(100)
-                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
-                </div>
+  
             </div>
             <div class="row form-group">
                 <div class="col-md-6">

@@ -1,20 +1,17 @@
-﻿using System.Text.Json;
-using AutoDependencyRegistration.Attributes;
+﻿using AutoDependencyRegistration.Attributes;
 using AutoMapper;
 using ENTITIES.DBContent;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
+using Model.BASE;
 using MODELS;
 using MODELS.BASE;
+using MODELS.DUAN.QUANLICONGVIEC_CHITIET.Requests;
 using MODELS.DUAN.QUANLYCONGVIEC.Dtos;
 using MODELS.DUAN.QUANLYCONGVIEC.Requests;
-using MODELS.DUAN.QUANLICONGVIEC_CHITIET.Requests;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Linq;
 using Repository;
-using Model.BASE;
-using Microsoft.IdentityModel.Tokens;
+using System.Text.Json;
 
 
 namespace REPONSITORY.DUAN.QUANLYCONGVIEC;
@@ -45,7 +42,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
         var response = new BaseResponse<GetListPagingResponse>();
         try
         {
-            SqlParameter iTotalRow = new()  
+            SqlParameter iTotalRow = new()
             {
                 ParameterName = "@oTotalRow",
                 SqlDbType = System.Data.SqlDbType.BigInt,
@@ -80,7 +77,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
             var result = _unitOfWork.GetRepository<MODELQuanLyCongViec>()
                 .ExcuteStoredProcedure("sp_DUAN_QUANLYCONGVIEC_GetListPaging", parameters)
                 .ToList();
-    
+
             var responseData = new GetListPagingResponse
             {
                 PageIndex = request.PageIndex,
@@ -90,7 +87,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
             response.Data = responseData;
 
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             response.Error = true;
             response.Message = ex.Message;
@@ -109,7 +106,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
             var result = new MODELQuanLyCongViec();
             var data = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>()
                 .Find(x => x.Id == request.Id && !x.IsDeleted);
-            if(data is null)
+            if (data is null)
             {
                 throw new Exception("Không tìm thấy thông tin");
             }
@@ -121,7 +118,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
             }
             response.Data = result;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             response.Error = true;
             response.Message = ex.Message;
@@ -152,73 +149,25 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                 result.IsEdit = true;
                 result.TienDo *= 100;
                 result.ListTepDinhKem = GetListTepDinhKem(result.Id);
-                //result.ListSubTask = GetListSubTask(data.Id);
                 result.listCongViecChiTiet = GetListCongViecChiTiet(data.Id);
-                //result.listCongViecLoi = GetListChiTietCongViecLoi(data.Id);
-                //if (result.ListSubTask?.Any() == true)
-                //{
-                  if (result.listCongViecChiTiet?.Any() == true)
-                    {
-                        //var assignToIds = result.ListSubTask
-                        //.Where(x => x.AssignToId.HasValue)
-                        //.Select(x => x.AssignToId.Value)
-                        //.Distinct()
-                        //.ToList();
+                if (result.listCongViecChiTiet?.Any() == true)
+                {
 
-                    //var trangThaiIds = result.ListSubTask
-                    //    .Where(x => x.TrangThaiId.HasValue)
-                    //    .Select(x => x.TrangThaiId.Value)
-                    //    .Distinct()
-                    //    .ToList();
                     var trangThaiIds = result.listCongViecChiTiet
                       .Where(x => x.TrangThaiId.HasValue)
                       .Select(x => x.TrangThaiId.Value)
                       .Distinct()
                       .ToList();
-                    //var assignToUsers = _unitOfWork
-                    //    .GetRepository<ENTITIES.DBContent.TAIKHOAN>()
-                    //    .GetAll(x => assignToIds.Contains(x.Id))
-                    //    .ToDictionary(x => x.Id, x => x.UserName);
+
 
                     var trangThaiCongViec = _unitOfWork
                         .GetRepository<ENTITIES.DBContent.SYS_TRANGTHAICONGVIEC>()
                         .GetAll(x => trangThaiIds.Contains(x.Id))
                         .ToDictionary(x => x.Id, x => x.TenGoi);
-                    //foreach (var item in result.ListSubTask)
-                    //{
-                    //    if (item.AssignToId.HasValue && assignToUsers.TryGetValue(item.AssignToId.Value, out var userName))
-                    //    {
-                    //        item.ClientAssignTo.Text = userName;
-                    //        item.ClientAssignTo.Value = item.AssignToId.ToString();
-                    //    }
-                    //    else
-                    //    {
-                    //        item.ClientAssignTo.Text = null;
-                    //        item.ClientAssignTo.Value = null;
-                    //    }
-                    //    if (item.TrangThaiId.HasValue && trangThaiCongViec.TryGetValue(item.TrangThaiId.Value, out var trangThai))
-                    //    {
-                    //        item.ClientTrangThaiCongViec.Text = trangThai;
-                    //        item.ClientTrangThaiCongViec.Value = item.TrangThaiId.ToString();
-                    //    }
-                    //    else
-                    //    {
-                    //        item.ClientTrangThaiCongViec.Text = null;
-                    //        item.ClientTrangThaiCongViec.Value = null;
-                    //    }
-                    //}
+                   
                     foreach (var item in result.listCongViecChiTiet)
                     {
-                        //if (item.AssignToId.HasValue && assignToUsers.TryGetValue(item.AssignToId.Value, out var userName))
-                        //{
-                        //    item.ClientAssignTo.Text = userName;
-                        //    item.ClientAssignTo.Value = item.AssignToId.ToString();
-                        //}
-                        //else
-                        //{
-                        //    item.ClientAssignTo.Text = null;
-                        //    item.ClientAssignTo.Value = null;
-                        //}
+    
                         if (item.TrangThaiId.HasValue && trangThaiCongViec.TryGetValue(item.TrangThaiId.Value, out var trangThai))
                         {
                             item.ClientTrangThaiCongViec.Text = trangThai;
@@ -243,35 +192,32 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
 
         return response;
     }
-
-
     //INSERT
     public BaseResponse<MODELQuanLyCongViec> Insert(PostQuanLyCongViecRequest request)
-	{
-		var response = new BaseResponse<MODELQuanLyCongViec>();
-		try
-		{
-			var isExist = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>()
-				.Find(x => x.TenCongViec == request.TenCongViec && x.DuAnId == request.DuAnId);
-			if(isExist is not null)
-			{
-				throw new Exception("Dữ liệu đã tồn tại");
-			}
-			var add = _mapper.Map<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>(request);
-            add.TienDo /= 100;
-         
+    {
+        var response = new BaseResponse<MODELQuanLyCongViec>();
+        try
+        {
+            var isExist = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>()
+                .Find(x => x.TenCongViec == request.TenCongViec && x.DuAnId == request.DuAnId);
+            if (isExist is not null)
+            {
+                throw new Exception("Dữ liệu đã tồn tại");
+            }
+            var add = _mapper.Map<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>(request);
+
             if (add.NguoiThucHienId is not null && add.NguoiThucHienId != Guid.Empty && add.AssignTo is null)
             {
                 add.TrangThaiId = add.TrangThaiId == 1 ? 2 : add.TrangThaiId;
                 add.AssignTo = request.NguoiThucHienId;
             }
-            if (add.AssignTo != null && add.NguoiThucHienId == null )
+            if (add.AssignTo != null && add.NguoiThucHienId == null)
             {
                 add.TrangThaiId = add.TrangThaiId == 1 ? 2 : add.TrangThaiId;
                 if (add.TrangThaiId == 1)
                 {
                     add.TrangThaiId = 2;
-                }             
+                }
                 add.NguoiThucHienId = add.AssignTo;
             }
             if (add.AssignTo != null)
@@ -279,13 +225,13 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                 add.TrangThaiId = 2;
             }
             add.NguoiTao = _contextAccessor.HttpContext.User.Identity.Name;
-			add.NgayTao = DateTime.Now;
-			add.NguoiSua = _contextAccessor.HttpContext.User.Identity.Name;
-			add.NgaySua = DateTime.Now;
-			_unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>().add(add);
+            add.NgayTao = DateTime.Now;
+            add.NguoiSua = _contextAccessor.HttpContext.User.Identity.Name;
+            add.NgaySua = DateTime.Now;
+            _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>().add(add);
 
             #region Thêm tài liệu đính kèm
-            if(request.IsTepDinhKem == true)
+            if (request.IsTepDinhKem == true)
             {
                 var dinhKemIds = JsonSerializer.Deserialize<List<Guid>>(request.TepDinhKemIDs);
 
@@ -305,7 +251,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                     _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_TEPDINHKEM>().add(tepDinhKem);
                 }
             }
-            
+
             #endregion
             var thongBao = new ENTITIES.DBContent.HETHONG_THONGBAO();
             thongBao.Id = Guid.NewGuid();
@@ -327,34 +273,11 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                 _unitOfWork.GetRepository<THONGBAO_NGUOIDUNG>().add(thongBao_NguoiDung);
                 listAssignName.Add(assignTo.UserName);
             }
-            if(request.NguoiThucHienId != null && request.AssignTo != request.NguoiThucHienId)
-            {
-                var nguoiThucHien = _unitOfWork.GetRepository<TAIKHOAN>().Find(x => x.Id == add.NguoiThucHienId);
-                var thongBao_NguoiDung = new ENTITIES.DBContent.THONGBAO_NGUOIDUNG();
-                thongBao_NguoiDung.Id = Guid.NewGuid();
-                thongBao_NguoiDung.TaiKhoanId = nguoiThucHien.Id;
-                thongBao_NguoiDung.ThongBaoId = thongBao.Id;
-                thongBao_NguoiDung.Delivered_At = DateTime.Now;
-                _unitOfWork.GetRepository<THONGBAO_NGUOIDUNG>().add(thongBao_NguoiDung);
-                listAssignName.Add(nguoiThucHien.UserName);
-            }
-            if (request.NguoiKiemTraId != null && request.NguoiKiemTraId != request.AssignTo)
-            {
-                var nguoiKiemThu = _unitOfWork.GetRepository<TAIKHOAN>().Find(x => x.Id == request.NguoiKiemTraId);
-                var thongBao_NguoiDung = new ENTITIES.DBContent.THONGBAO_NGUOIDUNG();
-                thongBao_NguoiDung.Id = Guid.NewGuid();
-                thongBao_NguoiDung.TaiKhoanId = nguoiKiemThu.Id;
-                thongBao_NguoiDung.ThongBaoId = thongBao.Id;
-                thongBao_NguoiDung.Delivered_At = DateTime.Now;
-                thongBao_NguoiDung.Is_Read = false;
-                _unitOfWork.GetRepository<THONGBAO_NGUOIDUNG>().add(thongBao_NguoiDung);
-                listAssignName.Add(nguoiKiemThu.UserName);
-            }
             _unitOfWork.Commit();
             response.Data = _mapper.Map<MODELQuanLyCongViec>(add);
             response.Data.listAssignName = listAssignName;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             response.Error = true;
             response.Message = ex.Message;
@@ -362,22 +285,22 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
         return response;
     }
 
-	//UPDATE
-	public BaseResponse<MODELQuanLyCongViec> Update(PostQuanLyCongViecRequest request)
-	{
-		var response = new BaseResponse<MODELQuanLyCongViec>();
-		try
-		{
-			var isExist = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>()
-				.Find(x => x.TenCongViec.Trim() == request.TenCongViec.Trim() && x.DuAnId == request.DuAnId && x.Id != request.Id & !x.IsDeleted);
-			if(isExist is not null)
-			{
-				throw new Exception("Dữ liệu đã tồn tại");
-			}
-			var update = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>().Find(x => x.Id == request.Id);
+    //UPDATE
+    public BaseResponse<MODELQuanLyCongViec> Update(PostQuanLyCongViecRequest request)
+    {
+        var response = new BaseResponse<MODELQuanLyCongViec>();
+        try
+        {
+            var isExist = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>()
+                .Find(x => x.TenCongViec.Trim() == request.TenCongViec.Trim() && x.DuAnId == request.DuAnId && x.Id != request.Id & !x.IsDeleted);
+            if (isExist is not null)
+            {
+                throw new Exception("Dữ liệu đã tồn tại");
+            }
+            var update = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>().Find(x => x.Id == request.Id);
 
-            if(update is not null)
-            {              
+            if (update is not null)
+            {
                 var nguoiThucHien = update.NguoiThucHienId;
                 var nguoiKiemTra = update.NguoiKiemTraId;
                 var assign = update.AssignTo;
@@ -395,15 +318,15 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                     new SqlParameter("@iUserName", userName),
                     checkUpdate
                 };
-                 _unitOfWork.GetRepository<object>().ExcuteStoredProcedure("sp_CHECKUPDATETRANGTHAIDUYET", parameters);
-                 bool checkKq = bool.Parse(checkUpdate.Value.ToString());
-                 if (checkKq == false)
-                 {
-                     throw new Exception("Không thể cập nhật trạng thái công việc");
-                 }
-				_mapper.Map(request, update);
+                _unitOfWork.GetRepository<object>().ExcuteStoredProcedure("sp_CHECKUPDATETRANGTHAIDUYET", parameters);
+                bool checkKq = bool.Parse(checkUpdate.Value.ToString());
+                if (checkKq == false)
+                {
+                    throw new Exception("Không thể cập nhật trạng thái công việc");
+                }
+                _mapper.Map(request, update);
                 update.TienDo /= 100;
-                if(update.NguoiThucHienId is not null && update.NguoiThucHienId != Guid.Empty && assign is null)
+                if (update.NguoiThucHienId is not null && update.NguoiThucHienId != Guid.Empty && assign is null)
                 {
                     update.TrangThaiId = update.TrangThaiId == 1 ? 2 : update.TrangThaiId;
                     update.AssignTo = update.NguoiThucHienId;
@@ -420,7 +343,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                     request.TongThoiGianThucHien = 0;
                     double sumtongthoigianloi = 0;
                     foreach (var item in request.listCongViecChiTiet)
-                    {                      
+                    {
                         request.SoGioThucTe += item.SoGioCong;
                         //var ListChiTietLoi = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_LOI>()
                         //            .GetAll(x => x.ChiTietCongViecId == item.Id && x.IsDeleted != true).ToList();
@@ -431,7 +354,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                     var ids = request.listCongViecChiTiet
                             .Select(c => c.Id)
                             .ToList();
-                     
+
                 }
                 update.NguoiSua = _contextAccessor.HttpContext.User.Identity.Name;
                 update.NgaySua = DateTime.Now;
@@ -442,17 +365,17 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                 var dinhKemIds = JsonSerializer.Deserialize<List<Guid>>(request.TepDinhKemIDs);
                 var ListDinhKemCanXoa = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_TEPDINHKEM>().GetAll(x => x.LienKetId == update.Id
                     && !dinhKemIds.Any(y => y == x.Id)).ToList();
-                foreach(var attachment in ListDinhKemCanXoa)
+                foreach (var attachment in ListDinhKemCanXoa)
                 {
                     string fileDelete = Path.Combine(_webHostEnvironment.WebRootPath, attachment.Url);
-                    if(System.IO.File.Exists(fileDelete))
+                    if (System.IO.File.Exists(fileDelete))
                         System.IO.File.Delete(fileDelete);
                 }
                 _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_TEPDINHKEM>().DeleteRange(ListDinhKemCanXoa);
 
                 List<MODELTepDinhKem> lstAttachment = new();
                 lstAttachment = MODELS.COMMON.CommonFunc.UploadData(update.Id, _webHostEnvironment.WebRootPath, "QUANLYCONGVIEC", request.FolderUpload);
-                foreach(var attachment in lstAttachment)
+                foreach (var attachment in lstAttachment)
                 {
                     ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_TEPDINHKEM tepDinhKem = new()
                     {
@@ -468,19 +391,19 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                 #endregion
                 HashSet<string> listAssignName = new HashSet<string>();
 
-            
+
                 var thongBao = new ENTITIES.DBContent.HETHONG_THONGBAO();
-                    thongBao.Id = Guid.NewGuid();
-                    thongBao.TieuDe = "Có một công việc mới cần thực hiện";
-                    thongBao.NoiDung = request.GhiChu;
-                    thongBao.NguoiTao = _contextAccessor.HttpContext.User.Identity.Name;
-                    thongBao.NgayTao = DateTime.Now;
-                    thongBao.Type = 1;
+                thongBao.Id = Guid.NewGuid();
+                thongBao.TieuDe = "Có một công việc mới cần thực hiện";
+                thongBao.NoiDung = request.GhiChu;
+                thongBao.NguoiTao = _contextAccessor.HttpContext.User.Identity.Name;
+                thongBao.NgayTao = DateTime.Now;
+                thongBao.Type = 1;
                 _unitOfWork.GetRepository<HETHONG_THONGBAO>().add(thongBao);
                 response.Data = _mapper.Map<MODELQuanLyCongViec>(update);
                 if (nguoiThucHien is not null && assign is not null && assign != request.AssignTo)
                 {
-					var AssignTo =  _unitOfWork.GetRepository<TAIKHOAN>().Find(x => x.Id == request.AssignTo);
+                    var AssignTo = _unitOfWork.GetRepository<TAIKHOAN>().Find(x => x.Id == request.AssignTo);
                     if (AssignTo != null)
                     {
                         response.Data.AssignName = AssignTo.UserName;
@@ -489,7 +412,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                             Id = Guid.NewGuid(),
                             CongViecId = request.Id,
                             TrangThaiId = update.TrangThaiId,
-							NguoiDangThucHien = assign,
+                            NguoiDangThucHien = assign,
                             NgayBatDau = DateTime.Now,
                             NguoiTao = _contextAccessor.HttpContext.User.Identity.Name,
                             NgayTao = DateTime.Now,
@@ -507,7 +430,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                 throw new Exception("Không tìm thấy dữ liệu");
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             response.Error = true;
             response.Message = ex.Message;
@@ -523,7 +446,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
         try
         {
             var delete = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>().Find(x => x.Id == request.Id);
-            if(delete is not null)
+            if (delete is not null)
             {
                 delete.IsDeleted = true;
                 delete.NguoiXoa = _contextAccessor.HttpContext.User.Identity.Name;
@@ -538,7 +461,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
             _unitOfWork.Commit();
             response.Data = request.Id.ToString();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             response.Error = true;
             response.Message = ex.Message;
@@ -553,10 +476,10 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
         var response = new BaseResponse<string>();
         try
         {
-            foreach(var id in request.Ids)
+            foreach (var id in request.Ids)
             {
                 var delete = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>().Find(x => x.Id == id);
-                if(delete is not null)
+                if (delete is not null)
                 {
                     delete.IsDeleted = true;
                     delete.NguoiXoa = _contextAccessor.HttpContext.User.Identity.Name;
@@ -572,7 +495,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
             _unitOfWork.Commit();
             response.Data = string.Join(',', request);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             response.Error = true;
             response.Message = ex.Message;
@@ -671,7 +594,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
             response.Error = true;
             response.Message = e.Message;
         }
-        
+
         return response;
     }
     private List<PostQuanLiCongViec_ChiTietRequest> GetListCongViecChiTiet(Guid Id)
@@ -684,7 +607,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
             NgayHoanThanh = x.NgayHoanThanh,
             TrangThaiId = x.TrangThaiId
 
-        }).OrderByDescending(x=>x.NgayHoanThanh).ToList();
+        }).OrderByDescending(x => x.NgayHoanThanh).ToList();
         List<PostQuanLiCongViec_ChiTietRequest> list = new List<PostQuanLiCongViec_ChiTietRequest>();
         foreach (var item in result)
         {
@@ -771,7 +694,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
             Text = x.TenCongViecCon,
             Value = x.Id.ToString(),
         }).OrderBy(x => x.Text).ToList();
-            
+
         return response;
     }
 }

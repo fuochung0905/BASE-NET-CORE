@@ -1,5 +1,20 @@
 ﻿@model MODELS.DANHMUC.MONHOC.Requests.PostMonHocRequest
 
+<script>
+    function taiKhoanTrongPhongBan()
+    {
+       var phongBanId = $("#PhongBanId").val();      
+        return { PhongBanId: phongBanId };
+    }
+    $("#PhongBanId").change(function () {
+        var multiselect = $("#taiKhoanIds").data("kendoMultiSelect");
+        multiselect.dataSource.read();
+        multiselect.value([]);
+
+    });
+</script>
+
+
 <div class="modal-content" id="modalLoading">
     @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMonHoc", @class = "forms-sample" }))
     {
@@ -50,8 +65,8 @@
                         .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
                     @Html.ValidationMessageFor(model => model.PhongBanId, "", new { @class = "text-danger" })
                 </div>
-               
             </div>
+      
             <div class="row">
                 <div class="col-md-12">
                     <label>Niên khóa <span class="text-danger">*</span></label>
@@ -108,7 +123,25 @@
                     @Html.ValidationMessageFor(model => model.NgayKetThuc, "", new { @class = "text-danger" })
                 </div>
             </div>
-
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Thành viên <span class="text-danger">*</span></label>
+                    @(Html.Kendo().MultiSelectFor(m => m.taiKhoanIds)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Filter(FilterType.Contains)
+                        .Placeholder("-- Chọn tài khoản tham gia --")
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read => { read.Action("GetComboBoxOfPhongBan", "TaiKhoan").Data("taiKhoanTrongPhongBan"); })
+                        )
+                        .ServerFiltering(true)
+                        )
+                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.taiKhoanIds, "", new { @class = "text-danger" })
+                </div>
+            </div>
            
             <div class="row">
                 <div class="col-md-12">

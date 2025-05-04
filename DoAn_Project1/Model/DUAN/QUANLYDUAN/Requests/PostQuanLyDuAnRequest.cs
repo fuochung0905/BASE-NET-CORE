@@ -10,25 +10,15 @@ public class PostQuanLyDuAnRequest : BaseRequest
     [Required(AllowEmptyStrings = false, ErrorMessage = "Tên dự án bắt buộc nhập")]
 
     public string? TenDuAn { get; set; }
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Tên chủ đầu tư bắt đầu bắt buộc nhập")]
-    public string? ChuDauTu { get; set; }
     public Guid? GiaiDoanId { get; set; }
+    public Guid? MonHocId { get; set; }
+    public Guid? TeamId { get; set; }
     [Required(AllowEmptyStrings = false, ErrorMessage = "Thời gian bắt đầu bắt buộc nhập")]
     public DateTime? ThoiGianBatDau { get; set; }
     public DateTime? ThoiGianKetThuc { get; set; }
-
     public double TienDo { get; set; }
-
     public string? GhiChu { get; set; } = string.Empty;
-    public int? LoaiDuAn { get; set; }
-    public double? ChiPhiHoSo { get; set; }
-
-    public double? ChiPhiTrienKhai { get; set; }
-
-    public double? ChiPhiCode { get; set; }
+    public Guid? LoaiDuAn { get; set; }
     public List<Guid>? UserIds { get; set; }
-
-  
-
     public bool IsCanhBaoHetHan { get; set; }
 }

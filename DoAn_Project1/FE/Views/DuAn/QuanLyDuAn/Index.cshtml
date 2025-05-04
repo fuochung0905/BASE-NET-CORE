@@ -120,26 +120,13 @@
                         .Columns(columns =>
                         {
                             columns.Select().HtmlAttributes(new { @style = "text-align:center;" }).Width(68).Lockable(true).Locked();
-
                             columns.Bound("").ClientTemplate("#= xoFunc.renderNumberGrid() #").Title("STT")
                             .Width(72).Filterable(false).Sortable(false).HtmlAttributes(new { @class = "text-center" }).Lockable(true).Locked();
-
                             columns.Bound(c => c.MaDuAn).Title("Mã dự án")
                             .Width(153).HtmlAttributes(new { @style = "text-align: center;" }).Lockable(true).Locked();
-
-                            columns.Bound(c => c.TenDuAn).HtmlAttributes(new { @class = "title" }).Title("Tên dự án").Width(319).Lockable(true).Locked();
-                            columns.Bound(c => c.ChiPhiHoSo).Title("Chi phí hồ sơ").HtmlAttributes(new { @class = "title-number" }).Width(94).HtmlAttributes(new { @style = "text-align: right;" });
-                            columns.Bound(c => c.ChiPhiTrienKhai).Title("Chi phí triển khai").HtmlAttributes(new { @class = "title-number" }).Width(94).HtmlAttributes(new { @style = "text-align: right;" });
-                            columns.Bound(c => c.ChiPhiCode).Title("Chi phí code").HtmlAttributes(new { @class = "title-number" }).Width(94).HtmlAttributes(new { @style = "text-align: right;" });
-                            columns.Bound(c => c.ChuDauTu).Title("Chủ đầu tư").Width(191);
+                            columns.Bound(c => c.TenDuAn).HtmlAttributes(new { @class = "title" }).Title("Tên dự án").Width(319).Lockable(true).Locked();                         
                             columns.Bound(c => c.GiaiDoan).Title("Giai đoạn").Width(131);
-                            columns.Bound(c => c.IsActived).Title("Loại dự án").ClientTemplate(
-                            "# if(LoaiDuAn == 1) { #" +
-                            "<span type='button' class=' btn-sm btn-flat'>OutSource</span>" +
-                            "# } if(LoaiDuAn ==2) { #" +
-                            "<span type='button' class=' btn-sm btn-flat'>Khoán phòng</span>" +
-                            "# } if(LoaiDuAn ==3) { #" +
-                            "<span type='button' class=' btn-sm btn-flat'>Tư vấn</span># } #").Width(153).HtmlAttributes(new { @class = "text-center" });
+                             columns.Bound(c => c.TenLoaiDuAn).Title("Loại dự án").Width(131);
                             columns.Bound(c => c.ThoiGianBatDau)
                             .Title("Thời gian kết thúc")
                             .Width(153)

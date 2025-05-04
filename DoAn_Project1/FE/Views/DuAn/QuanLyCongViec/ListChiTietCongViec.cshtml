@@ -50,46 +50,13 @@
         }     
       
     }
-    // function gridDataSubTask_AddMultiData(rowCount) {
-    //     debugger
-    //     var grid = $("#gridDataSubTask").data("kendoGrid");
-
-    //     if (grid && $("#gridDataSubTask .k-grid-edit-row").length == 0) {
-    //         $('div[data-role="grid"]').each(function () {
-    //             var gridInstance = $(this).data("kendoGrid");
-    //             if (gridInstance && $(this).attr("name") !== "gridDataSubTask") {
-    //                 gridInstance.dataSource.cancelChanges();
-    //             }
-    //         });
-
-    //         for (var i = 0; i < rowCount; i++) {
-    //             grid.addRow();
-    //         }
-    //          setTimeout(function () {
-    //             var lastRow = $("#gridDataSubTask tbody tr:last");
-    //             if (lastRow.length) {
-    //                 $('html, body').animate({
-    //                     scrollTop: lastRow.offset().top
-    //                 }, 500);
-    //             }
-    //         }, 300);
-    //     }
-    //     }
-    // function gridDataSubTask_AddMultipleRows() {
-    //     var rowCount = parseInt(prompt("Nhập số hàng muốn thêm:", "1"), 10);
-    //     if (isNaN(rowCount) || rowCount <= 0) {
-    //         alert("Số lượng không hợp lệ!");
-    //         return;
-    //     }
-    //      gridDataSubTask_AddMultiData(rowCount);
-    //     }
         function onEdit(e) {
-        var fieldName = e.container.find("input").attr("name"); // Tên cột đang chỉnh sửa
+        var fieldName = e.container.find("input").attr("name"); 
 
-        if (fieldName === "SoGioCong") {  // Kiểm tra nếu đang sửa "SoGioCong"
+        if (fieldName === "SoGioCong") {  
             e.container.find("input").on("change", function () {
                 var grid = $("#gridDataSubTask").data("kendoGrid");
-                grid.saveChanges(); // Lưu dữ liệu ngay lập tức
+                grid.saveChanges(); 
             });
         }
     }

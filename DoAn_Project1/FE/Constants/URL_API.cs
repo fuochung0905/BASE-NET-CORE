@@ -1,7 +1,7 @@
 ﻿namespace FE.Constants
 {
     public class URL_API
-    {
+    { 
         #region BASE
         public const string UPLOADFILE = "uploadfile";
         public const string PING = "ping";
@@ -31,6 +31,9 @@
         public const string TAIKHOAN_GETLISTNHATKYTHAOTAC = "taikhoan/get-list-nhatky-thaotac";
         public const string TAIKHOAN_GETALLFORCOMBOBOX = "taikhoan/get-all-combobox";
         public const string TAIKHOAN_GETCOMBOBOXNGUOIQUANLY = "taikhoan/get-combo-box-nguoi-quan-ly";
+        public const string TAIKHOAN_GETCOMBOBOXOFMONHOC = "taikhoan/get-all-combobox-OfMonHoc";
+        public const string TAIKHOAN_GETCOMBOBOXOFPHONGBAN = "taikhoan/get-all-combobox-OfPhongBan";
+        public const string TAIKHOAN_GETCOMBOBOXOFDUAN = "taikhoan/get-all-combobox-OfDuAn";
 
         //VAITRO
         public const string VAITRO_GETLISTPAGING = "vaitro/get-list-paging";
@@ -159,14 +162,15 @@
         public const string MONHOC_DELETELIST = "monhoc/delete-list";
 
         //TEAM
-        public const string TEAM_GETALLFORCOMBOBOX = "chucvu/get-all-combobox";
-        public const string TEAM_GETLIST = "chucvu/get-list";
-        public const string TEAM_GETBYID = "chucvu/get-by-id";
-        public const string TEAM_GETBYPOST = "chucvu/get-by-post";
-        public const string TEAM_INSERT = "chucvu/insert";
-        public const string TEAM_UPDATE = "chucvu/update";
-        public const string TEAM_DELETE = "chucvu/delete";
-        public const string TEAM_DELETELIST = "chucvu/delete-list";
+        public const string TEAM_GETALLFORCOMBOBOX = "team/get-all-combobox";
+        public const string TEAM_GETLIST = "team/get-list";
+        public const string TEAM_GETBYID = "team/get-by-id";
+        public const string TEAM_GETBYPOST = "team/get-by-post";
+        public const string TEAM_INSERT = "team/insert";
+        public const string TEAM_UPDATE = "team/update";
+        public const string TEAM_DELETE = "team/delete";
+        public const string TEAM_DELETELIST = "team/delete-list";
+        public const string TEAM_GETALLCOMBOBOXOFMONHOC = "team/get-all-combobox-OfMonHoc";
 
         public const string NIENKHOA_GETALLFORCOMBOBOX = "nienkhoa/get-all-combobox";
         public const string NIENKHOA_GETLIST = "nienkhoa/get-list";
@@ -176,6 +180,15 @@
         public const string NIENKHOA_UPDATE = "nienkhoa/update";
         public const string NIENKHOA_DELETE = "nienkhoa/delete";
         public const string NIENKHOA_DELETELIST = "nienkhoa/delete-list";
+
+        public const string LOAIDUAN_GETALLFORCOMBOBOX = "loaiduan/get-all-combobox";
+        public const string LOAIDUAN_GETLIST = "loaiduan/get-list";
+        public const string LOAIDUAN_GETBYID = "loaiduan/get-by-id";
+        public const string LOAIDUAN_GETBYPOST = "loaiduan/get-by-post";
+        public const string LOAIDUAN_INSERT = "loaiduan/insert";
+        public const string LOAIDUAN_UPDATE = "loaiduan/update";
+        public const string LOAIDUAN_DELETE = "loaiduan/delete";
+        public const string LOAIDUAN_DELETELIST = "loaiduan/delete-list";
 
         //LOAITAIKHOAN
         public const string LOAIHOSO_GETALLFORCOMBOBOX = "loaihoso/get-all-combobox";

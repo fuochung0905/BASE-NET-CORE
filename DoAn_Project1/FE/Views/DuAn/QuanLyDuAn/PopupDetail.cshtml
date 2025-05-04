@@ -1,17 +1,28 @@
 @model MODELS.DUAN.QUANLYDUAN.Requests.PostQuanLyDuAnRequest
+
+<script>
+    function nhomMonHocTrongMonHoc()
+    {
+        var monHocId = $("#MonHocId").data("kendoDropDownList").value();
+        return { MonHocId: monHocId };
+    }
+    $(document).ready(function () {
+        $("#MonHocId").data("kendoDropDownList").bind("change", function () {
+            var teamDropdown = $("#TeamId").data("kendoDropDownList");
+            if (teamDropdown) {
+                teamDropdown.dataSource.read();
+                teamDropdown.value(""); 
+            }
+        });
+    });
+</script>
+
+
 <style>
     #IsCanhBaoHetHan_validationMessage {
         display: none !important;
     }
 
-  /*   #ThoiGianKetThuc_validationMessage {
-        display: none;
-    }
-
-    #ThoiGianBatDau_validationMessage {
-        display: none;
-    } */
-  
 </style>
 <div class="modal-content" id="modalLoading">
     @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmQuanLyDuAn", @class = "forms-sample" }))
@@ -49,33 +60,6 @@
             </div>
             <div class="row form-group">
                 <div class="col-md-6">
-                    <label>Chủ đầu tư</label>
-                    @(Html.Kendo().TextBoxFor(m => m.ChuDauTu).HtmlAttributes(new { @class = "form-control", @style = "width:100%;" }))
-                    @Html.ValidationMessageFor(model => model.ChuDauTu, "", new { @class = "text-danger" })
-                </div>
-                <div class="col-md-6">
-                    <label> Giai đoạn dự án<span class="text-danger">(*)</span></label>
-                    @(Html.Kendo().DropDownListFor(m => m.GiaiDoanId)
-                        .DataTextField("Text")
-                        .DataValueField("Value")
-                        .Filter(FilterType.Contains)
-                        .DataSource(source => source
-                        .Custom()
-                        .Transport(transport => transport
-                        .Read(read =>
-                        {
-                            read.Action("GetAllComboBox", "GiaiDoanDuAn");
-
-                        })
-                        )
-                        )
-                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
-                        )
-                    @Html.ValidationMessageFor(model => model.GiaiDoanId, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="row form-group">
-                <div class="col-md-6">
                     <label>
                         Thời gian bắt đầu
                     </label>
@@ -83,8 +67,7 @@
                         .Format("dd/MM/yyyy")
                         .HtmlAttributes(new { @class = "form-control", @style = "width:100%;" })
                         )
-                    @* <div id="ThoiGianBatDau_validationMessage" class="validation-message">
-                    </div> *@
+                    
                 </div>
                 <div class="col-md-6">
                     <label>
@@ -105,20 +88,56 @@
 
             </div>
             <div class="row form-group">
-                <div class="col-md-4">
-                    <label>Chi phí hồ sơ</label>
-                    @(Html.Kendo().NumericTextBoxFor(m => m.ChiPhiHoSo).HtmlAttributes(new { @class = "form-control", @style = "width:100%; " }))
-                    @Html.ValidationMessageFor(model => model.ChiPhiHoSo, "", new { @class = "text-danger" })
+                <div class="col-md-16">
+                    <label>Giai đoạn dự án <span class="text-danger">*</span></label>
+                    @(Html.Kendo().DropDownListFor(m => m.GiaiDoanId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .OptionLabel("-- Chọn giai đoạn dự án --")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetAllComboBox", "GiaiDoanDuAn");
+                        })))
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.GiaiDoanId, "", new { @class = "text-danger" })
                 </div>
-                <div class="col-md-4">
-                    <label>Chi phí triển khai</label>
-                    @(Html.Kendo().NumericTextBoxFor(m => m.ChiPhiTrienKhai).HtmlAttributes(new { @class = "form-control", @style = "width:100%; " }))
-                    @Html.ValidationMessageFor(model => model.ChiPhiTrienKhai, "", new { @class = "text-danger" })
+                <div class="col-md-16">
+                    <label>Môn học <span class="text-danger">*</span></label>
+                    @(Html.Kendo().DropDownListFor(m => m.MonHocId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .OptionLabel("-- Chọn môn học --")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetList_Combobox", "MonHoc");
+                        })))
+                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.MonHocId, "", new { @class = "text-danger" })
                 </div>
-                <div class="col-md-4">
-                    <label>Chi phí code</label>
-                    @(Html.Kendo().NumericTextBoxFor(m => m.ChiPhiCode).HtmlAttributes(new { @class = "form-control", @style = "width:100%; " }))
-                    @Html.ValidationMessageFor(model => model.ChiPhiCode, "", new { @class = "text-danger" })
+                <div class="col-md-16">
+                    <label>Nhóm môn học <span class="text-danger">*</span></label>
+                    @(Html.Kendo().DropDownListFor(m => m.TeamId)
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .OptionLabel("-- Chọn nhóm môn học --")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read => { read.Action("GetList_ComboboxOfMonHoc", "Team").Data("nhomMonHocTrongMonHoc"); })
+                        )
+                        .ServerFiltering(true)
+                        )
+                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
+                    @Html.ValidationMessageFor(model => model.MonHocId, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="row form-group">
@@ -129,7 +148,15 @@
                     @(Html.Kendo().DropDownListFor(m => m.LoaiDuAn)
                         .DataTextField("Text")
                         .DataValueField("Value")
-                        .BindTo(SYS_CONFIG.LOAIDUAN)
+                        .OptionLabel("-- Chọn loại dự án --")
+                        .Filter(FilterType.Contains)
+                        .DataSource(source => source
+                        .Custom()
+                        .Transport(transport => transport
+                        .Read(read =>
+                        {
+                            read.Action("GetList_Combobox", "LoaiDuAn");
+                        })))
                         .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
                     @Html.ValidationMessageFor(model => model.LoaiDuAn, "", new { @class = "text-danger" })
                 </div>

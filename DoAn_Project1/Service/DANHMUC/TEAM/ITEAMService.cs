@@ -23,6 +23,7 @@ namespace Service.DANHMUC.TEAM
         BaseResponse<string> Delete(DeleteRequest request);
         BaseResponse<string> DeleteList(DeleteListRequest request);
         BaseResponse<List<MODELCombobox>> GetAllForCombobox(GetAllRequest request);
+        BaseResponse<List<MODELCombobox>> GetAllForComboboxWithMonHoc(GetByIdRequest request);
     }
 
 }

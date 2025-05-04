@@ -12,7 +12,7 @@ namespace MODELS.DANHMUC.MONHOC.Dtos
     {
         public Guid Id { get; set; }
         public string Ma { get; set; }
-
+        public string NienKhoa { get; set; }
         public string TenGoi { get; set; } = null!;
 
         public int? SoTinChi { get; set; }

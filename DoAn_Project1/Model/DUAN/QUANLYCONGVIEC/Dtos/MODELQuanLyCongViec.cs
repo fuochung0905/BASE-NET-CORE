@@ -12,6 +12,7 @@ public class MODELQuanLyCongViec : MODELBase
 	public Guid? GiaiDoanId { get; set; }
 	public string? GiaiDoan { get; set; } = string.Empty;
 	public Guid? CongViecGiaiDoanId { get; set; }
+    public int DoKhoCongViec { get; set; }
     public string? CongViecGiaiDoan { get; set; } = string.Empty;
     public Guid? CongViecLienQuanId { get; set; }
     public Guid? NguoiThucHienId { get; set; }

@@ -16,6 +16,7 @@ namespace MODELS.DANHMUC.PHONGBAN.Requests
         public string? MoTa { get; set; }
         public string? GhiChu { get; set; }
         public bool IsKhoa { get; set; }
+        public List<Guid> taiKhoanIds { get; set; }
     }
 
 }

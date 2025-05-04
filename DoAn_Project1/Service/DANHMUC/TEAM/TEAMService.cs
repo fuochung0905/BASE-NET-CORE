@@ -1,5 +1,6 @@
 ﻿using AutoDependencyRegistration.Attributes;
 using AutoMapper;
+using ENTITIES.DBContent;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Model.BASE;
@@ -8,6 +9,7 @@ using MODELS.BASE;
 using MODELS.DANHMUC.TEAM.Dtos;
 using MODELS.DANHMUC.TEAM.Requests;
 using Repository;
+using System.Collections;
 
 namespace Service.DANHMUC.TEAM
 {
@@ -44,7 +46,7 @@ namespace Service.DANHMUC.TEAM
 
                 var parameters = new[]
                 {
-                    new SqlParameter("@iMonHocId", request.MonHocId) ,
+                     new SqlParameter("@iMonHocId", request.MonHocId.HasValue ? request.MonHocId : Guid.Empty),
                     new SqlParameter("@iTextSearch", request.TextSearch),
                     new SqlParameter("@iPageIndex", request.PageIndex),
                     new SqlParameter("@iRowsPerPage", request.RowPerPage),
@@ -110,6 +112,8 @@ namespace Service.DANHMUC.TEAM
                 else
                 {
                     result = _mapper.Map<PostTeamRequest>(data);
+                    var tkIds = _unitOfWork.GetRepository<TEAM_NGUOITHAMGIA>().GetAll(x=>x.TeamId == request.Id).Select(x=>x.TaiKhoanId).ToList();
+                    result.taiKhoanIds = tkIds;
                     result.IsEdit = true;
                 }
                 response.Data = result;
@@ -137,6 +141,21 @@ namespace Service.DANHMUC.TEAM
                 _unitOfWork.GetRepository<ENTITIES.DBContent.DM_TEAM>().add(add);
                 _unitOfWork.Commit();
 
+                if (request.taiKhoanIds.Count() > 0)
+                {
+                    foreach(var id in request.taiKhoanIds) 
+                    {
+                        var newEnti = new TEAM_NGUOITHAMGIA
+                        {
+                            Id = Guid.NewGuid(),
+                            TaiKhoanId = id,
+                            TeamId = request.Id
+                        };
+                        _unitOfWork.GetRepository<TEAM_NGUOITHAMGIA>().add(newEnti);
+                    }
+                    _unitOfWork.Commit();
+                }
+
                 response.Data = _mapper.Map<MODELTeam>(add);
             }
             catch (Exception ex)
@@ -163,7 +182,26 @@ namespace Service.DANHMUC.TEAM
 
                     _unitOfWork.GetRepository<ENTITIES.DBContent.DM_TEAM>().update(update);
                     _unitOfWork.Commit();
-
+                    var listTaiKhoanCurrent = _unitOfWork.GetRepository<TEAM_NGUOITHAMGIA>().GetAll(x => x.TeamId == request.Id).ToList();
+                    var currentUserId = listTaiKhoanCurrent.Select(x => x.TaiKhoanId).ToHashSet();
+                    var newUserIds = request.taiKhoanIds.ToHashSet();
+                    var toAdd = newUserIds.Except(currentUserId);
+                    foreach (var id in toAdd)
+                    {
+                        var newEntry = new TEAM_NGUOITHAMGIA
+                        {
+                            Id = Guid.NewGuid(),
+                            TeamId = request.Id,
+                            TaiKhoanId = id
+                        };
+                        _unitOfWork.GetRepository<TEAM_NGUOITHAMGIA>().add(newEntry);
+                    }
+                    var toRemove = listTaiKhoanCurrent.Where(x => !newUserIds.Contains(x.TaiKhoanId)).ToList();
+                    foreach (var entry in toRemove)
+                    {
+                        _unitOfWork.GetRepository<TEAM_NGUOITHAMGIA>().delete(entry);
+                    }
+                    _unitOfWork.Commit();
                     response.Data = _mapper.Map<MODELTeam>(update);
                 }
                 else
@@ -250,6 +288,25 @@ namespace Service.DANHMUC.TEAM
         {
             BaseResponse<List<MODELCombobox>> response = new BaseResponse<List<MODELCombobox>>();
             var data = _unitOfWork.GetRepository<ENTITIES.DBContent.DM_TEAM>().GetAll(x => x.IsActived && !x.IsDeleted).ToList();
+            response.Data = data.Select(x => new MODELCombobox
+            {
+                Text = x.TenGoi,
+                Value = x.Id.ToString(),
+            }).OrderBy(x => x.Sort).ToList();
+
+            return response;
+        }
+
+        public BaseResponse<List<MODELCombobox>> GetAllForComboboxWithMonHoc(GetByIdRequest request)
+        {
+            BaseResponse<List<MODELCombobox>> response = new BaseResponse<List<MODELCombobox>>();
+            if (request.Id == null)
+            {
+                response.Data = new List<MODELCombobox>(); 
+                return response;
+            }
+
+            var data = _unitOfWork.GetRepository<ENTITIES.DBContent.DM_TEAM>().GetAll(x => x.IsActived && !x.IsDeleted && x.MonHocId == request.Id).ToList();
             response.Data = data.Select(x => new MODELCombobox
             {
                 Text = x.TenGoi,

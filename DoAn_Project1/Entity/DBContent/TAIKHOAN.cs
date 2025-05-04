@@ -65,6 +65,7 @@ public partial class TAIKHOAN
     public DM_CHUCVU CHUCVU { get; set; }
     public Guid? DuAnId { get; set; }
     public DUAN_QUANLYDUAN DUAN_QUANLYDUAN {get ; set; }
+    public ICollection<THONGBAO_NGUOIDUNG> tHONGBAO_NGUOIDUNGs { get; set; }
     public ICollection<DUAN_DANHSACHNGUOITHUCHIEN> DUAN_DANHSACHNGUOITHUCHIENs { get; set; }
     public ICollection<DUAN_QUANLYCONGVIEC> DUAN_QUANLYCONGVIECs { get; set; }
     public ICollection<QUANLYDUAN_NGUOIDUNG> QUANLYDUAN_NGUOIDUNGs { get; set; }
@@ -72,5 +73,6 @@ public partial class TAIKHOAN
     public ICollection<TEAM_NGUOITHAMGIA> tEAM_NGUOITHAMGIAs{ get; set; }
     public ICollection<CHAT_MESSAGE> cHAT_MESSAGEs { get; set; }
     public ICollection<CHAT_CONVERSATIONMEMBER> CHAT_CONVERSATIONMEMBERs { get; set; }
+    public ICollection<PHONGBAN_NGUOITHAMGIA> pHONGBAN_NGUOITHAMGIAs { get; set; }  
 
 }

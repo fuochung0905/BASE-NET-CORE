@@ -11,5 +11,6 @@ namespace MODELS.DANHMUC.TEAM.Requests
         [Required(AllowEmptyStrings = false, ErrorMessage = "Tên team không được để trống")]
         public string TenGoi { get; set; } = null!;
         public Guid MonHocId { get; set; }
+        public List<Guid> taiKhoanIds { get; set; }
     }
 }

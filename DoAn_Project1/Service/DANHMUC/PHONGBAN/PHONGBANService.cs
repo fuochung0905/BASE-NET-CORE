@@ -1,5 +1,6 @@
 ﻿using AutoDependencyRegistration.Attributes;
 using AutoMapper;
+using ENTITIES.DBContent;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Model.BASE;
@@ -112,6 +113,8 @@ namespace REPONSITORY.DANHMUC.PHONGBAN
                 else
                 {
                     result = _mapper.Map<PostPhongBanRequest>(data);
+                    var tkIds = _unitOfWork.GetRepository<PHONGBAN_NGUOITHAMGIA>().GetAll(x => x.PhongBanId == request.Id).Select(x=>x.TaiKhoanId).ToList();
+                    result.taiKhoanIds = tkIds;
                     result.IsEdit = true;
                 }
                 response.Data = result;
@@ -139,6 +142,34 @@ namespace REPONSITORY.DANHMUC.PHONGBAN
                 _unitOfWork.GetRepository<ENTITIES.DBContent.DM_PHONGBAN>().add(add);
                 _unitOfWork.Commit();
 
+                if (request.taiKhoanIds.Count > 0)
+                {
+                    List<PHONGBAN_NGUOITHAMGIA> tk_mk = new List<PHONGBAN_NGUOITHAMGIA>();
+                    foreach (var id in request.taiKhoanIds)
+                    {
+                        var item = new PHONGBAN_NGUOITHAMGIA
+                        {
+                            Id = Guid.NewGuid(),
+                            PhongBanId = add.Id,
+                            TaiKhoanId = id,
+                        };
+                        tk_mk.Add(item);
+                    }
+                    _unitOfWork.GetRepository<PHONGBAN_NGUOITHAMGIA>().addRange(tk_mk);
+                    _unitOfWork.Commit();
+                    //response.Data = _mapper.Map<MODELThongBao>(add);
+                    //response.Data.UserId = new List<string>();
+                    //foreach (var item in utb)
+                    //{
+                    //    var userName = _unitOfWork.GetRepository<ENTITIES.DBContent.TAIKHOAN>().Find(x => x.Id == item.TaiKhoanId);
+                    //    if (userName != null)
+                    //    {
+                    //        response.Data.UserId.Add(userName.UserName);
+                    //    }
+                    //}
+
+                }
+
                 response.Data = _mapper.Map<MODELPhongBan>(add);
             }
             catch (Exception ex)
@@ -165,7 +196,26 @@ namespace REPONSITORY.DANHMUC.PHONGBAN
 
                     _unitOfWork.GetRepository<ENTITIES.DBContent.DM_PHONGBAN>().update(update);
                     _unitOfWork.Commit();
-
+                    var listTaiKhoanCurrent = _unitOfWork.GetRepository<PHONGBAN_NGUOITHAMGIA>().GetAll(x=>x.PhongBanId == request.Id).ToList();
+                    var currentUserId = listTaiKhoanCurrent.Select(x=>x.TaiKhoanId).ToHashSet();
+                    var newUserIds = request.taiKhoanIds.ToHashSet();
+                    var toAdd = newUserIds.Except(currentUserId);
+                    foreach (var id in toAdd)
+                    {
+                        var newEntry = new PHONGBAN_NGUOITHAMGIA
+                        {
+                            Id = Guid.NewGuid(),
+                            PhongBanId = request.Id,
+                            TaiKhoanId = id                     
+                        };
+                        _unitOfWork.GetRepository<PHONGBAN_NGUOITHAMGIA>().add(newEntry);
+                    }
+                    var toRemove = listTaiKhoanCurrent.Where(x => !newUserIds.Contains(x.TaiKhoanId)).ToList();
+                    foreach (var entry in toRemove)
+                    {
+                        _unitOfWork.GetRepository<PHONGBAN_NGUOITHAMGIA>().delete(entry);
+                    }
+                    _unitOfWork.Commit();
                     response.Data = _mapper.Map<MODELPhongBan>(update);
                 }
                 else

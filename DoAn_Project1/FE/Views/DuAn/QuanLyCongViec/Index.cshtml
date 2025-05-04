@@ -119,13 +119,6 @@
             <!--FILTER-->
             <div id="accordion">
                 <div class="card card-info">
-                   @*  <div class="card-header">
-                        <h4 class="card-title w-100">
-                            <a class="d-block w-100" data-toggle="collapse" href="#divFilter">
-                                <i class="fas fa-filter"></i> LỌC DANH SÁCH
-                            </a>
-                        </h4>
-                    </div> *@
                     <div id="divFilter" class="collapse" data-parent="#accordion" style="">
                         <div class="card-body">
                             <div class="row">
@@ -173,7 +166,7 @@
                                             .Transport(transport => transport
                                                 .Read(read => { read.Action("GetAllComboBoxByGiaiDoan", "CongViecTrongGiaiDoan").Data("congViecGiaiDoanData");})
                                             )
-                                            .ServerFiltering(true) //Không có cái này thì cái CascadeFrom không chạy được
+                                            .ServerFiltering(true) 
                                         )
                                         .CascadeFrom("FilterGiaiDoanId")
                                         .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
@@ -278,24 +271,26 @@
                     columns.Bound(c => c.TenCongViec).HtmlAttributes(new { @class = "title" }).HtmlAttributes(new { @class = "title" }).Title("Tên công việc").Width(350).Lockable(true).Locked();
 
                     columns.Bound(c => c.DuAn).Title("Dự án").Width(191).Lockable(true).Locked();
-
+                    columns.Bound(c => c.DoKhoCongViec).Title("Độ khó công việc")
+                    .ClientTemplate(
+                    "# if (DoKhoCongViec == 0) { #" +
+                    "<button type='button' class='btn btn-outline-success btn-sm btn-flat'>Dễ</button>" +
+                    "# } else if (DoKhoCongViec == 1) { #" +
+                    "<button type='button' class='btn btn-outline-warning btn-sm btn-flat'>Trung bình</button>" +
+                    "# } else if (DoKhoCongViec == 2) { #" +
+                    "<button type='button' class='btn btn-outline-danger btn-sm btn-flat'>Khó</button>" +
+                    "# } else if (DoKhoCongViec == 3) { #" +
+                    "<button type='button' class='btn btn-outline-dark btn-sm btn-flat'>Rất khó</button>" +
+                    "# } #"
+                    ).Width(153).HtmlAttributes(new { @class = "text-center" });
                     columns.Bound(c => c.SoGioThucTe).Title("Thời gian thực hiện (giờ)").Width(131)
                         .HeaderHtmlAttributes(new { @style = "text-wrap: pretty;" })
                     .HtmlAttributes(new { @style = "text-align: right;" }).HtmlAttributes(new { @class = "title-number" });
-                    columns.Bound(c => c.ThoiGianTest).Title("Thời gian test (giờ)").Width(131)
-                        .HeaderHtmlAttributes(new { @style = "text-wrap: pretty;" })
-                    .HtmlAttributes(new { @style = "text-align: right;" }).HtmlAttributes(new { @class = "title-number" });
+                   
                     columns.Bound(c => c.TongThoiGianThucHien).Title("Tổng thời gian thực hiện (giờ)").Width(131)
                         .HeaderHtmlAttributes(new { @style = "text-wrap: pretty;" })
-                    .HtmlAttributes(new { @style = "text-align: right;" }).HtmlAttributes(new { @class = "title-number" });
-                    columns.Bound(c => c.SoLoiDaFix).Title("Số lỗi đã fix")
-                        .Width(131)
-                        .ClientTemplate("#= SoLoiDaFix# / #= TongSoLoi #")
-                    .HtmlAttributes(new { @style = "text-align: right;" }).HtmlAttributes(new { @class = "title-number" });
-                    columns.Bound(c => c.TienDo).Title("Tiến độ").Width(131).Format("{0:p}");
-                    columns.Bound(c => c.GiaiDoan).Title("Giai đoạn").Width(153);
-                    columns.Bound(c => c.NguoiThucHien).Title("Người thực hiện").Width(191);
-                    columns.Bound(c => c.NguoiKiemTra).Title("Người kiểm tra").Width(191);
+                    .HtmlAttributes(new { @style = "text-align: right;" }).HtmlAttributes(new { @class = "title-number" });                              
+                    columns.Bound(c => c.GiaiDoan).Title("Giai đoạn").Width(153);                 
                     columns.Bound(c => c.AssignName).Title("Assign to").Width(191);
                     columns.Bound(c => c.TrangThai).Title("Trạng thái công việc").Width(180).HeaderHtmlAttributes(new { @style = "text-wrap: pretty;" });
                     columns.Group(g =>

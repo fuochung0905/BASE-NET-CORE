@@ -28,5 +28,6 @@ namespace ENTITIES.DBContent
 
         public bool IsDeleted { get; set; }
         public ICollection<TEAM_NGUOITHAMGIA> tEAM_NGUOITHAMGIAs { get; set; }
+        public ICollection<DUAN_QUANLYDUAN> dUAN_QUANLYDUANs { get; set; }
     }
 }
