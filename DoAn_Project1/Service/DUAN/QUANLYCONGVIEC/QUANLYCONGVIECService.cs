@@ -95,8 +95,6 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
 
         return response;
     }
-
-
     //GET BY ID
     public BaseResponse<MODELQuanLyCongViec> GetById(GetByIdRequest request)
     {
@@ -149,7 +147,13 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                 result.IsEdit = true;
                 result.TienDo *= 100;
                 result.ListTepDinhKem = GetListTepDinhKem(result.Id);
+                if(GetListTepDinhKemNoBai(result.Id).Count() > 0)
+                {
+                    result.ListTepDinhKemKetQua = GetListTepDinhKemNoBai(result.Id).ToList();
+                }    
+                
                 result.listCongViecChiTiet = GetListCongViecChiTiet(data.Id);
+
                 if (result.listCongViecChiTiet?.Any() == true)
                 {
 
@@ -198,6 +202,10 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
         var response = new BaseResponse<MODELQuanLyCongViec>();
         try
         {
+            if (request.DuKienTuNgay is DateTime tuNgay && request.DuKienDenNgay is DateTime denNgay && tuNgay > denNgay)
+            {
+                throw new Exception("Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc");
+            }
             var isExist = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC>()
                 .Find(x => x.TenCongViec == request.TenCongViec && x.DuAnId == request.DuAnId);
             if (isExist is not null)
@@ -224,6 +232,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
             {
                 add.TrangThaiId = 2;
             }
+            add.NguoiThucHienId = request.AssignTo;
             add.NguoiTao = _contextAccessor.HttpContext.User.Identity.Name;
             add.NgayTao = DateTime.Now;
             add.NguoiSua = _contextAccessor.HttpContext.User.Identity.Name;
@@ -301,8 +310,6 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
 
             if (update is not null)
             {
-                var nguoiThucHien = update.NguoiThucHienId;
-                var nguoiKiemTra = update.NguoiKiemTraId;
                 var assign = update.AssignTo;
                 var userName = _contextAccessor.HttpContext.User.Identity.Name;
                 SqlParameter checkUpdate = new SqlParameter()
@@ -325,16 +332,10 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                     throw new Exception("Không thể cập nhật trạng thái công việc");
                 }
                 _mapper.Map(request, update);
-                update.TienDo /= 100;
-                if (update.NguoiThucHienId is not null && update.NguoiThucHienId != Guid.Empty && assign is null)
+
+                if (assign is not null && update.AssignTo != Guid.Empty )
                 {
                     update.TrangThaiId = update.TrangThaiId == 1 ? 2 : update.TrangThaiId;
-                    update.AssignTo = update.NguoiThucHienId;
-                }
-                if (assign is not null && update.AssignTo != Guid.Empty && update.NguoiThucHienId is null)
-                {
-                    update.TrangThaiId = update.TrangThaiId == 1 ? 2 : update.TrangThaiId;
-                    update.NguoiThucHienId = update.AssignTo;
                 }
                 // update lại số giờ thực tế và tổng thời gian để lưu vào database vì khi lưu chi tiết không làm thay đổi số giờ thực tế (kh bắt đc js) nên lưu cái cũ
                 if (request.listCongViecChiTiet.Count() > 0 || request.listCongViecChiTiet.Count() == 0)
@@ -345,17 +346,13 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                     foreach (var item in request.listCongViecChiTiet)
                     {
                         request.SoGioThucTe += item.SoGioCong;
-                        //var ListChiTietLoi = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_LOI>()
-                        //            .GetAll(x => x.ChiTietCongViecId == item.Id && x.IsDeleted != true).ToList();
-                        //var TongthoiGianloi = ListChiTietLoi.Sum(x => x.SoGioFix.GetValueOrDefault());
-                        //sumtongthoigianloi += TongthoiGianloi;
-                        //request.TongThoiGianThucHien = request.SoGioThucTe + request.ThoiGianTest + sumtongthoigianloi;
                     }
                     var ids = request.listCongViecChiTiet
                             .Select(c => c.Id)
                             .ToList();
 
                 }
+                update.NguoiThucHienId = request.AssignTo;
                 update.NguoiSua = _contextAccessor.HttpContext.User.Identity.Name;
                 update.NgaySua = DateTime.Now;
 
@@ -401,7 +398,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                 thongBao.Type = 1;
                 _unitOfWork.GetRepository<HETHONG_THONGBAO>().add(thongBao);
                 response.Data = _mapper.Map<MODELQuanLyCongViec>(update);
-                if (nguoiThucHien is not null && assign is not null && assign != request.AssignTo)
+                if ( assign is not null && assign != request.AssignTo)
                 {
                     var AssignTo = _unitOfWork.GetRepository<TAIKHOAN>().Find(x => x.Id == request.AssignTo);
                     if (AssignTo != null)
@@ -640,6 +637,28 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
     {
         var result = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_TEPDINHKEM>().GetAll(x => x.LienKetId == Id).ToList();
         var mappedResult = _mapper.Map<List<MODELTepDinhKem>>(result);
+        mappedResult.ForEach(x =>
+        {
+            x.TenTapTinFull = x.TenFile + x.TenMoRong;
+        });
+        return mappedResult;
+    }
+
+    private List<MODELTepDinhKem> GetListTepDinhKemNoBai(Guid Id)
+    {
+        var result = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_KETQUACONGVIEC_TEPDINHKEM>().GetAll(x => x.LienKetId == Id).ToList();
+        var mappedResult = new List<MODELTepDinhKem>();
+        foreach (var item in result)
+        {
+            var temp = new MODELTepDinhKem();
+            temp.Id = item.Id;
+            temp.LienKetId = item.LienKetId;
+            temp.TenFile = item.TenFile;
+            temp.Url = item.Url;
+            temp.DoLon = item.DoLon;
+            temp.TenMoRong = item.TenMoRong;
+            mappedResult.Add(temp);
+        }
         mappedResult.ForEach(x =>
         {
             x.TenTapTinFull = x.TenFile + x.TenMoRong;

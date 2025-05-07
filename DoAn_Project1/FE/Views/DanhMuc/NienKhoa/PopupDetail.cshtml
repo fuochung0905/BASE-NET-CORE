@@ -32,11 +32,6 @@
                     @Html.ValidationMessageFor(model => model.TenGoi, "", new { @class = "text-danger" })
                 </div>
             </div>
-            <div class="row">    
-                    <label>Hiện tại <span class="text-danger">*</span></label>
-                    @(Html.Kendo().CheckBoxFor(model => model.IsHienTai).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
-                    @Html.ValidationMessageFor(model => model.IsHienTai, "", new { @class = "text-danger" })              
-            </div>
             <div class="row">
                 <div class="col-md-12">
                     <label>Trạng thái</label>

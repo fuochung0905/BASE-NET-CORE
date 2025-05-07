@@ -36,14 +36,6 @@
 	        <div class="col-8"><span>@(Model.DuKienTuNgay.HasValue ? Model.DuKienTuNgay.Value.ToString("dd/MM/yyyy") : "") - @(Model.DuKienDenNgay.HasValue ? Model.DuKienDenNgay.Value.ToString("dd/MM/yyyy") : "")</span></div>
         </div>
         <div class="row mt-2 w-100 align-items-center">
-	        <div class="col-4"> <span class="mt-2"><i class="fas fa-user"></i>  Thực hiện </span></div>
-	        <div class="col-8"><span>@Model.NguoiThucHien</span></div>
-        </div>
-        <div class="row mt-2 w-100 align-items-center">
-	        <div class="col-4"> <span class="mt-2"><i class="fas fa-user"></i>  Kiểm tra </span></div>
-	        <div class="col-8"><span>@Model.NguoiKiemTra</span></div>
-        </div>
-        <div class="row mt-2 w-100 align-items-center">
 	        <div class="col-4"> <span class="mt-2"><i class="fas fa-user"></i>  Assign To </span></div>
 	        <div class="col-8">@(Html.Kendo().DropDownListFor(m => m.AssignTo)
 		                           .DataTextField("Text")
@@ -59,56 +51,58 @@
 		                           .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;", @id = "AssignToPicker" }))</div>
         </div>
         <hr  width="100%" align="center" />
-     
-	        <div class="col-12">
-		        <h5 class="text-bold text-dark">Thực tế</h5>
-	        </div>
-        <div class="row mt-2 w-100 align-items-center">
-		        <div class="col-4"> <span class="mt-2"><i class="fas fa-calendar-day"></i> Từ ngày </span></div>
-		        <div class="col-8">  @(Html.Kendo().DatePickerFor(m => m.ThucTeTuNgay).Format("dd/MM/yyyy")
-			                             .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  ", @id = "ThucTeTuNgayPicker" }))</div>
-	        </div>
-	        <div class="row mt-2 w-100 align-items-center">
-		        <div class="col-4"> <span class="mt-2"><i class="fas fa-calendar-day"></i> Đến ngày </span></div>
-		        <div class="col-8">     @(Html.Kendo().DatePickerFor(m => m.ThucTeDenNgay).Format("dd/MM/yyyy")
-			                                .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  ", @id = "ThucTeDenNgayPicker" }))</div>
-	        </div>
-	        <div class="row mt-2 w-100 align-items-center">
-		        <div class="col-4"> <span class="mt-2"><i class="fas fa-clock"></i> Số giờ </span></div>
-		        <div class="col-8"> @(Html.Kendo().NumericTextBoxFor(m => m.SoGioThucTe).Min(0)
-			                            .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  ", @id = "ThucTeSoGioPicker" }))
-			    </div>
-	        </div>
-        <div class="row mt-2 w-100 align-items-center">
-		        <div class="col-4"> <span class="mt-2"><i class="fas fa-tachometer-alt"></i> Tiến độ (%)</span></div>
-		        <div class="col-8"> @(Html.Kendo().NumericTextBoxFor(m => m.TienDo).Min(0).Max(100)
-			                            .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  ", @id = "TienDoPicker" }))
-		        </div>
-	        </div>
-        <div class="row mt-2 w-100 align-items-center">
-            <div class="col-4"> <span class="mt-2"><i class="fas fa-clock"></i> Tổng số giờ test (giờ)</span></div>
-		        <div class="col-8"> @(Html.Kendo().NumericTextBoxFor(m => m.ThoiGianTest).Min(0)
-                    .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  ", @id = "ThoiGianTestPicker" }))
-		        </div>
-	        </div>
-	     
+        
+            <div>
+                @using(Html.BeginForm(null, null, FormMethod.Post, new { id = "frmQuanLyFile", @class = "forms-sample" }))
+                {
+                    @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.FolderUpload)
+                @Html.HiddenFor(model => model.TepDinhKemIDs)
+                @Html.HiddenFor(model => model.IsTepDinhKem)
+                
+                <label class="col-md-12">File kết quả</label>
+                <div class="col-md-12">
+                    @Html.Partial("~/Views/Shared/Components/UploadFileBase.cshtml",
+                             new MODELS.BASE.MODELUploadFileBase
+                {
+                    FileSizeLimit = 10, //Megabyte (Giới hạn độ lớn file)
+                    FileValidate = MODELS.COMMON.CommonConst._fileValid, //Kiểm tra định dạng file
+                    FileValidateText = MODELS.COMMON.CommonConst._fileValidString, //Text hiển thị định dạng file cho phép
+                    MultiFile = true, 
+                    ListTepDinhKem = Model.ListTepDinhKem 
+                })
+                </div>
+                }
+            @if (Model.DuKienDenNgay > DateTime.Now)
+            {
+                <button type="button" class="btn btn-success" id="btnGuiFile"><i class="fas fa-check-square"></i> Gửi file </button>
+            }
+  
+            </div>
+
         <div class="col-12">
 	       
         </div>
-        <div class="col-12">
-	        @if (Model.ListTepDinhKem.Count != 0)
+           <div class="col-12">
+            @if (Model.ListTepDinhKemGetBy !=  null)
 	        {
 		        <hr  width="100%" align="center" />
 		        <div class="d-flex justify-content-between">
 			        <p class="h5">Danh sách tệp đính kèm: </p>
-			        <a href="#" class="text-primary" onclick="downloadAllFiles()">Tải xuống tất cả</a> 
+                    <a href="#" class="text-primary" onclick="downloadAllFiles()">Tải xuống tất cả</a>
 		        </div>
-		        
-		        foreach (var file in Model.ListTepDinhKem)
+
+                foreach (var file in Model.ListTepDinhKemGetBy)
 		        {
 			        <a href="#" onclick='taiTepDinhKemPopup(encodeURI("@file.Url"),"@file.TenTapTinFull")'>@file.TenTapTinFull</a>
+                    <br />
 		        }
 	        }
+        </div>
+        <div class="row mt-2 w-100 align-items-center">
+            <div class="col-4"> <span class="mt-2"><i class="fas fa-calendar"></i> Hướng dẫn </span></div>
+            <div class="col-8"><span>@Model.HuongDanSuDungNhanh</span></div>
         </div>
         <hr  width="100%" align="center" />
 	</div>
@@ -428,4 +422,34 @@ $(document).ready(function () {
         });
         showLoadingElement(false, 'modalLoading');
     }
+        $(document).ready(function () {
+            $("#btnGuiFile").click(async function (event) {
+            event.preventDefault(); 
+
+            const checkUploadFile = await uploadFile(); // ✅ Chờ upload hoàn tất
+            console.log(checkUploadFile);
+            if (checkUploadFile !== undefined && checkUploadFile.IsSuccess === true) {
+                $('#IsTepDinhKem').val(true);
+            }
+
+            getAttachments(); // Nếu async => await getAttachments();
+
+            var param = $("#frmQuanLyFile").serializeArray();
+            console.log(param);
+            $.ajax({
+                url: '/TrangThaiCongViec/UpdateNopBai',
+                type: "POST",
+                data: param,
+                success: function (data) {
+                    if (data.IsSuccess) {
+                  
+                            showSuccessNotify("Nộp bài thành công");
+                            closePopUp();
+                    } else {
+                        showErrorNotify(data.Message);
+                    }
+                }
+            });
+        });
+    });
 </script>
