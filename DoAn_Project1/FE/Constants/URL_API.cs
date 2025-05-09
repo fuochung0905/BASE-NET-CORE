@@ -261,6 +261,7 @@
         public const string TRANGTHAICONGVIEC_CHECKROLE = "trangthaicongviec/check-role";
         public const string TRANGTHAICONGVIEC_GETBYID = "trangthaicongviec/get-by-id";
         public const string TRANGTHAICONGVIEC_UPDATECONGVIEC = "trangthaicongviec/update-congviec";
+        public const string TRANGTHAICONGVIEC_UPDATENOPBAI = "trangthaicongviec/update-nop-bai";
 
         //QUANLYDUAN
         public const string QUANLYDUAN_GETLIST = "quanlyduan/get-list";

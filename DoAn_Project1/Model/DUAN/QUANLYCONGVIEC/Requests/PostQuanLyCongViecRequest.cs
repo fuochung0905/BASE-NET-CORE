@@ -49,6 +49,12 @@ public class PostQuanLyCongViecRequest : BaseRequest
     public List<MODELTepDinhKem>? ListTepDinhKem { get; set; }
     public bool IsTepDinhKem { get; set; } = false;
 
+    //TepDinhKem
+    public string? FolderTempKetQua { get; set; }
+    public string? TepDinhKemKetQuaIDs { get; set; }
+    public List<MODELTepDinhKem>? ListTepDinhKemKetQua { get; set; }
+    public bool IsTepDinhKemKetQua { get; set; } = false;
+
     public List<PostQuanLiCongViec_ChiTietRequest>? listCongViecChiTiet { get; set; } = new List<PostQuanLiCongViec_ChiTietRequest>();
     public List<PostChiTietCongViecRequest>? listChiTiet { get; set; } = new List<PostChiTietCongViecRequest>();
     //public List<PostSubTaskRequests>? ListSubTask { get; set; } = new List<PostSubTaskRequests>();

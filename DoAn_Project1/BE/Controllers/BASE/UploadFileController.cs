@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BE.Controllers.BASE
 {
-	public class UploadFileController : ControllerBase
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UploadFileController : ControllerBase
 	{
 		private IWebHostEnvironment _webHostEnvironment;
 
@@ -18,7 +20,7 @@ namespace BE.Controllers.BASE
 		{
 			try
 			{
-				var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "Files/UploadFile/" + folderName);
+				var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "Files/Temp/UploadFile/" + folderName);
 				if (!Directory.Exists(folderPath))
 				{
 					Directory.CreateDirectory(folderPath);
@@ -28,7 +30,7 @@ namespace BE.Controllers.BASE
 				{
 					if (file.Length > 0)
 					{
-						using (var stream = new FileStream(folderPath + "/" + file.Name, FileMode.Create))
+						using (var stream = new FileStream(folderPath + "/" + file.FileName, FileMode.Create))
 						{
 							await file.CopyToAsync(stream);
 						}

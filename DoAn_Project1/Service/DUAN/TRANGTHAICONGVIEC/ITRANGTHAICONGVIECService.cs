@@ -15,5 +15,6 @@ namespace REPONSITORY.DUAN.TRANGTHAICONGVIEC
         BaseResponse<MODELCheckPhanQuyen> CheckRoleUser();
         BaseResponse<MODELQuanLyCongViec> GetById(GetByIdRequest request);
         BaseResponse<MODELCongViec> UpdateCongViecByTrangThai(PostCongViecByTrangThaiRequest request);
+        BaseResponse<MODELQuanLyCongViec> UpdateNopBai(MODELQuanLyCongViec request);
     }
 }

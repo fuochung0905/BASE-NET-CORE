@@ -1,6 +1,7 @@
 ﻿using AutoDependencyRegistration.Attributes;
 using AutoMapper;
 using ENTITIES.DBContent;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Model.BASE;
@@ -10,6 +11,7 @@ using MODELS.DUAN.QUANLYCONGVIEC.Dtos;
 using MODELS.DUAN.TRANGTHAICONGVIEC.Dtos;
 using MODELS.DUAN.TRANGTHAICONGVIEC.Request;
 using Repository;
+using System.Text.Json;
 
 namespace REPONSITORY.DUAN.TRANGTHAICONGVIEC
 {
@@ -19,12 +21,14 @@ namespace REPONSITORY.DUAN.TRANGTHAICONGVIEC
         private IUnitOfWork _unitOfWork;
         private IHttpContextAccessor _contextAccessor;
         private IMapper _mapper;
+        private IWebHostEnvironment _webHostEnvironment;
 
-        public TRANGTHAICONGVIECService(IUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor, IMapper mapper)
+        public TRANGTHAICONGVIECService(IUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor, IMapper mapper, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
             _contextAccessor = contextAccessor;
             _mapper = mapper;
+            _webHostEnvironment = webHostEnvironment;
 
         }
 
@@ -296,8 +300,8 @@ namespace REPONSITORY.DUAN.TRANGTHAICONGVIEC
                 }
                 else
                 {
-                    data.TienDo = data.TienDo * 100;
-                    data.ListTepDinhKem = GetListTepDinhKem(data.Id);
+                    data.ListTepDinhKemGetBy = GetListTepDinhKem(data.Id);
+                    data.ListTepDinhKem = GetListTepDinhKemNoBai(data.Id);
                     response.Data = data;
                 }
             }
@@ -318,6 +322,66 @@ namespace REPONSITORY.DUAN.TRANGTHAICONGVIEC
                 x.TenTapTinFull = x.TenFile + x.TenMoRong;
             });
             return mappedResult;
+        }
+
+        private List<MODELTepDinhKem> GetListTepDinhKemNoBai(Guid Id)
+        {
+            var result = _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_KETQUACONGVIEC_TEPDINHKEM>().GetAll(x => x.LienKetId == Id).ToList();
+            var mappedResult = new List<MODELTepDinhKem>();
+            foreach(var item in result)
+            {
+                var temp = new MODELTepDinhKem();
+                temp.Id = item.Id;
+                temp.LienKetId = item.LienKetId;
+                temp.TenFile = item.TenFile;
+                temp.Url = item.Url;
+                temp.DoLon = item.DoLon;
+                temp.TenMoRong = item.TenMoRong;
+                mappedResult.Add(temp);
+            }    
+            mappedResult.ForEach(x =>
+            {
+                x.TenTapTinFull = x.TenFile + x.TenMoRong;
+            });
+            return mappedResult;
+        }
+
+        public BaseResponse<MODELQuanLyCongViec> UpdateNopBai(MODELQuanLyCongViec request)
+        {
+            var response = new BaseResponse<MODELQuanLyCongViec>();
+            try
+            {
+                #region Thêm tài liệu đính kèm
+                if (request.IsTepDinhKem == true)
+                {
+                    var dinhKemIds = JsonSerializer.Deserialize<List<Guid>>(request.TepDinhKemIDs);
+
+                    List<MODELTepDinhKem> lstAttachment = [];
+                    lstAttachment = MODELS.COMMON.CommonFunc.UploadData(request.Id, _webHostEnvironment.WebRootPath, "QUANLY", request.FolderUpload);
+                    foreach (var attachment in lstAttachment)
+                    {
+                        var tepDinhKem = new ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_KETQUACONGVIEC_TEPDINHKEM
+                        {
+                            Id = attachment.Id,
+                            LienKetId = request.Id,
+                            TenFile = attachment.TenFile,
+                            TenMoRong = attachment.TenMoRong,
+                            DoLon = attachment.DoLon.Value,
+                            Url = attachment.Url
+                        };
+                        _unitOfWork.GetRepository<ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_KETQUACONGVIEC_TEPDINHKEM>().add(tepDinhKem);
+                    }
+                    _unitOfWork.Commit();
+                }
+
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                response.Error = true;
+                response.Message = ex.Message;
+            }
+            return response;
         }
     }
 }
