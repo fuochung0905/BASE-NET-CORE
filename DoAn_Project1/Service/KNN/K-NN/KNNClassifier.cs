@@ -24,7 +24,9 @@ namespace Service.KNN
                         Math.Pow(input.TotalEstimatedHours - s.TotalEstimatedHours, 2) +
                         Math.Pow(input.TotalActualHours - s.TotalActualHours, 2) +
                         Math.Pow(input.CompletionRate - s.CompletionRate, 2) +
-                        Math.Pow(input.AverageEfficiency - s.AverageEfficiency, 2)
+                        Math.Pow(input.AverageEfficiency - s.AverageEfficiency, 2) +
+                        Math.Pow(input.TaskCompletionRatio - s.TaskCompletionRatio, 2) +
+                        Math.Pow(input.AverageTaskEvaluation - s.AverageTaskEvaluation, 2)
                     )
                 })
                 .OrderBy(x => x.Distance)
@@ -35,6 +37,8 @@ namespace Service.KNN
 
             return distances?.Key ?? "Không rõ";
         }
+
+
 
         public static List<UserTasks> ClassifyClass( Dictionary<string, List<TaskRecord>> classTaskDict,  List<UserTasks> trainingSet, int k = 3)
         {

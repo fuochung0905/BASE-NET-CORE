@@ -1,0 +1,202 @@
+﻿[
+  {
+    "EasyTaskCount": 2,
+    "MediumTaskCount": 3,
+    "HardTaskCount": 5,
+    "TotalEstimatedHours": 50,
+    "TotalActualHours": 48,
+    "CompletionRate": 0.9,
+    "AverageEfficiency": 1.05,
+    "Label": "Giỏi"
+  },
+  {
+    "EasyTaskCount": 3,
+    "MediumTaskCount": 4,
+    "HardTaskCount": 3,
+    "TotalEstimatedHours": 44,
+    "TotalActualHours": 45,
+    "CompletionRate": 0.85,
+    "AverageEfficiency": 1.01,
+    "Label": "Giỏi"
+  },
+  {
+    "EasyTaskCount": 4,
+    "MediumTaskCount": 4,
+    "HardTaskCount": 2,
+    "TotalEstimatedHours": 42,
+    "TotalActualHours": 44,
+    "CompletionRate": 0.7,
+    "AverageEfficiency": 0.95,
+    "Label": "Khá"
+  },
+  {
+    "EasyTaskCount": 5,
+    "MediumTaskCount": 3,
+    "HardTaskCount": 2,
+    "TotalEstimatedHours": 40,
+    "TotalActualHours": 43,
+    "CompletionRate": 0.75,
+    "AverageEfficiency": 0.93,
+    "Label": "Khá"
+  },
+  {
+    "EasyTaskCount": 5,
+    "MediumTaskCount": 2,
+    "HardTaskCount": 1,
+    "TotalEstimatedHours": 36,
+    "TotalActualHours": 40,
+    "CompletionRate": 0.6,
+    "AverageEfficiency": 0.85,
+    "Label": "Trung Bình"
+  },
+  {
+    "EasyTaskCount": 6,
+    "MediumTaskCount": 1,
+    "HardTaskCount": 1,
+    "TotalEstimatedHours": 34,
+    "TotalActualHours": 38,
+    "CompletionRate": 0.55,
+    "AverageEfficiency": 0.78,
+    "Label": "Trung Bình"
+  },
+  {
+    "EasyTaskCount": 7,
+    "MediumTaskCount": 1,
+    "HardTaskCount": 0,
+    "TotalEstimatedHours": 32,
+    "TotalActualHours": 37,
+    "CompletionRate": 0.4,
+    "AverageEfficiency": 0.70,
+    "Label": "Yếu"
+  },
+  {
+    "EasyTaskCount": 6,
+    "MediumTaskCount": 2,
+    "HardTaskCount": 0,
+    "TotalEstimatedHours": 30,
+    "TotalActualHours": 39,
+    "CompletionRate": 0.35,
+    "AverageEfficiency": 0.68,
+    "Label": "Yếu"
+  },
+  {
+    "EasyTaskCount": 3,
+    "MediumTaskCount": 3,
+    "HardTaskCount": 4,
+    "TotalEstimatedHours": 48,
+    "TotalActualHours": 47,
+    "CompletionRate": 0.88,
+    "AverageEfficiency": 1.02,
+    "Label": "Giỏi"
+  },
+  {
+    "EasyTaskCount": 2,
+    "MediumTaskCount": 5,
+    "HardTaskCount": 3,
+    "TotalEstimatedHours": 45,
+    "TotalActualHours": 44,
+    "CompletionRate": 0.9,
+    "AverageEfficiency": 1.00,
+    "Label": "Giỏi"
+  },
+  {
+    "EasyTaskCount": 4,
+    "MediumTaskCount": 5,
+    "HardTaskCount": 1,
+    "TotalEstimatedHours": 41,
+    "TotalActualHours": 43,
+    "CompletionRate": 0.76,
+    "AverageEfficiency": 0.94,
+    "Label": "Khá"
+  },
+  {
+    "EasyTaskCount": 5,
+    "MediumTaskCount": 3,
+    "HardTaskCount": 1,
+    "TotalEstimatedHours": 39,
+    "TotalActualHours": 42,
+    "CompletionRate": 0.65,
+    "AverageEfficiency": 0.87,
+    "Label": "Khá"
+  },
+  {
+    "EasyTaskCount": 6,
+    "MediumTaskCount": 2,
+    "HardTaskCount": 1,
+    "TotalEstimatedHours": 38,
+    "TotalActualHours": 41,
+    "CompletionRate": 0.5,
+    "AverageEfficiency": 0.76,
+    "Label": "Trung Bình"
+  },
+  {
+    "EasyTaskCount": 7,
+    "MediumTaskCount": 1,
+    "HardTaskCount": 0,
+    "TotalEstimatedHours": 33,
+    "TotalActualHours": 39,
+    "CompletionRate": 0.42,
+    "AverageEfficiency": 0.69,
+    "Label": "Yếu"
+  },
+  {
+    "EasyTaskCount": 6,
+    "MediumTaskCount": 1,
+    "HardTaskCount": 1,
+    "TotalEstimatedHours": 34,
+    "TotalActualHours": 38,
+    "CompletionRate": 0.48,
+    "AverageEfficiency": 0.72,
+    "Label": "Yếu"
+  },
+  {
+    "EasyTaskCount": 3,
+    "MediumTaskCount": 4,
+    "HardTaskCount": 3,
+    "TotalEstimatedHours": 46,
+    "TotalActualHours": 45,
+    "CompletionRate": 0.84,
+    "AverageEfficiency": 1.03,
+    "Label": "Giỏi"
+  },
+  {
+    "EasyTaskCount": 5,
+    "MediumTaskCount": 3,
+    "HardTaskCount": 2,
+    "TotalEstimatedHours": 43,
+    "TotalActualHours": 44,
+    "CompletionRate": 0.73,
+    "AverageEfficiency": 0.92,
+    "Label": "Khá"
+  },
+  {
+    "EasyTaskCount": 4,
+    "MediumTaskCount": 3,
+    "HardTaskCount": 2,
+    "TotalEstimatedHours": 40,
+    "TotalActualHours": 42,
+    "CompletionRate": 0.67,
+    "AverageEfficiency": 0.89,
+    "Label": "Trung Bình"
+  },
+  {
+    "EasyTaskCount": 6,
+    "MediumTaskCount": 2,
+    "HardTaskCount": 0,
+    "TotalEstimatedHours": 35,
+    "TotalActualHours": 40,
+    "CompletionRate": 0.38,
+    "AverageEfficiency": 0.66,
+    "Label": "Yếu"
+  },
+  {
+    "EasyTaskCount": 2,
+    "MediumTaskCount": 4,
+    "HardTaskCount": 4,
+    "TotalEstimatedHours": 49,
+    "TotalActualHours": 48,
+    "CompletionRate": 0.9,
+    "AverageEfficiency": 1.04,
+    "Label": "Giỏi"
+  }
+]

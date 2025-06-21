@@ -21,8 +21,11 @@ namespace Service.KNN
             double est = tasks.Sum(t => t.EstimatedTime);
             double act = tasks.Sum(t => t.ActualTime);
 
-            int onTime = tasks.Count(t => t.ActualTime <= t.EstimatedTime);
-            double efficiencySum = tasks.Sum(t => t.EstimatedTime / (t.ActualTime == 0 ? 1 : t.ActualTime));
+            var completed = tasks.Where(t => t.Status == 5).ToList();
+
+            var completionRate = completed.Count / (double)(total == 0 ? 1 : total);
+            var efficiency = act == 0 ? 0 : est / act;
+            var avgEval = completed.Any() ? completed.Average(t => t.EvaluationScore) : 0;
 
             return new UserTasks
             {
@@ -32,8 +35,12 @@ namespace Service.KNN
                 HardTaskCount = hard,
                 TotalEstimatedHours = est,
                 TotalActualHours = act,
-                CompletionRate = (double)onTime / total,
-                AverageEfficiency = efficiencySum / total
+                CompletionRate = Math.Round(completionRate, 2),
+                AverageEfficiency = Math.Round(efficiency, 2),
+                CompletedTaskCount = completed.Count,
+                TotalTaskCount = total,
+                TaskCompletionRatio = Math.Round(completionRate, 2),
+                AverageTaskEvaluation = Math.Round(avgEval, 2),
             };
         }
 

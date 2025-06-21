@@ -19,9 +19,9 @@ namespace BE.Controllers.K_MEAN
             _service = service;
         }
 
-        [HttpPost, Route("userTask/get-list-paging")]
+        [HttpPost, Route("userTask/phan-loai-sinh-vien")]
         [AllowAnonymous]
-        public IActionResult GetListPaging(PostUserTaskGetListRequest request)
+        public IActionResult PhanLoaiSinhVien()
         {
             try
             {
@@ -29,7 +29,7 @@ namespace BE.Controllers.K_MEAN
                 {
                     throw new Exception(MODELS.COMMON.CommonFunc.GetModelStateAPI(ModelState));
                 }
-                var result = _service.GetList(request);
+                var result = _service.GetPhanLoaiSinhVien();
                 if (result.Error)
                 {
                     throw new Exception(result.Message);

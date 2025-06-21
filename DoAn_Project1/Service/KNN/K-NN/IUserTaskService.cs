@@ -12,7 +12,6 @@ namespace Service.K_MEAN
 {
     public interface IUserTaskService
     {
-        BaseResponse<GetListPagingResponse> GetList(PostUserTaskGetListRequest request);
         BaseResponse<List<UserTasks>> GetPhanLoaiSinhVien();
     }
 }
