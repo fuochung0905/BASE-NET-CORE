@@ -125,7 +125,6 @@ namespace REPONSITORY.HETHONG.TAIKHOAN
                     Direction = System.Data.ParameterDirection.Output
                 };
 
-
                 var parameters = new[]
                 {
                     new SqlParameter("@iPhongBanId", request.PhongBanId.HasValue ? request.PhongBanId : DBNull.Value),

@@ -8,6 +8,8 @@
 
     function gridDataFilter() {
         filter = {
+            PhongBanId: $("#FilterPhongBanId").data("kendoDropDownList").value(),
+            NienKhoaId: $("#FilterNienKhoaId").data("kendoDropDownList").value(),
             TextSearch: $("#TextSearch").val()
         }
         return filter;
@@ -35,6 +37,61 @@
     <div class="container-fluid">
         @if (Model.IsXem)
         {
+            <!--FILTER-->
+            <div id="accordion">
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h4 class="card-title w-100">
+                            <a class="d-block w-100" data-toggle="collapse" href="#divFilter">
+                                <i class="fas fa-filter"></i> LỌC DANH SÁCH
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="divFilter" class="collapse" data-parent="#accordion" style="">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    @(Html.Kendo().DropDownList().Name("FilterPhongBanId")
+                                                                    .DataTextField("Text")
+                                                                    .DataValueField("Value")
+                                                                    .OptionLabel("-- Tất cả phòng ban --")
+                                                                    .Filter(FilterType.Contains)
+                                                                    .DataSource(source => source
+                                                                    .Custom()
+                                                                    .Transport(transport => transport
+                                                                    .Read(read =>
+                                                                    {
+                                                                        read.Action("GetList_Combobox", "PhongBan");
+                                                                    }))).HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
+                                </div>
+                                <div class="col-md-3">
+                                    @(Html.Kendo().DropDownList().Name("FilterNienKhoaId")
+                                                                    .DataTextField("Text")
+                                                                    .DataValueField("Value")
+                                                                    .OptionLabel("-- Tất cả phòng ban --")
+                                                                    .Filter(FilterType.Contains)
+                                                                    .DataSource(source => source
+                                                                    .Custom()
+                                                                    .Transport(transport => transport
+                                                                    .Read(read =>
+                                                                    {
+                                                                        read.Action("GetList_Combobox", "NienKhoa");
+                                                                    }))).HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input id="TextSearch" type="text" class="form-control" placeholder="Tìm kiếm..." onchange="refreshGrid()">
+                                        <span class="input-group-append">
+                                            <button onclick="refreshGrid()" class="btn btn-default" type="button"><i class="fas fa-search"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--END FILTER-->
             @(Html.Kendo().Grid<MODELS.DANHMUC.MONHOC.Dtos.MODELMonHoc>()
                 .Name("gridData")
                 .HtmlAttributes(new { @class = "table table-hover" })

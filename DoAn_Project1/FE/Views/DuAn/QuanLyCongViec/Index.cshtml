@@ -13,7 +13,6 @@
     function gridDataFilter() {
         var duAnId = $("#FilterDuAnId").data("kendoDropDownList").value();
         var giaiDoanId = $("#FilterGiaiDoanId").data("kendoDropDownList").value();
-        var congViecTrongGiaiDoanId = $("#FilterCongViecTrongGiaiDoanId").data("kendoDropDownList").value();
         var trangThaiId = $("#FilterTrangThaiId").data("kendoDropDownList").value();
         var tuNgay = $("#FilterTuNgay").data("kendoDatePicker").value();
         var denNgay = $("#FilterDenNgay").data("kendoDatePicker").value();
@@ -23,7 +22,6 @@
         filter = {
             DuAnId: duAnId,
             GiaiDoanId: giaiDoanId,
-            CongViecTrongGiaiDoanId: congViecTrongGiaiDoanId,
             TrangThaiId: trangThaiId,
             TuNgay: tuNgay === null ? tuNgay : tuNgay.toJSON(),
             DenNgay: denNgay === null ? denNgay : denNgay.toJSON(),
@@ -46,7 +44,6 @@
     function refreshCongViecGiaiDoan() {
         var duAnId = $("#FilterDuAnId").val();
         var giaiDoanId = $("#FilterGiaiDoanId").val();
-        var congViecGiaiDoan = $('#FilterCongViecTrongGiaiDoanId').data('kendoDropDownList');
         if (duAnId !== '' && giaiDoanId !== '') {
             congViecGiaiDoan.dataSource.read();
         }
@@ -55,7 +52,6 @@
     function resetFilter() {
         $("#FilterDuAnId").data("kendoDropDownList").value("");
         $("#FilterGiaiDoanId").data("kendoDropDownList").value("");
-        $("#FilterCongViecTrongGiaiDoanId").data("kendoDropDownList").value("");
         $("#FilterTrangThaiId").data("kendoDropDownList").value("");
         $("#FilterNguoiThucHienId").data("kendoDropDownList").value("");
         $("#FilterNguoiKiemTraId").data("kendoDropDownList").value("");
@@ -119,135 +115,126 @@
             <!--FILTER-->
             <div id="accordion">
                 <div class="card card-info">
+                    <div class="card-header">
+                        <h4 class="card-title w-100">
+                            <a class="d-block w-100" data-toggle="collapse" href="#divFilter">
+                                <i class="fas fa-filter"></i> LỌC DANH SÁCH
+                            </a>
+                        </h4>
+                    </div>
                     <div id="divFilter" class="collapse" data-parent="#accordion" style="">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6 col-lg-6 col-xl-3">
                                     @(Html.Kendo().DropDownList()
-                                        .Name("FilterDuAnId")
-                                        .DataTextField("Text")
-                                        .DataValueField("Value")
-                                        .OptionLabel("-- Tất cả dự án --")
-                                        .Filter(FilterType.Contains)
-                                        .DataSource(source => source
-                                            .Custom()
-                                            .Transport(transport => transport
-                                                .Read(read => { read.Action("GetAllComboBox", "QuanLyDuAn"); })
-                                            )
-                                        )
-                                        .Events(e => e.Change("refreshCongViecGiaiDoan"))
-                                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
-                                    )
+                                                                    .Name("FilterDuAnId")
+                                                                    .DataTextField("Text")
+                                                                    .DataValueField("Value")
+                                                                    .OptionLabel("-- Tất cả dự án --")
+                                                                    .Filter(FilterType.Contains)
+                                                                    .DataSource(source => source
+                                                                    .Custom()
+                                                                    .Transport(transport => transport
+                                                                    .Read(read => { read.Action("GetAllComboBox", "QuanLyDuAn"); })
+                                                                    )
+                                                                    )
+                                                                    .Events(e => e.Change("refreshCongViecGiaiDoan"))
+                                                                    .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                                                                    )
                                 </div>
                                 <div class="col-md-6 col-lg-6 col-xl-3">
                                     @(Html.Kendo().DropDownList().Name("FilterGiaiDoanId")
-                                        .DataTextField("Text")
-                                        .DataValueField("Value")
-                                        .OptionLabel("-- Tất cả giai đoạn --")
-                                        .Filter(FilterType.Contains)
-                                        .DataSource(source => source
-                                            .Custom()
-                                            .Transport(transport => transport
-                                                .Read(read => { read.Action("GetAllComboBox", "GiaiDoanDuAn"); })
-                                            )
-                                        )
-                                        .Events(e => e.Change("refreshCongViecGiaiDoan"))
-                                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
-                                    )
-                                </div>
-                                <div class="col-md-6 col-lg-6 col-xl-3">
-                                    @(Html.Kendo().DropDownList().Name("FilterCongViecTrongGiaiDoanId")
-                                        .DataTextField("Text")
-                                        .DataValueField("Value")
-                                        .OptionLabel("-- Tất cả công việc trong giai đoạn --")
-                                        .Filter(FilterType.Contains)
-                                        .DataSource(source => source
-                                            .Custom()
-                                            .Transport(transport => transport
-                                                .Read(read => { read.Action("GetAllComboBoxByGiaiDoan", "CongViecTrongGiaiDoan").Data("congViecGiaiDoanData");})
-                                            )
-                                            .ServerFiltering(true) 
-                                        )
-                                        .CascadeFrom("FilterGiaiDoanId")
-                                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
-                                    )
-                                </div>
+                                                                    .DataTextField("Text")
+                                                                    .DataValueField("Value")
+                                                                    .OptionLabel("-- Tất cả giai đoạn --")
+                                                                    .Filter(FilterType.Contains)
+                                                                    .DataSource(source => source
+                                                                    .Custom()
+                                                                    .Transport(transport => transport
+                                                                    .Read(read => { read.Action("GetAllComboBox", "GiaiDoanDuAn"); })
+                                                                    )
+                                                                    )
+                                                                    .Events(e => e.Change("refreshCongViecGiaiDoan"))
+                                                                    .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                                                                    )
+                                </div>                         
                                 <div class="col-md-6 col-lg-6 col-xl-3">
                                     @(Html.Kendo().DropDownList().Name("FilterTrangThaiId")
-                                        .DataTextField("Text")
-                                        .DataValueField("Value")
-                                        .OptionLabel("-- Tất cả trạng thái --")
-                                        .Filter(FilterType.Contains)
-                                        .DataSource(source => source
-                                            .Custom()
-                                            .Transport(transport => transport
-                                                .Read(read => { read.Action("GetComboBoxTrangThai", "QuanLyCongViec"); })
-                                            )
-                                        ).HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
-                                    )
+                                                                    .DataTextField("Text")
+                                                                    .DataValueField("Value")
+                                                                    .OptionLabel("-- Tất cả trạng thái --")
+                                                                    .Filter(FilterType.Contains)
+                                                                    .DataSource(source => source
+                                                                    .Custom()
+                                                                    .Transport(transport => transport
+                                                                    .Read(read => { read.Action("GetComboBoxTrangThai", "QuanLyCongViec"); })
+                                                                    )
+                                                                    ).HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                                                                    )
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 col-lg-6 col-xl-3">
                                     @(Html.Kendo().DatePicker().Name("FilterTuNgay")
-                                        .Format("dd/MM/yyyy").Value(DateTime.ParseExact(DateTime.Now.ToString("01/MM/yyyy"), "dd/MM/yyyy", null))
-                                        .HtmlAttributes(new { @class = "form-control", @style = "width: 100%; max-width: none;", @placeholder = "Từ ngày" })
-                                    )
+                                                                    .Format("dd/MM/yyyy").Value(DateTime.ParseExact(DateTime.Now.ToString("01/MM/yyyy"), "dd/MM/yyyy", null))
+                                                                    .HtmlAttributes(new { @class = "form-control", @style = "width: 100%; max-width: none;", @placeholder = "Từ ngày" })
+                                                                    )
                                 </div>
                                 <div class="col-md-6 col-lg-6 col-xl-3">
                                     @(Html.Kendo().DatePicker().Name("FilterDenNgay")
-                                        .Format("dd/MM/yyyy").Value(DateTime.Now)
-                                        .HtmlAttributes(new { @class = "form-control", @style = "width: 100%; max-width: none;", @placeholder = "Đến ngày"})
-                                    )
+                                                                    .Format("dd/MM/yyyy").Value(DateTime.Now)
+                                                                    .HtmlAttributes(new { @class = "form-control", @style = "width: 100%; max-width: none;", @placeholder = "Đến ngày" })
+                                                                    )
                                 </div>
                                 <div class="col-md-6 col-lg-6 col-xl-3">
                                     @(Html.Kendo().DropDownList().Name("FilterNguoiThucHienId")
-                                        .DataTextField("Text")
-                                        .DataValueField("Value")
-                                        .OptionLabel("-- Tất cả người thực hiện --")
-                                        .Filter(FilterType.Contains)
-                                        .DataSource(source => source
-                                            .Custom()
-                                            .Transport(transport => transport
-                                                .Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
-                                            )
-                                        )
-                                        .Value(userId.ToString() ?? "")
-                                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
-                                    )
+                                                                    .DataTextField("Text")
+                                                                    .DataValueField("Value")
+                                                                    .OptionLabel("-- Tất cả người thực hiện --")
+                                                                    .Filter(FilterType.Contains)
+                                                                    .DataSource(source => source
+                                                                    .Custom()
+                                                                    .Transport(transport => transport
+                                                                    .Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
+                                                                    )
+                                                                    )
+                                                                    .Value(userId.ToString() ?? "")
+                                                                    .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                                                                    )
                                 </div>
                                 <div class="col-md-6 col-lg-6 col-xl-3">
                                     @(Html.Kendo().DropDownList().Name("FilterNguoiKiemTraId")
-                                        .DataTextField("Text")
-                                        .DataValueField("Value")
-                                        .OptionLabel("-- Tất cả người kiểm tra --")
-                                        .Filter(FilterType.Contains)
-                                        .DataSource(source => source
-                                            .Custom()
-                                            .Transport(transport => transport
-                                                .Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
-                                            )
-                                        )
-                                        .Value(userId.ToString() ?? "")
-                                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
-                                    )
+                                                                    .DataTextField("Text")
+                                                                    .DataValueField("Value")
+                                                                    .OptionLabel("-- Tất cả người kiểm tra --")
+                                                                    .Filter(FilterType.Contains)
+                                                                    .DataSource(source => source
+                                                                    .Custom()
+                                                                    .Transport(transport => transport
+                                                                    .Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
+                                                                    )
+                                                                    )
+                                                                    .Value(userId.ToString() ?? "")
+                                                                    .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                                                                    )
                                 </div>
                                 <div class="col-md-6 col-lg-6 col-xl-3">
                                     @(Html.Kendo().DropDownList().Name("FilterAssignToId")
-                                        .DataTextField("Text")
-                                        .DataValueField("Value")
-                                        .OptionLabel("-- Assign to --")
-                                        .Filter(FilterType.Contains)
-                                        .DataSource(source => source
-                                            .Custom()
-                                            .Transport(transport => transport
-                                                .Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
-                                            )
-                                        )
-                                        .Value(userId.ToString() ?? "")
-                                        .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
-                                    )
+                                                                    .DataTextField("Text")
+                                                                    .DataValueField("Value")
+                                                                    .OptionLabel("-- Assign to --")
+                                                                    .Filter(FilterType.Contains)
+                                                                    .DataSource(source => source
+                                                                    .Custom()
+                                                                    .Transport(transport => transport
+                                                                    .Read(read => { read.Action("GetList_Combobox", "TaiKhoan"); })
+                                                                    )
+                                                                    )
+                                                                    .Value(userId.ToString() ?? "")
+                                                                    .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" })
+                                                                    )
                                 </div>
+                                <br />
                                 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3 d-flex" style="gap: 8px; padding-bottom: 0.3rem;">
                                     <button class="btn btn-success" onclick="refreshGrid()"><i class="fa fa-filter"></i> Lọc</button>
                                     <button class="btn btn-primary" onclick="resetFilter()"><i class="fa fa-undo"></i> Đặt lại</button>

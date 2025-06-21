@@ -19,7 +19,7 @@ public partial class DUAN_QUANLYCONGVIEC
     
     public Guid? CongViecLienQuanId { get; set; }
     public int DoKhoCongViec { get; set; }
-
+    public int levelTask { get; set; }
     public string? GhiChu { get; set; }
 
     public Guid? NguoiThucHienId { get; set; }
