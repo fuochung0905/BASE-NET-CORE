@@ -30,7 +30,7 @@ public partial class DUAN_QUANLYCONGVIEC
     public double? SoGioThucTe { get; set; }
     public double? TienDo { get; set; }
     public string? KetQuaCongViec { get; set; }
-    public int DanhGiaCongViec { get; set; }
+    public int? DanhGiaCongViec { get; set; }
     public DateTime NgayTao { get; set; }
     public string NguoiTao { get; set; } = null!;
 

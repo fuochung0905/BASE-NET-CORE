@@ -19,6 +19,49 @@ namespace Service.K_MEAN
         {
             _unitOfWork = unitOfWork;
         }
+        public static List<TaskRecord> SimulateTaskList(string label)
+        {
+            var rand = new Random();
+            int n = rand.Next(5, 10);
+            var list = new List<TaskRecord>();
+
+            for (int i = 0; i < n; i++)
+            {
+                int difficulty = label switch
+                {
+                    "Giỏi" => rand.Next(2, 4), 
+                    "Khá" => rand.Next(1, 3),
+                    "Trung Bình" => rand.Next(1, 3),
+                    "Yếu" => 1,
+                    _ => 1
+                };
+
+                double est = rand.NextDouble() * (difficulty + 1) + 1;
+                double act = est + rand.NextDouble();
+
+                int eval = label switch
+                {
+                    "Giỏi" => rand.Next(3, 5),
+                    "Khá" => rand.Next(2, 4),
+                    "Trung Bình" => rand.Next(2, 3),
+                    "Yếu" => rand.Next(1, 2),
+                    _ => 2
+                };
+
+                int status = label == "Yếu" ? rand.Next(1, 5) : 5;
+
+                list.Add(new TaskRecord
+                {
+                    Difficulty = difficulty,
+                    EstimatedTime = Math.Round(est, 2),
+                    ActualTime = Math.Round(act, 2),
+                    EvaluationScore = eval,
+                    Status = status
+                });
+            }
+
+            return list;
+        }
 
         private List<UserTasks> getDataSet()
         {
@@ -41,7 +84,7 @@ namespace Service.K_MEAN
                  EstimatedTime = x.GioCongDuKien.Value,
                  ActualTime = x.SoGioThucTe.Value,
                 Status = x.TrangThaiId,
-                EvaluationScore = x.DanhGiaCongViec
+                EvaluationScore = x.DanhGiaCongViec.Value
              }
              ).ToList();
             return result;
@@ -71,5 +114,45 @@ namespace Service.K_MEAN
            response.Message = "Phân loai thành công";
            return response;
         }
+
+        public static List<List<UserTasks>> DistributeBalancedGroups(List<UserTasks> allStudents)
+        {
+            var grouped = allStudents
+                .GroupBy(s => s.Label)
+                .ToDictionary(g => g.Key, g => new Queue<UserTasks>(g));
+
+            int totalStudents = allStudents.Count;
+            int groupSize = 4;
+            int totalGroups = totalStudents / groupSize;
+
+            var result = new List<List<UserTasks>>();
+
+            for (int i = 0; i < totalGroups; i++)
+            {
+                var group = new List<UserTasks>();
+
+                foreach (var label in new[] { "Giỏi", "Khá", "Trung Bình", "Yếu" })
+                {
+                    if (grouped.ContainsKey(label) && grouped[label].Count > 0)
+                    {
+                        group.Add(grouped[label].Dequeue());
+                    }
+                }
+
+                while (group.Count < groupSize)
+                {
+                    var nonEmptyGroups = grouped.Where(g => g.Value.Count > 0).ToList();
+                    if (nonEmptyGroups.Count == 0) break;
+
+                    var randomGroup = nonEmptyGroups[new Random().Next(nonEmptyGroups.Count)];
+                    group.Add(randomGroup.Value.Dequeue());
+                }
+
+                result.Add(group);
+            }
+
+            return result;
+        }
+
     }
 }

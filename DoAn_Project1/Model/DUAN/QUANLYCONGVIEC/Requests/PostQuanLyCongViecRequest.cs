@@ -15,24 +15,16 @@ public class PostQuanLyCongViecRequest : BaseRequest
 	public Guid? GiaiDoanId { get; set; }
 	public Guid? CongViecGiaiDoanId { get; set; }
     public Guid? CongViecLienQuanId { get; set; }
-	//[Required(ErrorMessage = "Người thực hiện bắt buộc chọn")]
 	public int DoKhoCongViec { get; set; }
     public Guid? NguoiThucHienId { get; set; }
-	//[Required(ErrorMessage = "Người kiểm tra bắt buộc chọn")]
 	public Guid? NguoiKiemTraId { get; set; }
     public int TrangThaiId { get; set; } = 1;
 	public DateTime? DuKienTuNgay { get; set; }
 	public DateTime? DuKienDenNgay { get; set; }
-	/// <summary>
-	/// Tính theo giờ
-	/// </summary>
 	public double? GioCongDuKien { get; set; }
 	public DateTime? ThucTeTuNgay { get; set; }
 	public DateTime? ThucTeDenNgay { get; set; }
 	public double? SoGioThucTe { get; set; }
-	/// <summary>
-	/// Tính theo giờ
-	/// </summary>
 	public double? ThoiGianTest { get; set; }
 	public double? TongThoiGianThucHien { get; set; }
     public double? TienDo { get; set; }
@@ -42,14 +34,11 @@ public class PostQuanLyCongViecRequest : BaseRequest
 	public string? HuongDanSuDungNhanh { get; set; }
     public string? idPopup { get; set; }
     public string? GhiChu { get; set; }
-
-    //TepDinhKem
+	public int? DanhGiaCongViec { get; set; }
     public string? FolderTemp { get; set; }
     public string? TepDinhKemIDs { get; set; }
     public List<MODELTepDinhKem>? ListTepDinhKem { get; set; }
     public bool IsTepDinhKem { get; set; } = false;
-
-    //TepDinhKem
     public string? FolderTempKetQua { get; set; }
     public string? TepDinhKemKetQuaIDs { get; set; }
     public List<MODELTepDinhKem>? ListTepDinhKemKetQua { get; set; }
@@ -57,7 +46,5 @@ public class PostQuanLyCongViecRequest : BaseRequest
 
     public List<PostQuanLiCongViec_ChiTietRequest>? listCongViecChiTiet { get; set; } = new List<PostQuanLiCongViec_ChiTietRequest>();
     public List<PostChiTietCongViecRequest>? listChiTiet { get; set; } = new List<PostChiTietCongViecRequest>();
-    //public List<PostSubTaskRequests>? ListSubTask { get; set; } = new List<PostSubTaskRequests>();
-    public bool? IsThuyetTrinh { get; set; } = true;
 }
 

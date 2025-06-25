@@ -271,6 +271,16 @@
                     "<button type='button' class='btn btn-outline-dark btn-sm btn-flat'>Rất khó</button>" +
                     "# } #"
                     ).Width(153).HtmlAttributes(new { @class = "text-center" });
+                        columns.Bound(c => c.DanhGiaCongViec).Title("Đánh giá công việc")
+                    .ClientTemplate(
+                    "# if (DanhGiaCongViec == 0) { #" +
+                    "<button type='button' class='btn btn-outline-success btn-sm btn-flat'>Tốt</button>" +
+                    "# } else if (DanhGiaCongViec == 1) { #" +
+                    "<button type='button' class='btn btn-outline-warning btn-sm btn-flat'>Khá</button>" +
+                    "# } else if (DanhGiaCongViec == 2) { #" +
+                    "<button type='button' class='btn btn-outline-danger btn-sm btn-flat'>Trung bình</button>" +
+                    "# } #"
+                    ).Width(153).HtmlAttributes(new { @class = "text-center" });
                     columns.Bound(c => c.SoGioThucTe).Title("Thời gian thực hiện (giờ)").Width(131)
                         .HeaderHtmlAttributes(new { @style = "text-wrap: pretty;" })
                     .HtmlAttributes(new { @style = "text-align: right;" }).HtmlAttributes(new { @class = "title-number" });

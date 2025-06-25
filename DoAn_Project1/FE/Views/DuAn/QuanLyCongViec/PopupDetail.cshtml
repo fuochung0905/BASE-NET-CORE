@@ -467,17 +467,17 @@
                         .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
                 @Html.ValidationMessageFor(model => model.TrangThaiId, "", new { @class = "text-danger" })
             </div>
-                <div class="col-md-6">
-                    <label>
-                       Độ khó công việc
-                    </label>
-                    @(Html.Kendo().DropDownListFor(m => m.DoKhoCongViec)
-                        .DataTextField("Text")
-                        .DataValueField("Value")
-                        .BindTo(SYS_CONFIG.DOKHO_CONGVIEC)
-                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
-                    @Html.ValidationMessageFor(model => model.DoKhoCongViec, "", new { @class = "text-danger" })
-                </div>
+            <div class="col-md-6">
+                <label>
+                    Độ khó công việc
+                </label>
+                @(Html.Kendo().DropDownListFor(m => m.DoKhoCongViec)
+                    .DataTextField("Text")
+                    .DataValueField("Value")
+                    .BindTo(SYS_CONFIG.DOKHO_CONGVIEC)
+                    .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.DoKhoCongViec, "", new { @class = "text-danger" })
+            </div>
         </div>
  
         <div class="row form-group">
@@ -509,6 +509,12 @@
                 </label>
                 @(Html.Kendo().DatePickerFor(m => m.DuKienDenNgay).Format("dd/MM/yyyy").HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
             </div>
+              <div class="col-md-4">
+                <label>
+                    Số giờ dự kiến
+                </label>
+                @(Html.Kendo().NumericTextBoxFor(m => m.GioCongDuKien).Min(0).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
+            </div>
         </div>
         <div class="row form-group mb-0">
             <div class="col-md-12 d-flex">
@@ -519,30 +525,25 @@
 
         <div class="form-group py-3 px-2" style="background-color: #dfdfdf">
             <div class="row form-group">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label>
                         Thời gian thực tế từ ngày
                     </label>
                     @(Html.Kendo().DatePickerFor(m => m.ThucTeTuNgay).Format("dd/MM/yyyy")
                     .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label>
                         Thời gian thực tế đến ngày
                     </label>
                     @(Html.Kendo().DatePickerFor(m => m.ThucTeDenNgay).Format("dd/MM/yyyy")
                     .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
                 </div>
-            </div>
-
-            <div class="row form-group">
-                <div class="col-md-6">
+                 <div class="col-md-4">
                     <label class="text-danger">
-                        Số giờ thực tế (giờ)
+                        Số giờ thực tế
                     </label>
-                    @(Html.Kendo().NumericTextBoxFor(m => m.SoGioThucTe).Min(0)
-                            .HtmlAttributes(new { @class = "form-control", @style = "width:100%;", @readonly = true })                    
-                    )
+                     @(Html.Kendo().NumericTextBoxFor(m => m.SoGioThucTe).Min(0).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
                 </div>
             </div>
         </div>
@@ -579,7 +580,13 @@
                     }
                 </div>
         </div>
-            
+        <div class="row form-group">
+            <label class="col-md-12">Hướng dẫn sử dụng nhanh</label>
+            <div class="col-md-12">
+                @(Html.Kendo().TextAreaFor(model => model.HuongDanSuDungNhanh).HtmlAttributes(new { @class = "form-control", @style = "width:100%; height: 125px;" }))
+                @Html.ValidationMessageFor(model => model.HuongDanSuDungNhanh, "", new { @class = "text-danger" })
+            </div>
+        </div>
         <div class="row form-group">
             <label class="col-md-12">Kết quả công việc</label>
             <div class="col-md-12">
@@ -588,12 +595,21 @@
             </div>
         </div>
         <div class="row form-group">
-            <label class="col-md-12">Hướng dẫn sử dụng nhanh</label>
-            <div class="col-md-12">
-                @(Html.Kendo().TextAreaFor(model => model.HuongDanSuDungNhanh).HtmlAttributes(new { @class = "form-control", @style = "width:100%; height: 125px;" }))
-                @Html.ValidationMessageFor(model => model.HuongDanSuDungNhanh, "", new { @class = "text-danger" })
+            
+           <div class="col-md-12">
+                <label>
+                    Đánh giá công việc
+                </label>
+                @(Html.Kendo().DropDownListFor(m => m.DanhGiaCongViec)
+                    .OptionLabel("Tất cả lựa chọn")
+                    .DataTextField("Text")
+                    .DataValueField("Value")
+                    .BindTo(SYS_CONFIG.DANHGIA_CONGVIEC)
+                    .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.DoKhoCongViec, "", new { @class = "text-danger" })
             </div>
         </div>
+        
         @if (Model.IsEdit)
         {
             <div class="row form-group">

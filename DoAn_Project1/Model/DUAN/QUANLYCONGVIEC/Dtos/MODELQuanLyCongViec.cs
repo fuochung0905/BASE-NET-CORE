@@ -19,7 +19,8 @@ public class MODELQuanLyCongViec : MODELBase
 	public string? NguoiThucHien { get; set; } = string.Empty;
 	public Guid? NguoiKiemTraId { get; set; }
 	public string? NguoiKiemTra { get; set; } = string.Empty;
-	public int? TrangThaiId { get; set; }
+    public int? DanhGiaCongViec { get; set; }
+    public int? TrangThaiId { get; set; }
 	public string? TrangThai { get; set; } = string.Empty;
 	public DateTime? DuKienTuNgay { get; set; }
 	public DateTime? DuKienDenNgay { get; set; }

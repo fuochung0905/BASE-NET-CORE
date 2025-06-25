@@ -265,7 +265,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
             var thongBao = new ENTITIES.DBContent.HETHONG_THONGBAO();
             thongBao.Id = Guid.NewGuid();
             thongBao.TieuDe = "Có một công việc mới cần thực hiện";
-            thongBao.NoiDung = request.GhiChu;
+            thongBao.NoiDung = "Có một công việc mới cần thực hiện";
             thongBao.NguoiTao = _contextAccessor.HttpContext.User.Identity.Name;
             thongBao.NgayTao = DateTime.Now;
             thongBao.Type = 1;
@@ -277,6 +277,7 @@ public class QUANLYCONGVIECService : IQUANLYCONGVIECService
                 var thongBao_NguoiDung = new ENTITIES.DBContent.THONGBAO_NGUOIDUNG();
                 thongBao_NguoiDung.Id = Guid.NewGuid();
                 thongBao_NguoiDung.TaiKhoanId = assignTo.Id;
+                
                 thongBao_NguoiDung.ThongBaoId = thongBao.Id;
                 thongBao_NguoiDung.Delivered_At = DateTime.Now;
                 _unitOfWork.GetRepository<THONGBAO_NGUOIDUNG>().add(thongBao_NguoiDung);

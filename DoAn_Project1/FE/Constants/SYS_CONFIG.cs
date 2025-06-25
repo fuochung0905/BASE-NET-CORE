@@ -34,6 +34,12 @@ namespace FE.Constants
             new SelectListItem(){Text ="Khó", Value="2"},
             new SelectListItem(){Text ="Rất khó", Value="3"},
         };
+        public static List<SelectListItem> DANHGIA_CONGVIEC = new List<SelectListItem>()
+        {
+            new SelectListItem(){Text ="Tốt", Value="0"},
+            new SelectListItem(){Text ="Khá", Value="1"},
+            new SelectListItem(){Text ="Trung bình", Value="2"},
+        };
         public static List<SelectListItem> LOAIDUAN = new List<SelectListItem>()
         {
             new SelectListItem(){Text ="OutSource", Value="1"},

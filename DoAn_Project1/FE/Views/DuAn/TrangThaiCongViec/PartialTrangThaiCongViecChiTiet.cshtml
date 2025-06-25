@@ -50,6 +50,15 @@
 		                           )
 		                           .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;", @id = "AssignToPicker" }))</div>
         </div>
+        <div class="row mt-2 w-100 align-items-center">
+	        <div class="col-4"> <span class="mt-2"><i class="fas fa-calendar"></i> Đánh giá công việc </span></div>
+	        <div class="col-8"><span> @(Html.Kendo().DropDownListFor(m => m.DanhGiaCongViec)
+                    .OptionLabel("Tất cả lựa chọn")
+                    .DataTextField("Text")
+                    .DataValueField("Value")
+                    .BindTo(SYS_CONFIG.DANHGIA_CONGVIEC)
+                    .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))</span></div>
+        </div>
         <hr  width="100%" align="center" />
         
             <div>
