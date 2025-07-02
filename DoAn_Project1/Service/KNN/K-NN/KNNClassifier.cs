@@ -10,7 +10,6 @@ namespace Service.KNN
 {
     public static class KNNClassifier
     {
-
         public static string Classify(UserTasks input, List<UserTasks> trainingSet, int k = 3)
         {
             var distances = trainingSet
@@ -19,14 +18,14 @@ namespace Service.KNN
                     Label = s.Label,
                     Distance = Math.Sqrt(
                         Math.Pow(input.EasyTaskCount - s.EasyTaskCount, 2) +
-                        Math.Pow(input.MediumTaskCount - s.MediumTaskCount, 2) +
-                        Math.Pow(input.HardTaskCount - s.HardTaskCount, 2) +
+                        Math.Pow(input.MediumTaskCount * 2 - s.MediumTaskCount * 2, 2) +
+                        Math.Pow(input.HardTaskCount * 3 - s.HardTaskCount * 3, 2) +
                         Math.Pow(input.TotalEstimatedHours - s.TotalEstimatedHours, 2) +
                         Math.Pow(input.TotalActualHours - s.TotalActualHours, 2) +
                         Math.Pow(input.CompletionRate - s.CompletionRate, 2) +
                         Math.Pow(input.AverageEfficiency - s.AverageEfficiency, 2) +
                         Math.Pow(input.TaskCompletionRatio - s.TaskCompletionRatio, 2) +
-                        Math.Pow(input.AverageTaskEvaluation - s.AverageTaskEvaluation, 2)
+                        Math.Pow(input.AverageTaskEvaluation - s.AverageTaskEvaluation * 2, 2)
                     )
                 })
                 .OrderBy(x => x.Distance)
@@ -38,9 +37,7 @@ namespace Service.KNN
             return distances?.Key ?? "Không rõ";
         }
 
-
-
-        public static List<UserTasks> ClassifyClass( Dictionary<string, List<TaskRecord>> classTaskDict,  List<UserTasks> trainingSet, int k = 3)
+        public static List<UserTasks> ClassifyClass(Dictionary<string, List<TaskRecord>> classTaskDict, List<UserTasks> trainingSet, int k = 3)
         {
             var results = new List<UserTasks>();
 
@@ -56,7 +53,5 @@ namespace Service.KNN
 
             return results;
         }
-
     }
-
 }

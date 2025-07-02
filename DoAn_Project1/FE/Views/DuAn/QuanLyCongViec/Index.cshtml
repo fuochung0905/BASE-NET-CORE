@@ -177,13 +177,13 @@
                             <div class="row">
                                 <div class="col-md-6 col-lg-6 col-xl-3">
                                     @(Html.Kendo().DatePicker().Name("FilterTuNgay")
-                                                                    .Format("dd/MM/yyyy").Value(DateTime.ParseExact(DateTime.Now.ToString("01/MM/yyyy"), "dd/MM/yyyy", null))
+                                                                    .Format("dd/MM/yyyy")
                                                                     .HtmlAttributes(new { @class = "form-control", @style = "width: 100%; max-width: none;", @placeholder = "Từ ngày" })
                                                                     )
                                 </div>
                                 <div class="col-md-6 col-lg-6 col-xl-3">
                                     @(Html.Kendo().DatePicker().Name("FilterDenNgay")
-                                                                    .Format("dd/MM/yyyy").Value(DateTime.Now)
+                                                                    .Format("dd/MM/yyyy")
                                                                     .HtmlAttributes(new { @class = "form-control", @style = "width: 100%; max-width: none;", @placeholder = "Đến ngày" })
                                                                     )
                                 </div>

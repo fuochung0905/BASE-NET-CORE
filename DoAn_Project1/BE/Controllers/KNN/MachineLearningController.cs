@@ -19,8 +19,7 @@ namespace BE.Controllers.K_MEAN
             _service = service;
         }
 
-        [HttpPost, Route("userTask/phan-loai-sinh-vien")]
-        [AllowAnonymous]
+        [HttpGet, Route("phan-loai-sinh-vien")]
         public IActionResult PhanLoaiSinhVien()
         {
             try
@@ -30,6 +29,32 @@ namespace BE.Controllers.K_MEAN
                     throw new Exception(MODELS.COMMON.CommonFunc.GetModelStateAPI(ModelState));
                 }
                 var result = _service.GetPhanLoaiSinhVien();
+                if (result.Error)
+                {
+                    throw new Exception(result.Message);
+                }
+                else
+                {
+                    return Ok(new ApiOkResponse(result.Data));
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ApiResponse(false, 500, ex.Message));
+            }
+        }
+
+        [HttpGet, Route("de-xuat-phan-nhom-sinh-vien")]
+        [AllowAnonymous]
+        public IActionResult DeXuatPhanNhomSinhVien()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    throw new Exception(MODELS.COMMON.CommonFunc.GetModelStateAPI(ModelState));
+                }
+                var result = _service.DistributeBalancedGroupsWithGroupNumber();
                 if (result.Error)
                 {
                     throw new Exception(result.Message);

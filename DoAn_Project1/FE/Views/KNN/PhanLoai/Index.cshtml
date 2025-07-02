@@ -3,16 +3,36 @@
     var gioi = ViewBag.Gioi as List<MODELS.K_MEAN.Dtos.UserTasks>;
     var kha = ViewBag.Kha as List<MODELS.K_MEAN.Dtos.UserTasks>;
     var tb = ViewBag.TrungBinh as List<MODELS.K_MEAN.Dtos.UserTasks>;
+    var yeu = ViewBag.Yeu as List<MODELS.K_MEAN.Dtos.UserTasks>;
 }
 
-<div class="container mt-5">
-    <h2 class="text-center mb-4">Phân Loại Sinh Viên</h2>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
 
-    <div class="row text-center">
-        <div class="col-md-4">
-            <div class="card shadow rounded-4 border-success">
-                <div class="card-header bg-success text-white fw-bold">Giỏi</div>
-                <div class="card-body">
+<style>
+    .card {
+        transition: transform 0.2s ease-in-out;
+    }
+    .card:hover {
+        transform: scale(1.03);
+    }
+    .scroll-box {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-5 text-primary fw-bold">Phân Loại Sinh Viên</h2>
+
+    <div class="row text-center g-4">
+        <!-- Giỏi -->
+        <div class="col-md-3">
+            <div class="card border-success shadow rounded-4">
+                <div class="card-header bg-success text-white fw-bold">
+                    <i class="fas fa-star"></i> Giỏi
+                    <span class="badge bg-light text-dark float-end">@gioi.Count</span>
+                </div>
+                <div class="card-body scroll-box">
                     <ul class="list-group list-group-flush">
                         @foreach (var s in gioi)
                         {
@@ -23,10 +43,14 @@
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card shadow rounded-4 border-primary">
-                <div class="card-header bg-primary text-white fw-bold">Khá</div>
-                <div class="card-body">
+        <!-- Khá -->
+        <div class="col-md-3">
+            <div class="card border-primary shadow rounded-4">
+                <div class="card-header bg-primary text-white fw-bold">
+                    <i class="fas fa-medal"></i> Khá
+                    <span class="badge bg-light text-dark float-end">@kha.Count</span>
+                </div>
+                <div class="card-body scroll-box">
                     <ul class="list-group list-group-flush">
                         @foreach (var s in kha)
                         {
@@ -37,12 +61,34 @@
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card shadow rounded-4 border-warning">
-                <div class="card-header bg-warning text-dark fw-bold">Trung Bình</div>
-                <div class="card-body">
+        <!-- Trung Bình -->
+        <div class="col-md-3">
+            <div class="card border-warning shadow rounded-4">
+                <div class="card-header bg-warning text-dark fw-bold">
+                    <i class="fas fa-user"></i> Trung Bình
+                    <span class="badge bg-dark text-white float-end">@tb.Count</span>
+                </div>
+                <div class="card-body scroll-box">
                     <ul class="list-group list-group-flush">
                         @foreach (var s in tb)
+                        {
+                            <li class="list-group-item">@s.Name</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yếu -->
+        <div class="col-md-3">
+            <div class="card border-danger shadow rounded-4">
+                <div class="card-header bg-danger text-white fw-bold">
+                    <i class="fas fa-exclamation-triangle"></i> Yếu
+                    <span class="badge bg-light text-dark float-end">@yeu.Count</span>
+                </div>
+                <div class="card-body scroll-box">
+                    <ul class="list-group list-group-flush">
+                        @foreach (var s in yeu)
                         {
                             <li class="list-group-item">@s.Name</li>
                         }

@@ -86,7 +86,9 @@
         public const string THONGBAO_GETLISTPHANQUYEN = "thongbao/get-list-phan-quyen";
         public const string THONGBAO_POSTPHANQUYEN = "thongbao/post-phan-quyen";
         public const string THONGBAO_SOLUONGTHONGBAOCHUAXEM = "thongbao/get-so-luong-thong-bao";
-        
+
+        public const string MACHINELEARNPHANLOAISINHVIEN = "machinelearning/phan-loai-sinh-vien";
+        public const string MACHINELEARNDEXUATSINHVIEN = "machinelearning/de-xuat-phan-nhom-sinh-vien";
         #endregion
 
         #region DANHMUC

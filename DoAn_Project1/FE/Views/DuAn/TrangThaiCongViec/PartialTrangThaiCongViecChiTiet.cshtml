@@ -240,60 +240,56 @@ $(document).ready(function () {
         });
     }
 
-    function getHtmlFromPhanHoi(item) {
-        let date = new Date(item.NgayGui);
-        let formatted = new Intl.DateTimeFormat("vi-VN", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-        }).format(date);
-        let username = item.PhanHoiByUsername ? `@@${item.PhanHoiByUsername}` : "";
+   function getHtmlFromPhanHoi(item) {
+    let date = new Date(item.NgayGui);
+    let now = new Date();
+    let diffMinutes = (now - date) / 1000 / 60;
 
+    let formatted = new Intl.DateTimeFormat("vi-VN", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+    }).format(date);
 
-        if (item.ParentId === "" || item.ParentId === null) {
-            return `
-                    <div class="row border border-secondary" id="${item.Id}" style="background-color: #FFFFFF;">
-                        <div class="p-3 w-100">
-                            <div class="d-flex align-items-center">
-                                <div class="text-dark">
-                                    ${item.NguoiGui} - <span class="text-muted">${item.NgayGui}</span>
-                                </div>
-                                <div class="d-flex align-items-center gap-1 ml-auto">
-                                    <button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiUpdateEditor('${item.Id}')"><i class="fa fa-edit" aria-hidden="true"></i> Sửa</button>
-                                            <button type="button" class="btn btn-link btn-sm text-danger" onclick="XoaPhanHoi('${item.Id}')"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</button>
-                                    <button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiEditor('${item.Id}')"><i class="fa fa-reply" aria-hidden="true"></i> Trả lời</button>
-                                </div>
-                            </div>
-                            <div class="mt-1">
-                                <span><span class= "text-primary text-bold">${username}</span> ${item.NoiDungHtml}</span>
-                            </div>
-                        </div>
-                    </div>
-                `
-        } else {
-            return `
-                    <div class="row pt-3 ml-5 border border-primary" id="${item.Id}" style="background-color: #FFFFFF;">
-                        <div class="p-3 w-100">
-                            <div class="d-flex align-items-center">
-                                <div class="text-dark">
-                                    ${item.NguoiGui} - <span class="text-muted">${item.NgayGui}</span>
-                                </div>
-                                <div class="d-flex align-items-center gap-1 ml-auto">
-                                    <button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiUpdateEditor('${item.Id}')"><i class="fa fa-edit" aria-hidden="true"></i> Sửa</button>
-                                            <button type="button" class="btn btn-link btn-sm text-danger" onclick="XoaPhanHoi('${item.Id}')"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</button>
-                                    <button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiEditor('${item.Id}')"><i class="fa fa-reply" aria-hidden="true"></i> Trả lời</button>
-                                </div>
-                            </div>
-                            <div class="mt-1">
-                                <span><span class= "text-primary text-bold">${username}</span> ${item.NoiDungHtml}</span>
-                            </div>
-                        </div>
-                    </div>
-                `
-        }
+    let username = item.PhanHoiByUsername ? `@@${item.PhanHoiByUsername}` : "";
+
+    let xoaButton = '';
+    let suabutton = '';
+    if (diffMinutes <= 2) {
+        xoaButton = `<button type="button" class="btn btn-link btn-sm text-danger" onclick="XoaPhanHoi('${item.Id}')"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</button>`;
+        suabutton = `<button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiUpdateEditor('${item.Id}')"><i class="fa fa-edit" aria-hidden="true"></i> Sửa</button>`;
     }
+
+    const buttonsHtml = `
+        ${suabutton}
+        ${xoaButton}
+        <button type="button" class="btn btn-link btn-sm" onclick="showPhanHoiEditor('${item.Id}')"><i class="fa fa-reply" aria-hidden="true"></i> Trả lời</button>`;
+
+    const contentHtml = `
+        <div class="p-3 w-100">
+            <div class="d-flex align-items-center">
+                <div class="text-dark">
+                    ${item.NguoiGui} - <span class="text-muted">${formatted}</span>
+                </div>
+                <div class="d-flex align-items-center gap-1 ml-auto">
+                    ${buttonsHtml}
+                </div>
+            </div>
+            <div class="mt-1">
+                <span><span class="text-primary text-bold">${username}</span> ${item.NoiDungHtml}</span>
+            </div>
+        </div>
+    `;
+
+    if (item.ParentId === "" || item.ParentId === null) {
+        return `<div class="row border border-secondary" id="${item.Id}" style="background-color: #FFFFFF;">${contentHtml}</div>`;
+    } else {
+        return `<div class="row pt-3 ml-5 border border-primary" id="${item.Id}" style="background-color: #FFFFFF;">${contentHtml}</div>`;
+    }
+}
+
     function XoaPhanHoi(idCongViec) {
         var xoaThongTin = function(){
             showLoading(true);
@@ -435,13 +431,13 @@ $(document).ready(function () {
             $("#btnGuiFile").click(async function (event) {
             event.preventDefault(); 
 
-            const checkUploadFile = await uploadFile(); // ✅ Chờ upload hoàn tất
+            const checkUploadFile = await uploadFile();
             console.log(checkUploadFile);
             if (checkUploadFile !== undefined && checkUploadFile.IsSuccess === true) {
                 $('#IsTepDinhKem').val(true);
             }
 
-            getAttachments(); // Nếu async => await getAttachments();
+            getAttachments(); 
 
             var param = $("#frmQuanLyFile").serializeArray();
             console.log(param);

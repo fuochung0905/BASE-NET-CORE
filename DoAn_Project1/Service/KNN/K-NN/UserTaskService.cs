@@ -5,6 +5,7 @@ using Model.BASE;
 using MODELS.K_MEAN.Dtos;
 using MODELS.K_MEAN.Requests;
 using MODELS.KNN.Dtos;
+using REPONSITORY.HETHONG;
 using Repository;
 using Service.KNN;
 using System.Text.Json;
@@ -62,7 +63,11 @@ namespace Service.K_MEAN
 
             return list;
         }
-
+        
+        private double Normalize(double value, double min, double max)
+        {
+            return (max - min) == 0 ? 0 : (value - min) / (max - min);
+        }
         private List<UserTasks> getDataSet()
         {
             string filePath = @"C:\BASE-NET-CORE\DoAn_Project1\Service\KNN\DataSet\trainingSet.json";
@@ -75,16 +80,16 @@ namespace Service.K_MEAN
             return trainingSet;
         }
 
-        private List<TaskRecord> getListTaskWithUserName(Guid Id)
+        private List<TaskRecord> getListTaskWithUserName(Guid Id, Guid vaiTroId)
         {
              List<TaskRecord> result = new List<TaskRecord>();
              result = _unitOfWork.GetRepository<DUAN_QUANLYCONGVIEC>().GetAll().Where(x =>x.AssignTo == Id).Select(x => new TaskRecord
              {
                  Difficulty = x.DoKhoCongViec,
-                 EstimatedTime = x.GioCongDuKien.Value,
-                 ActualTime = x.SoGioThucTe.Value,
-                Status = x.TrangThaiId,
-                EvaluationScore = x.DanhGiaCongViec.Value
+                 EstimatedTime = x.GioCongDuKien ?? 0,     
+                 ActualTime = x.SoGioThucTe ?? 0,          
+                 Status = x.TrangThaiId,
+                 EvaluationScore = x.DanhGiaCongViec ?? 0
              }
              ).ToList();
             return result;
@@ -98,24 +103,27 @@ namespace Service.K_MEAN
             List<TAIKHOAN> taikhoans = _unitOfWork
                 .GetRepository<ENTITIES.DBContent.TAIKHOAN>()
                 .GetAll()
+                .Where(x=>x.VaiTroId.ToString() == "1E419272-4F46-4B9F-AB3A-0F9C1E4F43EA")
                 .Select(x => new TAIKHOAN
                 {
                     Id = x.Id,
-                    UserName = x.UserName
+                    UserName = x.UserName,
+                    VaiTroId = x.VaiTroId
                 })
                 .ToList();
             foreach(var item in taikhoans)
-                classTasks[item.UserName] = getListTaskWithUserName(item.Id);
+                classTasks[item.UserName] = getListTaskWithUserName(item.Id, item.VaiTroId);
 
             var results = KNNClassifier.ClassifyClass(classTasks, trainingSet, k: 3);
-
-           response.Data = results;
+            var cacheService = new CacheService();
+            cacheService.Set("PhanLoaiSinhVien", results, 30);
+            response.Data = results;
            response.Error = false;
            response.Message = "Phân loai thành công";
            return response;
         }
 
-        public static List<List<UserTasks>> DistributeBalancedGroups(List<UserTasks> allStudents)
+        private List<List<UserTasks>> DistributeBalancedGroups(List<UserTasks> allStudents)
         {
             var grouped = allStudents
                 .GroupBy(s => s.Label)
@@ -124,6 +132,8 @@ namespace Service.K_MEAN
             int totalStudents = allStudents.Count;
             int groupSize = 4;
             int totalGroups = totalStudents / groupSize;
+            if (totalStudents < groupSize)
+                totalGroups = totalStudents;
 
             var result = new List<List<UserTasks>>();
 
@@ -154,5 +164,35 @@ namespace Service.K_MEAN
             return result;
         }
 
+        public BaseResponse<List<GroupStudent>> DistributeBalancedGroupsWithGroupNumber()
+        {
+            BaseResponse<List<GroupStudent>> baseResponse = new BaseResponse<List<GroupStudent>>();
+            var cacheService = new CacheService();
+            var allStudents = cacheService.Get<List<UserTasks>>("PhanLoaiSinhVien");
+            var groups = DistributeBalancedGroups(allStudents);
+
+            var result = new List<GroupStudent>();
+            int groupNumber = 1;
+
+            foreach (var group in groups)
+            {
+                foreach (var student in group)
+                {
+                    result.Add(new GroupStudent
+                    {
+                        Name = student.Name,
+                        Label = student.Label,
+                        GroupNumber = groupNumber
+                    });
+                }
+                groupNumber++;
+            }
+            baseResponse.Data = result;
+            baseResponse.Error = false;
+            baseResponse.Message = "ThanhCong";
+            return baseResponse;
+        }
+
     }
+
 }

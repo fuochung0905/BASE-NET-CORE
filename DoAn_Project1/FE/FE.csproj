@@ -21,8 +21,4 @@
     <ProjectReference Include="..\Model\MODELS.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\KNN\DeXuat\" />
-  </ItemGroup>
-
 </Project>
