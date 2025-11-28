@@ -4,6 +4,7 @@ using Model.BASE;
 using MODELS;
 using MODELS.BASE;
 using MODELS.COMMON;
+using MODELS.DUAN.QUANLYCONGVIEC.Dtos;
 using MODELS.DUAN.TRANGTHAICONGVIEC.Request;
 using MODELS.HETHONG.TAIKHOAN.Requests;
 using REPONSITORY.DUAN.TRANGTHAICONGVIEC;
@@ -176,6 +177,28 @@ namespace BE.Controllers.DUAN
 			}
 	        catch (Exception ex)
 	        {
+                return Ok(new ApiResponse(false, 500, ex.Message));
+            }
+
+        }
+
+        [HttpPost, Route("update-nop-bai")]
+        public IActionResult UpdateNopBai([FromBody] MODELQuanLyCongViec request)
+        {
+            try
+            {
+                var result = _service.UpdateNopBai(request);
+                if (result.Error)
+                {
+                    throw new Exception(result.Message);
+                }
+                else
+                {
+                    return Ok(new ApiOkResponse(result.Data));
+                }
+            }
+            catch (Exception ex)
+            {
                 return Ok(new ApiResponse(false, 500, ex.Message));
             }
 

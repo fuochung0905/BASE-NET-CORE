@@ -701,6 +701,9 @@ namespace ENTITIES.Migrations
                     b.Property<Guid?>("CongViecLienQuanId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int?>("DanhGiaCongViec")
+                        .HasColumnType("int");
+
                     b.Property<int>("DoKhoCongViec")
                         .HasColumnType("int");
 
@@ -722,9 +725,6 @@ namespace ENTITIES.Migrations
                     b.Property<double?>("GioCongDuKien")
                         .HasColumnType("float");
 
-                    b.Property<string>("HuongDanSuDungNhanh")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActived")
                         .HasColumnType("bit");
 
@@ -733,9 +733,6 @@ namespace ENTITIES.Migrations
 
                     b.Property<string>("KetQuaCongViec")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("NgayHoanThanh")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgaySua")
                         .HasColumnType("datetime2");
@@ -765,9 +762,6 @@ namespace ENTITIES.Migrations
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double?>("SoGioCong")
-                        .HasColumnType("float");
-
                     b.Property<double?>("SoGioThucTe")
                         .HasColumnType("float");
 
@@ -778,9 +772,6 @@ namespace ENTITIES.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("ThoiGianTest")
-                        .HasColumnType("float");
-
                     b.Property<DateTime?>("ThucTeDenNgay")
                         .HasColumnType("datetime2");
 
@@ -788,9 +779,6 @@ namespace ENTITIES.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<double?>("TienDo")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("TongThoiGianThucHien")
                         .HasColumnType("float");
 
                     b.Property<int>("TrangThaiId")
@@ -865,6 +853,37 @@ namespace ENTITIES.Migrations
                     b.HasIndex("SYS_TRANGTHAICONGVIECId");
 
                     b.ToTable("DUAN_QUANLYCONGVIEC_CHITIET");
+                });
+
+            modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_KETQUACONGVIEC_TEPDINHKEM", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("DoLon")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("LienKetId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TenFile")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TenMoRong")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LienKetId");
+
+                    b.ToTable("DUAN_QUANLYCONGVIEC_KETQUACONGVIEC_TEPDINHKEM");
                 });
 
             modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_LOI_TEPDINHKEM", b =>
@@ -1720,6 +1739,17 @@ namespace ENTITIES.Migrations
                     b.Navigation("DUAN_QUANLYCONGVIEC");
                 });
 
+            modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_KETQUACONGVIEC_TEPDINHKEM", b =>
+                {
+                    b.HasOne("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC", "DUAN_QUANLYCONGVIEC")
+                        .WithMany("dUAN_QUANLYCONGVIEC_KETQUACONGVIEC_TEPDINHKEMs")
+                        .HasForeignKey("LienKetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DUAN_QUANLYCONGVIEC");
+                });
+
             modelBuilder.Entity("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC_PHANHOI", b =>
                 {
                     b.HasOne("ENTITIES.DBContent.DUAN_QUANLYCONGVIEC", "DUAN_QUANLYCONGVIEC")
@@ -2012,6 +2042,8 @@ namespace ENTITIES.Migrations
                     b.Navigation("DUAN_LICHSUGIAOVIECs");
 
                     b.Navigation("DUAN_QUANLYCONGVIEC_CHITIET");
+
+                    b.Navigation("dUAN_QUANLYCONGVIEC_KETQUACONGVIEC_TEPDINHKEMs");
 
                     b.Navigation("dUAN_QUANLYCONGVIEC_PHANHOIs");
 

@@ -86,7 +86,9 @@
         public const string THONGBAO_GETLISTPHANQUYEN = "thongbao/get-list-phan-quyen";
         public const string THONGBAO_POSTPHANQUYEN = "thongbao/post-phan-quyen";
         public const string THONGBAO_SOLUONGTHONGBAOCHUAXEM = "thongbao/get-so-luong-thong-bao";
-        
+
+        public const string MACHINELEARNPHANLOAISINHVIEN = "machinelearning/phan-loai-sinh-vien";
+        public const string MACHINELEARNDEXUATSINHVIEN = "machinelearning/de-xuat-phan-nhom-sinh-vien";
         #endregion
 
         #region DANHMUC
@@ -261,6 +263,7 @@
         public const string TRANGTHAICONGVIEC_CHECKROLE = "trangthaicongviec/check-role";
         public const string TRANGTHAICONGVIEC_GETBYID = "trangthaicongviec/get-by-id";
         public const string TRANGTHAICONGVIEC_UPDATECONGVIEC = "trangthaicongviec/update-congviec";
+        public const string TRANGTHAICONGVIEC_UPDATENOPBAI = "trangthaicongviec/update-nop-bai";
 
         //QUANLYDUAN
         public const string QUANLYDUAN_GETLIST = "quanlyduan/get-list";

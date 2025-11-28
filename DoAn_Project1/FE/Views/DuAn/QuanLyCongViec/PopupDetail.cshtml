@@ -80,7 +80,7 @@
              var param = $("#frmQuanLyCongViec").serializeArray();
             param.push({ name: "Json_ListSubTask",value: JSON.stringify(listSubTask) });
 
-            
+            console.log(param);
             $.ajax({
                 url: '/QuanLyCongViec/Post',
                 type: "POST",
@@ -467,17 +467,17 @@
                         .HtmlAttributes(new { @class = "form-control form-control-sm", @style = "width:100%;  max-width:none;" }))
                 @Html.ValidationMessageFor(model => model.TrangThaiId, "", new { @class = "text-danger" })
             </div>
-                <div class="col-md-6">
-                    <label>
-                       Độ khó công việc
-                    </label>
-                    @(Html.Kendo().DropDownListFor(m => m.DoKhoCongViec)
-                        .DataTextField("Text")
-                        .DataValueField("Value")
-                        .BindTo(SYS_CONFIG.DOKHO_CONGVIEC)
-                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
-                    @Html.ValidationMessageFor(model => model.DoKhoCongViec, "", new { @class = "text-danger" })
-                </div>
+            <div class="col-md-6">
+                <label>
+                    Độ khó công việc
+                </label>
+                @(Html.Kendo().DropDownListFor(m => m.DoKhoCongViec)
+                    .DataTextField("Text")
+                    .DataValueField("Value")
+                    .BindTo(SYS_CONFIG.DOKHO_CONGVIEC)
+                    .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.DoKhoCongViec, "", new { @class = "text-danger" })
+            </div>
         </div>
  
         <div class="row form-group">
@@ -485,29 +485,6 @@
                 <label>
                     Ghi chú
                 </label>
-                @* @(Html.Kendo().EditorFor(model => model.GhiChu) *@
-                @*     .Encoded(false) *@
-                @*     .HtmlAttributes(new { style = "height: 600px;" }) *@
-                @*     .Tools(tools => tools *@
-                @*         .Formatting() *@
-                @*         .Bold() *@
-                @*         .Italic() *@
-                @*         .Underline() *@
-                @*         .Strikethrough() *@
-                @*         .JustifyLeft() *@
-                @*         .JustifyCenter() *@
-                @*         .JustifyRight() *@
-                @*         .JustifyFull() *@
-                @*         .InsertUnorderedList() *@
-                @*         .InsertOrderedList() *@
-                @*         .Indent() *@
-                @*         .Outdent() *@
-                @*         .CreateLink() *@
-                @*         .Unlink() *@
-                @*         .InsertImage() *@
-                @*         .TableEditing() *@
-                @*         .Pdf() *@
-                @*     )) *@
                 @(Html.Kendo().TextAreaFor(model => model.GhiChu).HtmlAttributes(new { @class = "form-control", @style = "width:100%; height: 125px;" }))
                 @Html.ValidationMessageFor(model => model.GhiChu, "", new { @class = "text-danger" })
 
@@ -532,12 +509,12 @@
                 </label>
                 @(Html.Kendo().DatePickerFor(m => m.DuKienDenNgay).Format("dd/MM/yyyy").HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
             </div>
-            @* <div class="col-md-4"> *@
-            @*     <label> *@
-            @*         Giờ công dự kiến (giờ) *@
-            @*     </label> *@
-            @*     @(Html.Kendo().NumericTextBoxFor(m => m.GioCongDuKien).Min(0).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " })) *@
-            @* </div> *@
+              <div class="col-md-4">
+                <label>
+                    Số giờ dự kiến
+                </label>
+                @(Html.Kendo().NumericTextBoxFor(m => m.GioCongDuKien).Min(0).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
+            </div>
         </div>
         <div class="row form-group mb-0">
             <div class="col-md-12 d-flex">
@@ -548,75 +525,29 @@
 
         <div class="form-group py-3 px-2" style="background-color: #dfdfdf">
             <div class="row form-group">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label>
                         Thời gian thực tế từ ngày
                     </label>
                     @(Html.Kendo().DatePickerFor(m => m.ThucTeTuNgay).Format("dd/MM/yyyy")
                     .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label>
                         Thời gian thực tế đến ngày
                     </label>
                     @(Html.Kendo().DatePickerFor(m => m.ThucTeDenNgay).Format("dd/MM/yyyy")
                     .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
                 </div>
-            </div>
-
-            <div class="row form-group">
-                <div class="col-md-6">
+                 <div class="col-md-4">
                     <label class="text-danger">
-                        Số giờ thực tế (giờ)
+                        Số giờ thực tế
                     </label>
-                    @(Html.Kendo().NumericTextBoxFor(m => m.SoGioThucTe).Min(0)
-                            .HtmlAttributes(new { @class = "form-control", @style = "width:100%;", @readonly = true })
-                        .Events(e => e.Change("calculateTongThoiGianThucHien"))
-                    )
-                </div>
-  
-            </div>
-            <div class="row form-group">
-                <div class="col-md-6">
-                    <label class="text-danger">
-                        Tổng thời gian thực hiện (giờ)
-                    </label>
-                    @(Html.Kendo().NumericTextBoxFor(m => m.TongThoiGianThucHien)
-                        .Min(0)
-                        .HtmlAttributes(new { @class = "form-control", @style = "width:100%;", @readonly = true }))
+                     @(Html.Kendo().NumericTextBoxFor(m => m.SoGioThucTe).Min(0).HtmlAttributes(new { @class = "form-control", @style = "width:100%;  " }))
                 </div>
             </div>
         </div>
 
-        @if (Model.IsEdit)
-        {
-            @(Html.Partial("ListChiTietCongViec.cshtml", Model))
-        }
-@if (Model.IsEdit)
- {
-        <div class="row form-group mb-0">
-            <div class="col-md-12 d-flex">
-                <div class="pr-2 text-bold text-lg">Test</div>
-                <hr class="my-auto flex-grow-1">
-            </div>
-        </div>
-
-        <div class="form-group py-3 px-2" style="background-color: #dfdfdf">
-            <div class="row form-group">
-                <div class="col-md-6">
-                        <label class="text-danger">
-                        Thời gian test (giờ)
-                    </label>
-                    @(Html.Kendo().NumericTextBoxFor(m => m.ThoiGianTest).Min(0)
-                           .HtmlAttributes(new { @class = "form-control", @style = "width:100%;", @readonly = true })
-                    .Events(e => e.Change("calculateTongThoiGianThucHien"))
-                    )
-
-                </div>
-            </div>
-          
-        </div>
- }
         <div class="row form-group">
             <label class="col-md-12">Tệp đính kèm</label>
             <div class="col-md-12">
@@ -631,53 +562,54 @@
                     })
             </div>
         </div>
+         <div class="row form-group">
+                <div class="col-12">
+                    @if (Model.ListTepDinhKemKetQua != null)
+                    {
+                        <hr width="100%" align="center" />
+                        <div class="d-flex justify-content-between">
+                            <p class="h5">Danh sách file nộp: </p>
+                            <a href="#" class="text-primary" onclick="downloadAllFiles()">Tải xuống tất cả</a>
+                        </div>
+
+                        foreach (var file in Model.ListTepDinhKemKetQua)
+                        {
+                            <a href="#" onclick='taiTepDinhKemPopup(encodeURI("@file.Url"),"@file.TenTapTinFull")'>@file.TenTapTinFull</a>
+                            <br />
+                        }
+                    }
+                </div>
+        </div>
+        <div class="row form-group">
+            <label class="col-md-12">Hướng dẫn sử dụng nhanh</label>
+            <div class="col-md-12">
+                @(Html.Kendo().TextAreaFor(model => model.HuongDanSuDungNhanh).HtmlAttributes(new { @class = "form-control", @style = "width:100%; height: 125px;" }))
+                @Html.ValidationMessageFor(model => model.HuongDanSuDungNhanh, "", new { @class = "text-danger" })
+            </div>
+        </div>
         <div class="row form-group">
             <label class="col-md-12">Kết quả công việc</label>
             <div class="col-md-12">
-                @*     @(Html.Kendo().EditorFor(model => model.KetQuaCongViec) *@
-                @*     .Encoded(false) *@
-                @*     .HtmlAttributes(new { style = "height: 600px;" }) *@
-                @* ) *@
                 @(Html.Kendo().TextAreaFor(model => model.KetQuaCongViec).HtmlAttributes(new { @class = "form-control", @style = "width:100%; height: 125px;" }))
                 @Html.ValidationMessageFor(model => model.KetQuaCongViec, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="row form-group">
-            <label class="col-md-12">Hướng dẫn sử dụng nhanh</label>
-            <div class="col-md-12">
-                @*     @(Html.Kendo().EditorFor(model => model.HuongDanSuDungNhanh) *@
-                @*     .Encoded(false) *@
-                @*     .HtmlAttributes(new { style = "height: 600px;" }) *@
-                @*     .Tools(tools => tools *@
-                @*         .Formatting() *@
-                @*         .Bold() *@
-                @*         .Italic() *@
-                @*         .Underline() *@
-                @*         .Strikethrough() *@
-                @*         .JustifyLeft() *@
-                @*         .JustifyCenter() *@
-                @*         .JustifyRight() *@
-                @*         .JustifyFull() *@
-                @*         .InsertUnorderedList() *@
-                @*         .InsertOrderedList() *@
-                @*         .Indent() *@
-                @*         .Outdent() *@
-                @*         .CreateLink() *@
-                @*         .Unlink() *@
-                @*         .InsertImage() *@
-                @*         .TableEditing() *@
-                @*         .Pdf() *@
-                @*     ) *@
-                @*     .Pdf(pdf => pdf *@
-                @*         .Margin(20, 20, 20, 20) *@
-                @*         .PaperSize("A4") *@
-                @*         .FileName("HDSD_CongViec") *@
-                @*         .Title("Hướng dẫn sử dụng " + Model.TenCongViec)) *@
-                @* ) *@
-                @(Html.Kendo().TextAreaFor(model => model.HuongDanSuDungNhanh).HtmlAttributes(new { @class = "form-control", @style = "width:100%; height: 125px;" }))
-                @Html.ValidationMessageFor(model => model.HuongDanSuDungNhanh, "", new { @class = "text-danger" })
+            
+           <div class="col-md-12">
+                <label>
+                    Đánh giá công việc
+                </label>
+                @(Html.Kendo().DropDownListFor(m => m.DanhGiaCongViec)
+                    .OptionLabel("Tất cả lựa chọn")
+                    .DataTextField("Text")
+                    .DataValueField("Value")
+                    .BindTo(SYS_CONFIG.DANHGIA_CONGVIEC)
+                    .HtmlAttributes(new { @class = "form-control", @style = "width:100%;  max-width:none;" }))
+                @Html.ValidationMessageFor(model => model.DoKhoCongViec, "", new { @class = "text-danger" })
             </div>
         </div>
+        
         @if (Model.IsEdit)
         {
             <div class="row form-group">

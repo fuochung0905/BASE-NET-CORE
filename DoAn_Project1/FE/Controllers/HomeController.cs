@@ -20,39 +20,52 @@ namespace FE.Controllers
             _cacheService = new InMemoryCache();
         }
 
-        public IActionResult Index(Guid? Id) {
-            var breadcrumbs = new List<MODELS.BREADCRUMB.Breadcrumb>
-            {
-                new MODELS.BREADCRUMB.Breadcrumb { Name = "Trang chủ", Url = "/" },
-                new MODELS.BREADCRUMB.Breadcrumb { Name = "Dashboard", Url = "#", IsActive = true  }
+        public IActionResult Index() 
+        {
+            //var TongSoGioCong = this.PostAPI(URL_API.QUANLYCONGVIEC_GETTONGSOGIOCONG, new { taiKhoanId = Id });
+            //var tongSoGio = new MODELTongSoGioCong();
+            //if (TongSoGioCong.Status)
+            //{
+            //    tongSoGio = JsonConvert.DeserializeObject<MODELTongSoGioCong>(TongSoGioCong.Data.ToString());
+            //}
 
+            //var tongSoCongViec = this.PostAPI(URL_API.QUANLYCONGVIEC_GETTONGSOCONGVIECTHEOUSER, new {taiKhoanId = Id});
+            //List<MODELTongSoCongViec> tongCongViec = [];
+            //if (tongSoCongViec.Status)
+            //{
+            //    tongCongViec = JsonConvert.DeserializeObject<List<MODELTongSoCongViec>>(tongSoCongViec.Data.ToString());
+            //}
+            //var tongDuAnResponse = this.GetAPI(URL_API.QUANLYDUAN_GETTONGDUANTHEOTUNGIAIDOAN);
+            //List<MODELTongDuAn> tongDuAn = [];
+            //if (tongDuAnResponse.Status)
+            //{
+            //    tongDuAn = JsonConvert.DeserializeObject<List<MODELTongDuAn>>(tongDuAnResponse.Data.ToString());
+            //}
+            var tongSoGio = new MODELTongSoGioCong
+            {
+                GioCongDuKien = 180,
+                GioCongThucTe = 154
+            };
+            var tongCongViec = new List<MODELTongSoCongViec>
+            {
+                new MODELTongSoCongViec { TrangThaiId = 1, TenGoi = "Chưa bắt đầu", SoLuong = 5 },
+                new MODELTongSoCongViec { TrangThaiId = 2, TenGoi = "Đang thực hiện", SoLuong = 8 },
+                new MODELTongSoCongViec { TrangThaiId = 3, TenGoi = "Hoàn thành", SoLuong = 12 },
+                new MODELTongSoCongViec { TrangThaiId = 4, TenGoi = "Trễ hạn", SoLuong = 2 }
             };
 
-            ViewData["Breadcrumbs"] = breadcrumbs;
-            GetPhanQuyen();
-            var TongSoGioCong = this.PostAPI(URL_API.QUANLYCONGVIEC_GETTONGSOGIOCONG, new { taiKhoanId = Id });
-            var tongSoGio = new MODELTongSoGioCong();
-            if (TongSoGioCong.Status)
+            var tongDuAn = new List<MODELTongDuAn>
             {
-                tongSoGio = JsonConvert.DeserializeObject<MODELTongSoGioCong>(TongSoGioCong.Data.ToString());
-            }
+                new MODELTongDuAn { GiaiDoanId = Guid.NewGuid(), GiaiDoan = "Giai đoạn 1: Khởi tạo", SoLuong = 2 },
+                new MODELTongDuAn { GiaiDoanId = Guid.NewGuid(), GiaiDoan = "Giai đoạn 2: Phân tích", SoLuong = 4 },
+                new MODELTongDuAn { GiaiDoanId = Guid.NewGuid(), GiaiDoan = "Giai đoạn 3: Triển khai", SoLuong = 5 },
+                new MODELTongDuAn { GiaiDoanId = Guid.NewGuid(), GiaiDoan = "Giai đoạn 4: Hoàn tất", SoLuong = 3 }
+            };
 
-            var tongSoCongViec = this.PostAPI(URL_API.QUANLYCONGVIEC_GETTONGSOCONGVIECTHEOUSER, new {taiKhoanId = Id});
-            List<MODELTongSoCongViec> tongCongViec = [];
-            if (tongSoCongViec.Status)
-            {
-                tongCongViec = JsonConvert.DeserializeObject<List<MODELTongSoCongViec>>(tongSoCongViec.Data.ToString());
-            }
-            var tongDuAnResponse = this.GetAPI(URL_API.QUANLYDUAN_GETTONGDUANTHEOTUNGIAIDOAN);
-            List<MODELTongDuAn> tongDuAn = [];
-            if (tongDuAnResponse.Status)
-            {
-                tongDuAn = JsonConvert.DeserializeObject<List<MODELTongDuAn>>(tongDuAnResponse.Data.ToString());
-            }
             ViewBag.TongDuAn = tongDuAn;
             ViewBag.TongCongViec = tongCongViec;
             ViewBag.TongSoGio = tongSoGio;
-            return View();
+            return View("~/Views/Home/Index.cshtml", GetPhanQuyen());
         }
 
 

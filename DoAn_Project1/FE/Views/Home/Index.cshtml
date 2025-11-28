@@ -1,0 +1,104 @@
+﻿@using Newtonsoft.Json
+
+@{
+    ViewBag.Title = "Trang Dashboard Quản trị";
+    var tongCongViec = ViewBag.TongCongViec as List<MODELS.DUAN.QUANLYCONGVIEC.Dtos.MODELTongSoCongViec>;
+    var tongDuAn = ViewBag.TongDuAn as List<MODELS.DUAN.QUANLYDUAN.Dtos.MODELTongDuAn>;
+    var tongSoGio = ViewBag.TongSoGio as List<MODELS.DUAN.QUANLYCONGVIEC.Dtos.MODELTongSoGioCong>;
+}
+
+<link href="https://kendo.cdn.telerik.com/2024.1.130/styles/kendo.default-v2.min.css" rel="stylesheet" />
+<script src="https://kendo.cdn.telerik.com/2024.1.130/js/jquery.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/2024.1.130/js/kendo.all.min.js"></script>
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Dashboard Quản trị</h2>
+
+    <!-- Thống kê tổng quát -->
+    <div class="row mb-4 g-4">
+        <div class="col-md-4">
+            <div class="k-card k-card-type-rich bg-light shadow-sm p-4 rounded-3">
+                <h5 class="text-muted">Tổng giờ công dự kiến</h5>
+                <h2 class="text-primary">@tongSoGio?.FirstOrDefault()?.GioCongDuKien</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="k-card k-card-type-rich bg-light shadow-sm p-4 rounded-3">
+                <h5 class="text-muted">Tổng giờ công thực tế</h5>
+                <h2 class="text-success">@tongSoGio?.FirstOrDefault()?.GioCongThucTe</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="k-card k-card-type-rich bg-light shadow-sm p-4 rounded-3">
+                <h5 class="text-muted">Tổng số dự án</h5>
+                <h2>@(tongDuAn?.Sum(d => d.SoLuong) ?? 0)</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm rounded-4 mt-4">
+        <div class="card-body">
+            <h4 class="mb-3">Phân loại công việc</h4>
+            <div id="chartCongViec" style="height: 400px;"></div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm rounded-4 mt-4">
+        <div class="card-body">
+            <h4 class="mb-3">Dự án theo từng giai đoạn</h4>
+            <div id="chartDuAn" style="height: 400px;"></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        const congViecData = @Html.Raw(JsonConvert.SerializeObject(ViewBag.TongCongViec));
+        const duAnData = @Html.Raw(JsonConvert.SerializeObject(ViewBag.TongDuAn));
+
+        $("#chartCongViec").kendoChart({
+            title: { text: "Công việc theo loại" },
+            legend: { position: "bottom" },
+            series: [{
+                type: "pie",
+                data: congViecData.map(x => ({
+                    category: x.TenGoi || x.TenLoaiCongViec,
+                    value: x.SoLuong || x.TongSoCongViec
+                }))
+            }],
+            tooltip: {
+                visible: true,
+                format: "{0}",
+                template: "#= category #: #= value # công việc"
+            }
+        });
+
+        $("#chartDuAn").kendoChart({
+            title: { text: "Dự án theo giai đoạn" },
+            series: [{
+                type: "column",
+                data: duAnData.map(x => x.SoLuong),
+                name: "Số lượng",
+                color: "#3e95cd"
+            }],
+            categoryAxis: {
+                categories: duAnData.map(x => x.GiaiDoan || x.TenGiaiDoan),
+                title: { text: "Giai đoạn" },
+                majorGridLines: { visible: false }
+            },
+            valueAxis: {
+                min: 0,
+                title: { text: "Số dự án" },
+                labels: { format: "{0}" }
+            },
+            tooltip: {
+                visible: true,
+                format: "{0}",
+                template: "#= category #: #= value # dự án"
+            }
+        });
+    });
+</script>
